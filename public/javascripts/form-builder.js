@@ -219,7 +219,10 @@ function radio_edit($cgr) {
     if (inputs.length > 0) {
       radio_group_name = inputs[0].name;
       userkey = $(inputs[0]).data('userkey');
-      required = $(inputs[0]).prop('required');
+      // check the text value instead of calling pop(), which always returns true
+      if ("required" in inputs[0]["attributes"] && inputs[0]["attributes"]["required"].value == "true") {
+        required = true;
+      }
     }
   }
 
@@ -289,7 +292,11 @@ function checkbox_edit($cgr) {
     label = $('.control-label span', $cgr).text();
     userkey = $('.controls input', $cgr).data('userkey');
     checkbox_text = $('.controls label span', $cgr).text();
-    required = $('input', $cgr).prop('required');
+    // check the text value instead of calling pop(), which always returns true
+    var inputs = $cgr.find('.controls').find('input');
+    if (inputs.length > 0 && "required" in inputs[0]["attributes"] && inputs[0]["attributes"]["required"].value == "true") {
+      required = true;
+    }
   }
   var $checkbox = $(input.checkbox());
   var $buttons = $(input.button());
@@ -327,7 +334,10 @@ function text_edit($cgr) {
     userkey = $('.controls input', $cgr).data('userkey');
     placeholder = $('.controls input', $cgr).attr('placeholder');
     help = $('.controls span.help-block', $cgr).text();
-    required = $('.controls input', $cgr).prop('required');
+    var inputs = $cgr.find('.controls').find('input');
+    if (inputs.length > 0 && "required" in inputs[0]["attributes"] && inputs[0]["attributes"]["required"].value == "true") {
+      required = true;
+    }
   }
   var $text = $(input.text());
   var $buttons = $(input.button());
@@ -518,7 +528,11 @@ function other_edit($cgr) {
     placeholder = $('.controls input', $cgr).attr('placeholder');
     type = $('.controls input', $cgr).attr('type');
     help = $('.controls span.help-block', $cgr).text();
-    required = $('input', $cgr).prop('required');
+    // check the text value instead of calling pop(), which always returns true
+    var inputs = $cgr.find('.controls').find('input');
+    if (inputs.length > 0 && "required" in inputs[0]["attributes"] && inputs[0]["attributes"]["required"].value == "true") {
+      required = true;
+    }
   }
   var $other = $(input.other());
   var $buttons = $(input.button());
@@ -566,7 +580,12 @@ function textarea_edit($cgr) {
     placeholder = $('.controls textarea', $cgr).attr('placeholder');
     help = $('.controls span.help-block', $cgr).text();
     rows = $('.controls textarea', $cgr).attr('rows');
-    required = $('textarea', $cgr).prop('required');
+    // check the text value instead of calling pop(), which always returns true
+    var inputs = $cgr.find('.controls').find('input');
+    if (inputs.length > 0 && "required" in inputs[0]["attributes"] && inputs[0]["attributes"]["required"].value == "true") {
+      required = true;
+    }
+
   }
 
   var $textarea = $(input.textarea());
@@ -615,9 +634,13 @@ function number_edit($cgr) {
     userkey = $('.controls input', $cgr).data('userkey');
     placeholder = $('.controls input', $cgr).attr('placeholder');
     help = $('.controls span.help-block', $cgr).text();
-    required = $('input', $cgr).prop('required');
-    min = $('input', $cgr).prop('min');
-    max = $('input', $cgr).prop('max');
+    // check the text value instead of calling pop(), which always returns true
+    var inputs = $cgr.find('.controls').find('input');
+    if (inputs.length > 0 && "required" in inputs[0]["attributes"] && inputs[0]["attributes"]["required"].value == "true") {
+      required = true;
+    }
+    min = $('.controls input', $cgr).prop('min');
+    max = $('.controls input', $cgr).prop('max');
   }
 
   var $number = $(input.number());
