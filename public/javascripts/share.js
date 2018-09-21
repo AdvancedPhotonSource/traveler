@@ -212,6 +212,13 @@ $(function () {
     }
   });
 
+  $('input[id="username"]').on('input', function () {
+    if ($('input[id="username"]').val().trim() !== "") {
+      $('#add').attr('disabled', false);
+    } else {
+      $('#add').attr('disabled', true);
+    }
+  });
 
   $('#update').click(function (e) {
     e.preventDefault();
