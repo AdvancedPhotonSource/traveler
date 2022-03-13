@@ -20,6 +20,9 @@ node_modules/
 *.sublime-workspace
 *.idea
 
+# vscode 
+.vscode
+
 # system related #
 .DS_Store
 

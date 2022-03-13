@@ -638,7 +638,7 @@ module.exports = function(app) {
    * @param  {Function} cb    callback function
    * @return {Object}         the json representation
    */
-  function retrieveKeyLableValue(traveler, props, cb) {
+  function retrieveKeyLabelValue(traveler, props, cb) {
     var output = {};
     props.forEach(function(p) {
       output[p] = traveler[p];
@@ -735,7 +735,7 @@ module.exports = function(app) {
     reqUtils.exist('id', Traveler),
     reqUtils.canReadMw('id'),
     function(req, res) {
-      retrieveKeyLableValue(
+      retrieveKeyLabelValue(
         req[req.params.id],
         ['id', 'title', 'status', 'tags', 'devices'],
         function(err, output) {
