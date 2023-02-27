@@ -1022,6 +1022,8 @@ components:
               type: string
           clonedFrom:
             type: string
+          _v:
+            type: number
 
     BinderWork:
       type: object      
