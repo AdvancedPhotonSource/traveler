@@ -133,7 +133,7 @@ app.use(
   })
 );
 app.use(multer(config.multerConfig));
-app.use(express.json());
+app.use(express.json({ limit: config.app.body_max_size || '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(auth.proxied);
 app.use(auth.sessionLocals);
