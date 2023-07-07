@@ -89,7 +89,7 @@ module.exports.load = function() {
   module.exports.multerConfig = {
     dest: module.exports.uploadPath,
     limits: {
-      fileSize: (module.exports.app.upload_size || 10) * 1024 * 1024,
+      fileSize: (module.exports.app.upload_size || 50) * 1024 * 1024,
     },
   };
 
