@@ -1,3 +1,8 @@
+APS 1.6.3
+- Increase upload size on traveler to 50MB.
+- Update API to show version of form. 
+- Resolve size limitation of etraveler form. 
+
 APS 1.6.2
 - Resolve issue with not being able to upload multiple files onto discrepancy logs.
 
