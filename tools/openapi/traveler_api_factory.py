@@ -3,8 +3,9 @@ from travelerApi import Configuration, ApiClient, TravelerApi, DataApi, FormApi,
 
 class TravelerApiFactory:
 
-	def __init__(self, host, username, password):
+	def __init__(self, host, username, password, download_directory=None):
 		config = Configuration(host=host, username=username, password=password)
+		config.temp_folder_path=download_directory
 		client = ApiClient(configuration=config)
 		self.traveler_api = TravelerApi(api_client=client)
 		self.data_api = DataApi(api_client=client)

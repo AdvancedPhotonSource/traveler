@@ -7,7 +7,7 @@ info:
   license:
     name: Copyright (c) 2015 Dong Liu, Dariusz Jarosz.
     url: https://github.com/AdvancedPhotonSource/traveler/blob/master/LICENSE.md
-  version: APS-1.5.0
+  version: APS-1.6.4
 
 paths:
   /apis/travelers/:
@@ -414,6 +414,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Data'
+        '401':
+           $ref: '#/components/responses/UnauthorizedError'
+
+  /apis/data/{id}/file:
+    get:
+      tags:
+      - data
+      operationId: getFileByDataId
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+        - basicAuth: []
+      responses:
+        default: 
+          description: default response 
+          content:
+            application/*:
+              schema:
+                type: string
+                format: binary 
         '401':
            $ref: '#/components/responses/UnauthorizedError'
 
