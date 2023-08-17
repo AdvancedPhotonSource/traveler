@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var mongoose = require('mongoose');
+var path = require('path');
 var cheerio = require('cheerio');
 var basic = require('basic-auth');
 var routesUtilities = require('../utilities/routes.js');
@@ -13,6 +14,7 @@ const mqttUtilities = require('../utilities/mqtt.js');
 const DataError = require('../lib/error').DataError;
 const multer = require('multer');
 const config = require('../config/config.js');
+const util = require('util');
 const upload = multer(config.multerConfig);
 
 var Form = mongoose.model('Form');
@@ -876,15 +878,31 @@ module.exports = function(app) {
       .lean()
       .exec(function(err, data) {
         performMongoResponse(err, data, res, function() {
+          res.status(200).json(data);
+        });
+      });
+  });
+
+  app.get('/apis/data/:id/file', function(req, res) {
+    TravelerData.findById(req.params.id)
+      .lean()
+      .exec(function(err, data) {
+        performMongoResponse(err, data, res, function() {
           if (data.inputType === 'file') {
             fs.exists(data.file.path, function(exists) {
               if (exists) {
-                return res.sendFile(data.file.path);
+                header_val = util.format('inline; filename="%s"', data.value);
+                res.setHeader('Content-Disposition', header_val);
+                return res.sendFile(path.resolve(data.file.path));
               }
               return res.status(410).send('gone');
             });
           } else {
-            res.status(200).json(data);
+            error_msg = util.format(
+              "data is not a 'file' type. (found: %s)",
+              data.inputType
+            );
+            return res.status(500).send(error_msg);
           }
         });
       });
