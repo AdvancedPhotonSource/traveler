@@ -15,7 +15,7 @@ class TravelerApiFactory:
 	def get_traveler_api(self):
 		return self.traveler_api
 
-	def get_date_api(self):
+	def get_data_api(self):
 		return self.data_api
 
 	def get_form_api(self):
