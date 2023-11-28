@@ -1,3 +1,6 @@
+APS 1.6.5
+- Resolve issue where traveler will not functional unless it has sections defined.  
+
 APS 1.6.4
 - Add API to download files from eTraveler system.
 
