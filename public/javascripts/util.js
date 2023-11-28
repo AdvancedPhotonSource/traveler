@@ -54,28 +54,29 @@ function createSideNav() {
   }
 
   var parent = document.getElementById(nav_parent_id);
+  if (parent != null) {
+    parent.addEventListener('click', function() {
+      var header = document.getElementById(nav_parent_id);
+      var expansion = header.getElementsByTagName('span')[0];
 
-  parent.addEventListener('click', function() {
-    var header = document.getElementById(nav_parent_id);
-    var expansion = header.getElementsByTagName('span')[0];
+      var children = document.getElementsByClassName(nav_list_child_class);
 
-    var children = document.getElementsByClassName(nav_list_child_class);
+      for (i = 0; i < children.length; i++) {
+        var child = children[i];
 
-    for (i = 0; i < children.length; i++) {
-      var child = children[i];
-
-      if (child.style.maxHeight) {
-        child.style.maxHeight = null;
-        expansion.innerHTML = '+';
-      } else {
-        child.style.maxHeight = child.scrollHeight + 'px';
-        expansion.innerHTML = '-';
+        if (child.style.maxHeight) {
+          child.style.maxHeight = null;
+          expansion.innerHTML = '+';
+        } else {
+          child.style.maxHeight = child.scrollHeight + 'px';
+          expansion.innerHTML = '-';
+        }
       }
-    }
-  });
+    });
 
-  // Expand by default.
-  parent.click();
+    // Expand by default.
+    parent.click();
+  }
 }
 
 function history(found) {
