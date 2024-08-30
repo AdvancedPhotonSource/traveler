@@ -24,6 +24,7 @@
     "file-stream-rotator": "0.0.5",
     "generate-api-key": "^1.0.0",
     "jade": "1.10.0",
+    "jquery": "^1.12.4",
     "jstransformer-marked": "1.0.1",
     "ldapjs": "1.0.0",
     "lodash": "^4.17.11",
