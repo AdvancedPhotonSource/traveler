@@ -1,5 +1,7 @@
 /*global window: false*/
 
+jQuery.fn.jquery = undefined;
+
 function updateAjaxURL(prefix) {
   if (prefix) {
     $.ajaxPrefilter(function(options) {
