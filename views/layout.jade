@@ -12,53 +12,43 @@ html
       var showCCDB = !{viewConfig.showCCDB};
 
     - var isAdmin = locals.session && locals.session.userid && locals.session.roles && (locals.session.roles.indexOf('admin') !== -1 ||locals.session.roles.indexOf('manager') !== -1)
-    .navbar.navbar-fixed-top
-      .navbar-inner
-        .container-fluid
-          button.btn.btn-navbar(type='button', data-toggle='collapse', data-target='.nav-collapse')
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          .nav-collapse.collapse
-            ul.nav
-              li
-                - var appName = "Traveler"
-                if (viewConfig.deploymentName)
-                    - appName += " - " + viewConfig.deploymentName
-                a(href='#{prefix}/') #{appName}
-              if (viewConfig.topBarUrls)
-                each url in viewConfig.topBarUrls
-                  li
-                    a(href=url.url, target='_blank') #{url.text}
-              li
-                a(href='#{prefix}/forms/') Forms
-              li
-                a(href='#{prefix}/travelers/') Travelers
-              li
-                a(href='#{prefix}/binders/') Binders
-              li
-                a(href='#{prefix}/docs/', target='#{viewConfig.linkTarget}') Documents
-              if (locals.session && locals.session.userid && locals.session.roles && locals.session.roles.indexOf('admin') !== -1)
-                li
-                  a(href='#{prefix}/admin/', target='#{viewConfig.linkTarget}') Admin
-            ul.nav.pull-right
-              if (locals.session && locals.session.userid)
-                li
-                  img.user(src='#{prefix}/adusers/#{session.userid}/photo', title='#{session.username}', data-src='holder.js/27x40?size=20&text=#{session.username.substr(0, 1).toUpperCase()}')
-                li.dropdown
-                  a.dropdown-toggle(href='#', data-toggle='dropdown') #{session.username}
-                    b.caret
-                  ul.dropdown-menu
-                    li
-                      a(href='#{prefix}/profile', target='#{viewConfig.linkTarget}') Profile
-                    li
-                      a(href='#{prefix}/logout') Log out
-              else
-                li
-                  i.fa.fa-user.fa-3x
-                li
-                  a(href='#{prefix}/login') Log in
+    nav.navbar.navbar-expand-lg.navbar-light(style="background-color: #ffffff")
+      - var appName = "Traveler"
+        if (viewConfig.deploymentName)
+          - appName += " - " + viewConfig.deploymentName
+      a.navbar-brand(href='#{prefix}/') #{appName}
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navigationBarContent', aria-controls="navigationBarContent", aria-expanded="false", aria-label="Toggle navigation")
+        span.navbar-toggler-icon      
+      .collapse.navbar-collapse#navigationBarContent
+        ul.navbar-nav.flex-row
+          li.nav-item
+            a.nav-link(href='#{prefix}/forms/') Forms        
+          li.nav-item
+            a.nav-link(href='#{prefix}/travelers/') Travelers        
+          li.nav-item
+            a.nav-link(href='#{prefix}/binders/') Binders
+          li.nav-item
+            a.nav-link(href='#{prefix}/docs/', target='#{viewConfig.linkTarget}') Documents
+          if (locals.session && locals.session.userid && locals.session.roles && locals.session.roles.indexOf('admin') !== -1)            
+            li.nav-item
+              a.nav-link(href='#{prefix}/admin/', target='#{viewConfig.linkTarget}') Admin
+
+          if (locals.session && locals.session.userid)
+            li.nav-item.dropdown.d-md-flex
+              a.nav-link.dropdown-toggle#userDropdown(data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") 
+                //- img.user(src='#{prefix}/adusers/#{session.userid}/photo', title='#{session.username}', data-src='holder.js/27x40?size=20&text=#{session.username.substr(0, 1).toUpperCase()}')
+                span #{session.username}
+              .dropdown-menu(aria-labelledby="userDropdown")           
+                a.dropdown-item(href='#{prefix}/profile', target='#{viewConfig.linkTarget}') Profile              
+                a.dropdown-item(href='#{prefix}/logout') Log out
+          else            
+            li.nav-item              
+              a.nav-link(href='#{prefix}/login') 
+                //- i.fa.fa-user.fa-3x
+                span Log in                  
     block content
+    br
+    br
     .container-fluid
       h6.text-right
         a(href='https://github.com/AdvancedPhotonSource/traveler/releases/tag/#{viewConfig.appVersion}', target='_blank') Release #{viewConfig.appVersion}
