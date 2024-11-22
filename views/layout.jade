@@ -12,15 +12,15 @@ html
       var showCCDB = !{viewConfig.showCCDB};
 
     - var isAdmin = locals.session && locals.session.userid && locals.session.roles && (locals.session.roles.indexOf('admin') !== -1 ||locals.session.roles.indexOf('manager') !== -1)
-    nav.navbar.navbar-expand-lg.navbar-light(style="background-color: #ffffff")
+    nav.navbar.navbar-expand-lg.navbar-light
       - var appName = "Traveler"
         if (viewConfig.deploymentName)
-          - appName += " - " + viewConfig.deploymentName
-      a.navbar-brand(href='#{prefix}/') #{appName}
+          - appName += " - " + viewConfig.deploymentName      
       button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navigationBarContent', aria-controls="navigationBarContent", aria-expanded="false", aria-label="Toggle navigation")
         span.navbar-toggler-icon      
+      a.navbar-brand(href='#{prefix}/') #{appName}
       .collapse.navbar-collapse#navigationBarContent
-        ul.navbar-nav.flex-row
+        ul.navbar-nav
           li.nav-item
             a.nav-link(href='#{prefix}/forms/') Forms        
           li.nav-item
@@ -33,19 +33,20 @@ html
             li.nav-item
               a.nav-link(href='#{prefix}/admin/', target='#{viewConfig.linkTarget}') Admin
 
-          if (locals.session && locals.session.userid)
-            li.nav-item.dropdown.d-md-flex
-              a.nav-link.dropdown-toggle#userDropdown(data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") 
-                //- img.user(src='#{prefix}/adusers/#{session.userid}/photo', title='#{session.username}', data-src='holder.js/27x40?size=20&text=#{session.username.substr(0, 1).toUpperCase()}')
-                span #{session.username}
-              .dropdown-menu(aria-labelledby="userDropdown")           
-                a.dropdown-item(href='#{prefix}/profile', target='#{viewConfig.linkTarget}') Profile              
-                a.dropdown-item(href='#{prefix}/logout') Log out
-          else            
-            li.nav-item              
-              a.nav-link(href='#{prefix}/login') 
-                //- i.fa.fa-user.fa-3x
-                span Log in                  
+      ul.navbar-nav
+        if (locals.session && locals.session.userid)
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle#userDropdown(data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") 
+              //- img.user(src='#{prefix}/adusers/#{session.userid}/photo', title='#{session.username}', data-src='holder.js/27x40?size=20&text=#{session.username.substr(0, 1).toUpperCase()}')
+              span #{session.username}
+            .dropdown-menu(aria-labelledby="userDropdown")           
+              a.dropdown-item(href='#{prefix}/profile', target='#{viewConfig.linkTarget}') Profile              
+              a.dropdown-item(href='#{prefix}/logout') Log out
+        else            
+          li.nav-item              
+            a.nav-link(href='#{prefix}/login') 
+              //- i.fa.fa-user.fa-3x
+              span Log in                  
     block content
     br
     br
