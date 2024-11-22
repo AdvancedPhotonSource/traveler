@@ -15,24 +15,24 @@ block content
     var prefix = '!{prefix}';
   .container-fluid
     .btn-toolbar
-      .btn-group
+      .btn-group.m-1
         a.btn.btn-primary#new(href='#{prefix}/forms/new', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='create new empty #{viewConfig.terminology.form}s')
           i.fa.fa-file-o.fa-lg
           | &nbsp;New #{viewConfig.terminology.form}
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-primary#clone(data-toggle='tooltip', title='clone selected #{viewConfig.terminology.form}')
           i.fa.fa-copy.fa-lg
           | &nbsp;Clone
-      .btn-group
+      .btn-group.m-1
         a.btn.btn-info#all-forms(href='#{prefix}/publicforms/', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='see all public #{viewConfig.terminology.form}s')
           i.fa.fa-institution.fa-lg
           | &nbsp;All public #{viewConfig.terminology.form}s
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-info#reload
           i.fa.fa-refresh.fa-lg
           | &nbsp;Reload all tables
       if (locals.session && locals.session.userid && locals.session.roles && (locals.session.roles.indexOf('admin') !== -1 || locals.session.roles.indexOf('manager') !== -1))
-        .btn-group
+        .btn-group.m-1
           a.btn.btn-info#form-management(href='#{prefix}/form-management/', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='manage #{viewConfig.terminology.form}s')
             i.fa.fa-suitcase.fa-lg
             | &nbsp;Manage forms
