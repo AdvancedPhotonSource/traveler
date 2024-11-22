@@ -485,7 +485,7 @@ $(function() {
     }
   });
 
-  $('#clone').click(function() {
+  $('#clone').on('click', function() {
     var activeTable = $('.tab-pane.active table').dataTable();
     var selected = fnGetSelected(activeTable, 'row-selected');
     if (selected.length === 0) {
@@ -515,13 +515,14 @@ $(function() {
   });
 
   $('#reload').click(function() {
-    formTable.fnReloadAjax();
-    transferredFormTable.fnReloadAjax();
-    sharedFormTable.fnReloadAjax();
-    groupSharedFormTable.fnReloadAjax();
-    releasedFormTable.fnReloadAjax();
-    archivedFormTable.fnReloadAjax();
-    archivedReleasedFormTable.fnReloadAjax();
+    if (formTable.length) formTable.fnReloadAjax();
+    if (transferredFormTable.length) transferredFormTable.fnReloadAjax();
+    if (sharedFormTable.length) sharedFormTable.fnReloadAjax();
+    if (groupSharedFormTable.length) groupSharedFormTable.fnReloadAjax();
+    if (releasedFormTable.length) releasedFormTable.fnReloadAjax();
+    if (archivedFormTable.length) archivedFormTable.fnReloadAjax();
+    if (archivedReleasedFormTable.length)
+      archivedReleasedFormTable.fnReloadAjax();
   });
   // binding events
   selectEvent();
