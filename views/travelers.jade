@@ -14,29 +14,29 @@ block content
     var prefix = '!{prefix}';
   .container-fluid
     .btn-toolbar
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-primary#clone(data-toggle='tooltip', title='clone selected travelers')
           i.fa.fa-copy.fa-lg
           | &nbsp;Clone
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-primary#add-to-binder(data-toggle='tooltip', title='add selected travelers into a binder')
           i.fa.fa-briefcase.fa-lg
           | &nbsp;Add to binder
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-primary#report(data-toggle='tooltip', title='generate report for selected travelers')
           i.fa.fa-table.fa-large
           | &nbsp;Generate report
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-info#reload
           i.fa.fa-refresh.fa-lg
           | &nbsp;Reload all tables
       if (viewConfig.showPublicTravelers)
-        .btn-group
+        .btn-group.m-1
           a.btn.btn-info#all-travelers(href='#{prefix}/publictravelers/', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='see all public travelers')
             i.fa.fa-institution.fa-lg
             | &nbsp;All public travelers
       if (viewConfig.showCCDB)
-        .btn-group.dropdown
+        .btn-group.dropdown.m-1
           a#ref.btn.btn-info.dropdown-toggle(data-toggle='dropdown')
             i.fa.fa-gears.fa-lg
             | &nbsp;References
