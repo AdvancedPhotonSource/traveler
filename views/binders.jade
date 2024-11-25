@@ -41,19 +41,19 @@ block content
           .modal-footer
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#mybinders', data-toggle='tab') My binders
+        li.nav-item
+          a.nav-link.active(href='#mybinders', data-bs-toggle='tab') My binders
         if (viewConfig.transferOwnership)
-          li
-            a(href='#transferredbinders', data-toggle='tab') Transferred binders
+          li.nav-item
+            a.nav-link(href='#transferredbinders', data-bs-toggle='tab') Transferred binders
         if (viewConfig.shareUsers)
-          li
-            a(href='#sharedbinders', data-toggle='tab') Shared binders
+          li.nav-item
+            a.nav-link(href='#sharedbinders', data-bs-toggle='tab') Shared binders
         if (viewConfig.shareGroups)
-          li
-            a(href='#groupsharedbinders', data-toggle='tab') Group shared binders
-        li
-          a(href='#archivedbinders', data-toggle='tab') Archived binders
+          li.nav-item
+            a.nav-link(href='#groupsharedbinders', data-bs-toggle='tab') Group shared binders
+        li.nav-item
+          a.nav-link(href='#archivedbinders', data-bs-toggle='tab') Archived binders
       .tab-content
         #mybinders.tab-pane.active
           .btn-toolbar
