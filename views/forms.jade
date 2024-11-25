@@ -47,22 +47,22 @@ block content
     div
       ul.nav.nav-tabs
         li.nav-item
-          a.nav-link.active(href='#forms', data-toggle='tab') My draft #{viewConfig.terminology.form}s
+          a.nav-link.active(href='#forms', data-bs-toggle='tab' role='tab') My draft #{viewConfig.terminology.form}s
         if (viewConfig.transferOwnership)
           li.nav-item
-            a.nav-link(href='#transferredforms', data-toggle='tab') Transferred draft #{viewConfig.terminology.form}s
+            a.nav-link(href='#transferredforms', data-bs-toggle='tab' role='tab') Transferred draft #{viewConfig.terminology.form}s
         if (viewConfig.shareUsers)
           li.nav-item
-            a.nav-link(href='#sharedfroms', data-toggle='tab') Shared draft #{viewConfig.terminology.form}s
+            a.nav-link(href='#sharedfroms', data-bs-toggle='tab' role='tab') Shared draft #{viewConfig.terminology.form}s
         if (viewConfig.shareGroups)
           li.nav-item
-            a.nav-link(href='#groupsharedfroms', data-toggle='tab') Group shared draft #{viewConfig.terminology.form}s
+            a.nav-link(href='#groupsharedfroms', data-bs-toggle='tab' role='tab') Group shared draft #{viewConfig.terminology.form}s
         li.nav-item
-          a.nav-link(href='#releasedforms', data-toggle='tab') Released #{viewConfig.terminology.form}s
+          a.nav-link(href='#releasedforms', data-bs-toggle='tab' role='tab') Released #{viewConfig.terminology.form}s
         li.nav-item
-          a.nav-link(href='#archivedforms', data-toggle='tab') Archived draft #{viewConfig.terminology.form}s
+          a.nav-link(href='#archivedforms', data-bs-toggle='tab' role='tab') Archived draft #{viewConfig.terminology.form}s
         li.nav-item
-          a.nav-link(href='#archived-released-forms', data-toggle='tab') Archived released #{viewConfig.terminology.form}s
+          a.nav-link(href='#archived-released-forms', data-bs-toggle='tab' role='tab') Archived released #{viewConfig.terminology.form}s
       .tab-content
         #forms.tab-pane.active
           .btn-toolbar
