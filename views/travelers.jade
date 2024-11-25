@@ -55,19 +55,19 @@ block content
     form#report-form.hidden(action='#{prefix}/travelers/report/', method='post')
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#travelers', data-toggle='tab') My travelers
+        li.nav-item
+          a.nav-link.active(href='#travelers', data-bs-toggle='tab') My travelers
         if (viewConfig.transferOwnership)
-          li
-            a(href='#transferredtravelers', data-toggle='tab') Transferred travelers
+          li.nav-item
+            a.nav-link(href='#transferredtravelers', data-bs-toggle='tab') Transferred travelers
         if (viewConfig.shareUsers)
-          li
-            a(href='#sharedtravelers', data-toggle='tab') Shared travelers
+          li.nav-item
+            a.nav-link(href='#sharedtravelers', data-bs-toggle='tab') Shared travelers
         if (viewConfig.shareGroups)
-          li
-            a(href='#groupsharedtravelers', data-toggle='tab') Group shared travelers
-        li
-          a(href='#archivedtravelers', data-toggle='tab') Archived travelers
+          li.nav-item
+            a.nav-link(href='#groupsharedtravelers', data-bs-toggle='tab') Group shared travelers
+        li.nav-item
+          a.nav-link(href='#archivedtravelers', data-bs-toggle='tab') Archived travelers
 
       .tab-content
         #travelers.tab-pane.active
