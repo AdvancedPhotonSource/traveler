@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "basic-auth": "1.0.0",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "5.3.3",
     "bootstrap-responsive-tabs": "^2.0.3",
     "cas.js": "0.1.0",
     "cheerio": "0.22.0",

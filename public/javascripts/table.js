@@ -963,22 +963,29 @@ var deviceTravelerLinkColumn = {
 };
 
 function progressBar(active, finished, inProgress, text, width) {
-  var w = width || '100px';
   var t = text || '';
-  var bar = $(
-    '<div class="progress" style="width: ' +
-      w +
-      ';"><div class="bar bar-success" style="width:' +
-      finished +
-      '%;"></div><div class="bar bar-info" style="width:' +
-      inProgress +
-      '%;"></div><div class="progress-value">' +
-      t +
-      '</div></div>'
-  );
+
+  var progressAdditionalStyle = '';
+  var progressBarAdditionalStyle = '';
+
   if (active) {
-    bar.addClass('active').addClass('progress-striped');
+    progressAdditionalStyle += 'active';
+    progressBarAdditionalStyle += 'progress-bar-striped progress-bar-animated';
   }
+
+  bar = $(
+    `<div class="progress-bar-container">` +
+      `<div class="progress-stacked ${progressAdditionalStyle}">` +
+      `<div class="progress" role="progressbar" aria-valuenow="${finished}" aria-valuemin="0" aria-valuemax="100" style="width: ${finished}%">` +
+      `<div class="progress-bar bg-success ${progressBarAdditionalStyle}"></div>` +
+      `</div>` +
+      `<div class="progress" role="progressbar" aria-valuenow="${inProgress}" aria-valuemin="0" aria-valuemax="100" style="width: ${inProgress}%">` +
+      `<div class="progress-bar bg-info ${progressBarAdditionalStyle}"></div>` +
+      `</div>` +
+      `</div><div class="progress-bar-text">${t}</div>` +
+      `</div>`
+  );
+
   return bar[0].outerHTML;
 }
 
