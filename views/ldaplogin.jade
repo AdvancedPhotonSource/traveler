@@ -5,8 +5,6 @@ block head
     title #{orgName} Traveler :: login
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-    //TODO#339 see if this is necessary. 
-    //- link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
     link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
 block content
@@ -16,20 +14,16 @@ block content
                 p An error occurred: #{errorMessage}
 
         form.form-horizontal(name='login', action='./', method='POST')
-            .control-group
-                .control-label Username:
-                .controls
-                    input(type='text', name='username', required)
-            .control-group
-                .control-label Password:
-                .controls
-                    input(type='password', name='password', required)
-            .control-group
-                .controls
-                    .btn-group
-                        button.btn.btn-primary(type='submit') Log in
+            .row
+                .col-md-3
+                    .mb-3
+                        .form-label Username
+                        input.form-control(type='text', name='username', required)
+                    .mb-3
+                        .form-label Password
+                        input.form-control(type='password', name='password', required)
+
+                    button.btn.btn-primary(type='submit') Log in
 block js
     script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
-    //TODO#339 see if this is necessary. 
-    //- script(type='text/javascript', src='#{prefix}/jquery/jquery-ui-1.10.2.custom.js')
     script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
