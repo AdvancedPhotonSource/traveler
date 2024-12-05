@@ -212,10 +212,7 @@ function autosaveWipOnDone() {
     processData: false,
   })
     .done(function(data, textStatus, request) {
-      if (
-        $('#togglewip').size() &&
-        $('#togglewip')[0].innerText === showUnsavedText
-      ) {
+      if ($('#togglewip') && $('#togglewip')[0].innerText === showUnsavedText) {
         $('#wipHtmlStatus').html(unsavedText);
         $('#togglewip')[0].innerText = showSavedText;
       }
@@ -255,7 +252,7 @@ function done_button(view, $out) {
   return function(e) {
     e.preventDefault();
     // validate the userkey according to current form
-    var userKeyInput = $('.well.spec input[name="userkey"]');
+    var userKeyInput = $('.card-body input[name="userkey"]');
     var userkey = userKeyInput.val();
     if (typeof userkey !== 'undefined') {
       userkey = userkey.trim();
@@ -277,7 +274,7 @@ function done_button(view, $out) {
     }
     view.unbind();
     $(this)
-      .closest('.spec')
+      .closest('.card')
       .remove();
     // assign unique name if not yet
     $('input, textarea', $out).each(function() {
@@ -1174,7 +1171,7 @@ function rich_edit($cgr) {
       $('.tinymce', $rich).html(tinymce.activeEditor.getContent());
       tinymce.remove();
       $(this)
-        .closest('.spec')
+        .closest('.card')
         .remove();
       $rich.closest('.control-group-wrap').removeAttr('data-status');
       var resultParent = $rich[0];
@@ -1456,7 +1453,7 @@ function binding_events() {
 
   $('#save').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert(
         'Finish editing first',
         'Please close all the opened edit area by clicking the "Done" button, and save the changes if needed.'
@@ -1479,7 +1476,7 @@ function binding_events() {
 
   $('#numbering').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert(
         'Finish editing first',
         'Please close all the opened edit area by clicking the "Done" button, and then generate the numbering if needed.'
@@ -1492,7 +1489,7 @@ function binding_events() {
   });
 
   $('#preview').click(function(e) {
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       e.preventDefault();
       modalAlert(
         'Save changes first',
@@ -1514,7 +1511,7 @@ function binding_events() {
 
   $('#saveas').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert();
       return;
     }
@@ -1545,7 +1542,7 @@ function binding_events() {
 
   $('#submit').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert(
         'Finish editing first',
         'Please close all the opened edit area by clicking the "Done" button, and save the changes if needed.'
