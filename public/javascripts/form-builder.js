@@ -437,7 +437,7 @@ function add_radio($radio_group, $radio_value_spec, $done, count, model) {
 }
 
 function radio_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
 
   var radio_group_name;
 
@@ -474,13 +474,16 @@ function radio_edit($cgr) {
   }
 
   // Assign components to the configure view
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $required,
-    $add_radio_button,
-    $radio_value_spec,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $required,
+      $add_radio_button,
+      $radio_value_spec,
+      $done
+    )
   );
 
   var $new_cgr = $(
@@ -555,7 +558,7 @@ function radio_edit($cgr) {
 }
 
 function checkbox_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var checkbox_text = 'checkbox text';
@@ -573,12 +576,15 @@ function checkbox_edit($cgr) {
   var $checkbox_text = $(spec.checkbox_text());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $checkbox_text,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $checkbox_text,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">checkbox</span></div>'
@@ -599,7 +605,7 @@ function checkbox_edit($cgr) {
 }
 
 function text_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -620,13 +626,16 @@ function text_edit($cgr) {
   var $help = $(spec.help());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $placeholder,
-    $help,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $placeholder,
+      $help,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">text</span></div>'
@@ -648,7 +657,7 @@ function text_edit($cgr) {
 }
 
 function figure_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var src = '';
   var alt = '';
   var figcaption = '';
@@ -666,12 +675,15 @@ function figure_edit($cgr) {
   var $figcaption = $(spec.figcaption());
   var $width = $(spec.width());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $file,
-    $alt,
-    $width,
-    $figcaption,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $file,
+      $alt,
+      $width,
+      $figcaption,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">figure</span></div>'
@@ -826,7 +838,7 @@ function figure_edit($cgr) {
 }
 
 function other_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -850,14 +862,17 @@ function other_edit($cgr) {
   var $help = $(spec.help());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $type,
-    $label,
-    $userkey,
-    $placeholder,
-    $help,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $type,
+      $label,
+      $userkey,
+      $placeholder,
+      $help,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">other</span></div>'
@@ -883,7 +898,7 @@ function other_edit($cgr) {
 }
 
 function textarea_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -909,14 +924,17 @@ function textarea_edit($cgr) {
   var $help = $(spec.help());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $placeholder,
-    $rows,
-    $help,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $placeholder,
+      $rows,
+      $help,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">textarea</span></div>'
@@ -954,7 +972,7 @@ function rangeText(min, max) {
 }
 
 function number_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -984,15 +1002,18 @@ function number_edit($cgr) {
   var $max = $(spec.max());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $placeholder,
-    $help,
-    $min,
-    $max,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $placeholder,
+      $help,
+      $min,
+      $max,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">number</span></div>'
@@ -1022,7 +1043,7 @@ function number_edit($cgr) {
 }
 
 function file_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var required = false;
   var userkey = '';
@@ -1044,13 +1065,16 @@ function file_edit($cgr) {
 
   var $help = $(spec.help());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $required,
-    $userkey,
-    $filetype,
-    $help,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $required,
+      $userkey,
+      $filetype,
+      $help,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">file</span></div>'
@@ -1081,7 +1105,7 @@ function file_edit($cgr) {
 }
 
 function section_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var legend = 'Section name';
   if ($cgr) {
     legend = $('legend span.label-text', $cgr).text();
@@ -1089,7 +1113,10 @@ function section_edit($cgr) {
   var $section = $(input.section());
   var $legend = $(spec.legend());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append($legend, $done);
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append($legend, $done)
+  );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">section</span></div>'
   ).append($section);
@@ -1110,7 +1137,7 @@ function section_edit($cgr) {
 }
 
 function rich_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var html = '';
   if ($cgr) {
     html = $('.tinymce', $cgr).html();
@@ -1118,7 +1145,10 @@ function rich_edit($cgr) {
   var $rich = $(input.rich());
   var $rich_textarea = $(spec.rich_textarea());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append($rich_textarea, $done);
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append($rich_textarea, $done)
+  );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">rich</span></div>'
   ).append($rich);
