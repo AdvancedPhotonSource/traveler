@@ -1520,7 +1520,7 @@ function binding_events() {
     $('#modalLabel').html('Save the form as (a new one)');
     $('#modal .modal-body').empty();
     $('#modal .modal-body').append(
-      '<form class="form-horizontal" id="modalform"><div class="control-group"><label class="control-label">Form title</label><div class="controls"><input id="new-title" type="text" class="input"></div></div></form>'
+      '<form class="form-horizontal" id="modalform"><div class="mb-3"><label class="form-label">Form title</label><input class="form-control" id="new-title" type="text" class="input"></div></form>'
     );
     $('#modal .modal-footer').html(
       '<button value="confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
@@ -1575,9 +1575,9 @@ function binding_events() {
     $('#modal .modal-body').empty();
     let defaultTitle = $('#formtitle').text();
     $('#modal .modal-body').append(
-      '<form class="form-horizontal" id="modalform"> <div class="control-group"> <label class="control-label">Form title</label> <div class="controls"><input id="release-title" type="text" value="' +
+      '<form class="form-horizontal" id="modalform"> <div class="mb-3"> <label class="form-label">Form title</label><input class="form-control" id="release-title" type="text" value="' +
         defaultTitle +
-        '" class="input"> </div> </div> </form>'
+        '" class="input"> </div> </form>'
     );
 
     let priorVersionsTable = null;
