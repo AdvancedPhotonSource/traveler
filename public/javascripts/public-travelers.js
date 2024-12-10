@@ -6,7 +6,7 @@ function noneSelectedModal() {
   $('#modalLabel').html('Alert');
   $('#modal .modal-body').html('No traveler has been selected!');
   $('#modal .modal-footer').html(
-    '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
 }
@@ -44,7 +44,10 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },

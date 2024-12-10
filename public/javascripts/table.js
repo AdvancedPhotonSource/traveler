@@ -592,7 +592,7 @@ function cloneModal(id, type) {
   );
 
   $('#modal .modal-footer').html(
-    '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
   $('#submit').click(function() {

@@ -1,11 +1,11 @@
 function formatItemUpdate(data) {
   return (
-      '<div class="target" id="' +
-      data._id +
-      '"><b>' +
-      data.name +
-      '</b>' +
-      '</div>'
+    '<div class="target" id="' +
+    data._id +
+    '"><b>' +
+    data.name +
+    '</b>' +
+    '</div>'
   );
 }
 
@@ -14,7 +14,7 @@ function removeMembersFromModal(group, table) {
   $('#return').prop('disabled', true);
   let data = [];
   $('#modal .modal-body div.target').each(function() {
-    data.push({_id: this.id});
+    data.push({ _id: this.id });
   });
   $.ajax({
     url: '/groups/' + group + '/removeMembers',
@@ -72,7 +72,10 @@ $(function() {
         },*/
     bAutoWidth: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -96,22 +99,22 @@ $(function() {
       contentType: 'application/json',
       data: JSON.stringify({}),
     })
-        .success(function(data, status, jqXHR) {
-          $('#message').append(
-              '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
-              'User ' +
-              displayName +
-              ' has been added to this group.' +
-              '</div>'
-          );
-          $(that).addClass('text-success');
-          memberTable.fnReloadAjax();
-        })
-        .fail(function(jqXHR) {
-          $(that).append(' : ' + jqXHR.responseText);
-          $(that).addClass('text-error');
-        })
-        .always(function() {});
+      .success(function(data, status, jqXHR) {
+        $('#message').append(
+          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+            'User ' +
+            displayName +
+            ' has been added to this group.' +
+            '</div>'
+        );
+        $(that).addClass('text-success');
+        memberTable.fnReloadAjax();
+      })
+      .fail(function(jqXHR) {
+        $(that).append(' : ' + jqXHR.responseText);
+        $(that).addClass('text-error');
+      })
+      .always(function() {});
   });
 
   $('button#btnRemoveMembers').click(function() {
@@ -121,12 +124,12 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No user(s) have been selected!');
       $('#modal .modal-footer').html(
-          '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
       $('#modalLabel').html(
-          'Remove the following ' + selected.length + ' users? '
+        'Remove the following ' + selected.length + ' users? '
       );
       $('#modal .modal-body').empty();
       selected.forEach(function(row) {
@@ -134,7 +137,7 @@ $(function() {
         $('#modal .modal-body').append(formatItemUpdate(data));
       });
       $('#modal .modal-footer').html(
-          '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
 

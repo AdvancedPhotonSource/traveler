@@ -87,7 +87,7 @@ function remove(list, oTable) {
       }
     });
     $('#modal .modal-footer').html(
-      '<button id="remove" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button id="remove" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#remove').click(function(e) {
       e.preventDefault();
@@ -101,7 +101,7 @@ function remove(list, oTable) {
     $('#modalLabel').html('Alert');
     $('#modal .modal-body').html('No item has been selected!');
     $('#modal .modal-footer').html(
-      '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modal').modal('show');
   }
@@ -168,7 +168,7 @@ function modify(list, oTable) {
       }
     });
     $('#modal .modal-footer').html(
-      '<button id="modify" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button id="modify" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modify').click(function(e) {
       e.preventDefault();
@@ -190,7 +190,7 @@ function modify(list, oTable) {
     $('#modalLabel').html('Alert');
     $('#modal .modal-body').html('No item has been selected!');
     $('#modal .modal-footer').html(
-      '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modal').modal('show');
   }
@@ -377,7 +377,12 @@ $(function() {
     sDom: sDomNoTools,
   });
 
-  var groupShareAoColumns = [selectColumn, groupIdColumn, groupNameColumn, accessColumn];
+  var groupShareAoColumns = [
+    selectColumn,
+    groupIdColumn,
+    groupNameColumn,
+    accessColumn,
+  ];
   var groupShareTable = $('#groupshare-table').dataTable({
     aaData: [],
     // 'bAutoWidth': false,

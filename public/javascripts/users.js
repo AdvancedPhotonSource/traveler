@@ -113,7 +113,10 @@ $(function() {
     },
     bAutoWidth: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -190,7 +193,7 @@ $(function() {
         );
       });
       $('#modal .modal-footer').html(
-        '<button id="update" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="update" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#update').click(function(e) {
         e.preventDefault();
@@ -204,7 +207,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No users has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     }
@@ -232,7 +235,7 @@ $(function() {
         );
       });
       $('#modal .modal-footer').html(
-        '<button id="modify" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="modify" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modify').click(function(e) {
         e.preventDefault();
@@ -246,7 +249,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No users has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     }

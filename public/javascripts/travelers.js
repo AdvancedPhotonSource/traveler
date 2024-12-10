@@ -34,7 +34,7 @@ function noneSelectedModal() {
   $('#modalLabel').html('Alert');
   $('#modal .modal-body').html('No traveler has been selected!');
   $('#modal .modal-footer').html(
-    '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
 }
@@ -141,13 +141,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: travelerAoColumns,
-    aaSorting: [[11, 'desc'], [14, 'desc']],
+    aaSorting: [
+      [11, 'desc'],
+      [14, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -181,13 +187,20 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: transferredTravelerAoColumns,
-    aaSorting: [[10, 'desc'], [11, 'desc'], [14, 'desc']],
+    aaSorting: [
+      [10, 'desc'],
+      [11, 'desc'],
+      [14, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
   fnAddFilterFoot('#transferred-traveler-table', transferredTravelerAoColumns);
@@ -221,13 +234,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: sharedTravelerAoColumns,
-    aaSorting: [[12, 'desc'], [9, 'desc']],
+    aaSorting: [
+      [12, 'desc'],
+      [9, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
   var groupSharedTravelerAoColumns = [
@@ -258,13 +277,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: groupSharedTravelerAoColumns,
-    aaSorting: [[12, 'desc'], [9, 'desc']],
+    aaSorting: [
+      [12, 'desc'],
+      [9, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
   var archivedTravelerAoColumns = [
@@ -294,13 +319,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: archivedTravelerAoColumns,
-    aaSorting: [[3, 'desc'], [11, 'desc']],
+    aaSorting: [
+      [3, 'desc'],
+      [11, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -353,7 +384,7 @@ $(function() {
         $('#modal .modal-body').append(formatItemUpdate(data));
       });
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
       $('#submit').click(function() {
@@ -395,7 +426,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No traveler has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -408,7 +439,7 @@ $(function() {
         $('#modal .modal-body').append(formatItemUpdate(data));
       });
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
       $('#submit').click(function() {
@@ -429,7 +460,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No traveler has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -466,13 +497,16 @@ $(function() {
         },
         bDeferRender: true,
         aoColumns: binderAoColumns,
-        aaSorting: [[4, 'desc'], [5, 'desc']],
+        aaSorting: [
+          [4, 'desc'],
+          [5, 'desc'],
+        ],
         sDom: sDomNoTNoR,
       });
       selectEvent();
       filterEvent();
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
       $('#submit').click(function() {
@@ -505,7 +539,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No traveler has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -522,7 +556,7 @@ $(function() {
         '<form class="form-inline"><input id="username" type="text" placeholder="Last, First" name="name" class="input" required></form>'
       );
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
 

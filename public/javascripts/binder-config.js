@@ -285,7 +285,10 @@ $(function() {
     bAutoWidth: false,
     bPaginate: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, -1], [10, 'All']],
+    aLengthMenu: [
+      [10, -1],
+      [10, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -298,7 +301,10 @@ $(function() {
       works = worksTable.fnGetData();
       changeEvents();
     },
-    aaSorting: [[1, 'asc'], [2, 'asc']],
+    aaSorting: [
+      [1, 'asc'],
+      [2, 'asc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -317,7 +323,7 @@ $(function() {
         '</div>'
     );
     $('#modal .modal-footer').html(
-      '<button id="remove" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button id="remove" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modal').modal('show');
     $('#remove').click(function() {

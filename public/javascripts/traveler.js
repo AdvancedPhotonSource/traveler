@@ -137,7 +137,7 @@ function showConfirmation(action) {
     validationMessage(document.getElementById('form'))
   );
   $('#modal .modal-footer').html(
-    '<button value="submit" class="btn btn-primary" data-dismiss="modal">Submit</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button value="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
   $('#modal button[value="submit"]').click(action);
@@ -150,7 +150,7 @@ function showValidation() {
       'Please finish the input before validating the form.'
     );
     $('#modal .modal-footer').html(
-      '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modal').modal('show');
     return;
@@ -288,7 +288,7 @@ $(function() {
         '"></div></div></form>'
     );
     $('#modal .modal-footer').html(
-      '<button value="submit" class="btn btn-primary" data-dismiss="modal">Submit</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
+      '<button value="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
     );
     $('#modal').modal('show');
     $('#modal button[value="submit"]').click(function() {
@@ -837,7 +837,7 @@ $(function() {
             '</form>'
         );
         $('#modal .modal-footer').html(
-          '<button value="submit" class="btn btn-primary">Submit</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+          '<button value="submit" class="btn btn-primary">Submit</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
         );
         $('#modal').modal('show');
         if (travelerStatus === 1 || travelerStatus === 1.5) {
