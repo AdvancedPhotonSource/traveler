@@ -67,7 +67,7 @@ function sendRequest(data, cb, option) {
         document.location.href = data.location;
       } else {
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>The changes were saved ' +
+          '<div class="alert alert-success"><button class="close" data-bs-dismiss="alert">x</button>The changes were saved ' +
             livespan(timestamp) +
             '.</div>'
         );
@@ -98,14 +98,14 @@ function archive_prior_released_forms(selected) {
   })
     .done(function(data, textStatus, request) {
       $('#message').append(
-        '<div class="alert alert-success"><button class="close" data-dismiss="alert"></button>' +
+        '<div class="alert alert-success"><button class="close" data-bs-dismiss="alert"></button>' +
           data +
           '</div>'
       );
     })
     .fail(function(data, textStatus, request) {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert"></button>' +
+        '<div class="alert alert-error"><button class="close" data-bs-dismiss="alert"></button>' +
           data +
           '</div>'
       );
@@ -780,7 +780,7 @@ function figure_edit($cgr) {
         var location = jqXHR.getResponseHeader('Location');
         var timestamp = jqXHR.getResponseHeader('Date');
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>File uploaded ' +
+          '<div class="alert alert-success"><button class="close" data-bs-dismiss="alert">x</button>File uploaded ' +
             livespan(timestamp) +
             '</div>'
         );
@@ -816,7 +816,7 @@ function figure_edit($cgr) {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot upload the file: ' +
+            '<div class="alert alert-error"><button class="close" data-bs-dismiss="alert">x</button>Cannot upload the file: ' +
               (jqXHR.responseText || 'unknown') +
               '</div>'
           );
@@ -1293,7 +1293,7 @@ function modalAlert(label, body) {
   $('#modal .modal-body').empty();
   $('#modal .modal-body').append(body);
   $('#modal .modal-footer').html(
-    '<button data-dismiss="modal" aria-hidden="true" class="btn">OK</button>'
+    '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">OK</button>'
   );
   $('#modal').modal('show');
 }
@@ -1523,7 +1523,7 @@ function binding_events() {
       '<form class="form-horizontal" id="modalform"><div class="mb-3"><label class="form-label">Form title</label><input class="form-control" id="new-title" type="text" class="input"></div></form>'
     );
     $('#modal .modal-footer').html(
-      '<button value="confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
+      '<button value="confirm" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
     );
     $('#modal').modal('show');
     $('#modal button[value="confirm"]').click(function() {
@@ -1642,7 +1642,7 @@ function binding_events() {
       filterEvent();
     }
     $('#modal .modal-footer').html(
-      '<button value="confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
+      '<button value="confirm" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
     );
     $('#modal').modal('show');
     $('#modal button[value="confirm"]').click(function() {
