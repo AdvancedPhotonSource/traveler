@@ -575,7 +575,7 @@ function cloneForm(id, type, title) {
     })
     .fail(function(jqXHR) {
       $('#message').append(
-        '<div class="alert alert-error alert-dismissible">' +
+        '<div class="alert alert-danger alert-dismissible">' +
           '<button class="btn-close" data-bs-dismiss="alert"></button>' +
           jqXHR.responseText +
           '.</div>'

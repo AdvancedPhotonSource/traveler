@@ -27,7 +27,7 @@ function setStatus(s) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the status: ' +
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the status: ' +
             jqXHR.responseText +
             '</div>'
         );
@@ -87,7 +87,7 @@ function tagEvents() {
           .fail(function(jqXHR) {
             if (jqXHR.status !== 401) {
               $('#message').append(
-                '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot add the tag</div>'
+                '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot add the tag</div>'
               );
               $(window).scrollTop(
                 $('#message div:last-child').offset().top - 40
@@ -114,7 +114,7 @@ function tagEvents() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot remove the tag</div>'
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot remove the tag</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }
@@ -142,7 +142,7 @@ function editEvents(initValue) {
         error: function(jqXHR) {
           $(that).text(initValue[that.id]);
           $('#message').append(
-            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the binder config : ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the binder config : ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -210,7 +210,7 @@ function updateWorks(updates, cb) {
     })
     .fail(function(jqXHR, status, error) {
       $('#message').append(
-        '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the works: ' +
+        '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the works: ' +
           jqXHR.responseText +
           '</div>'
       );

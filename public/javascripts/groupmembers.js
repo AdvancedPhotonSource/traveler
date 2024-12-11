@@ -194,7 +194,7 @@ $(function() {
       })
       .fail(function(jqXHR) {
         $('#message').append(
-          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'Error: ' +
             jqXHR.responseText +
             '</div>'

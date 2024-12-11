@@ -15,7 +15,7 @@ function addData(oTable, url) {
     .fail(function(jqXHR, status, error) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot reach the server for forms and travelers.</div>'
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot reach the server for forms and travelers.</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -104,7 +104,7 @@ function addExternalData(oTable, url) {
     .fail(function(jqXHR, status, error) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot reach the server for forms and travelers.</div>'
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot reach the server for forms and travelers.</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }

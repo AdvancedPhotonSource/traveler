@@ -239,7 +239,7 @@ function addto(data, table, list) {
         error: function(jqXHR) {
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the ' +
+              '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the ' +
                 list +
                 ' share list : ' +
                 jqXHR.responseText +
@@ -304,7 +304,7 @@ $(function() {
         error: function(jqXHR) {
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the public access setting : ' +
+              '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the public access setting : ' +
                 jqXHR.responseText +
                 '</div>'
             );

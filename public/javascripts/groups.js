@@ -171,7 +171,7 @@ $(function() {
         },
         error: function(jqXHR) {
           $('#message').append(
-            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the group list : ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the group list : ' +
               jqXHR.responseText +
               '</div>'
           );

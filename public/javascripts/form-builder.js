@@ -105,7 +105,7 @@ function archive_prior_released_forms(selected) {
     })
     .fail(function(data, textStatus, request) {
       $('#message').append(
-        '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
+        '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
           data +
           '</div>'
       );
@@ -819,7 +819,7 @@ function figure_edit($cgr) {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot upload the file: ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot upload the file: ' +
               (jqXHR.responseText || 'unknown') +
               '</div>'
           );
