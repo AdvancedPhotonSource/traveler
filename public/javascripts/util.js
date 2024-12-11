@@ -28,11 +28,11 @@ function createSideNav() {
   $('.sidebar').empty();
   var $legend = $('legend');
   var $affix = $(
-    '<ul class="nav nav-list nav-stacked affix bs-docs-sidenav" data-offset-top="0"></ul>'
+    '<ul class="nav flex-column nav-stacked affix bs-docs-sidenav" data-offset-top="0"></ul>'
   );
   var i;
   var nav_parent_id = 'nav-parent';
-  var nav_list_child_class = 'nav-child';
+  var nav_list_child_class = 'nav-item nav-child';
   if ($legend.length > 1) {
     $affix.append(
       '<li id="' + nav_parent_id + '"><h4>' + title + '</h4><span></span></li>'
@@ -41,7 +41,7 @@ function createSideNav() {
       $affix.append(
         '<li class="' +
           nav_list_child_class +
-          '"><a href="#' +
+          '"><a class="nav-link" href="#' +
           $legend[i].id +
           '">' +
           $legend[i].textContent +
