@@ -340,6 +340,15 @@ figcaption {
 /* legend */
 .output-control-group legend {
   padding-top: 40px;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 20px;
+  font-size: 21px;
+  line-height: 40px;
+  color: #333333;
+  border: 0;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .inline-checkbox {
@@ -657,4 +666,34 @@ button.editable {
   border-color: white;
   border-radius: 9px;
   height: fit-content;
+}
+
+.form-horizontal .control-group:before,
+.form-horizontal .control-group:after {
+  display: table;
+  line-height: 0;
+  content: '';
+}
+
+.form-horizontal .control-group:after {
+  clear: both;
+}
+
+.form-horizontal .control-group {
+  margin-bottom: 20px;
+}
+
+.form-horizontal .control-label {
+  float: left;
+  width: 160px;
+  padding-top: 5px;
+  /* text-align: right; */
+}
+
+.form-horizontal .control-group.radio-group .controls {
+  display: inline-block;
+}
+
+.form-horizontal .control-group.radio-group .radio {
+  display: block;
 }
