@@ -400,7 +400,7 @@ $(function() {
               currentValue = found[0].value;
               if (found[0].inputType === 'radio') {
                 // Update element to match the value
-                for (var i = 0; i < inputElements.size(); i++) {
+                for (var i = 0; i < inputElements.length; i++) {
                   var ittrInput = inputElements[i];
                   if (ittrInput.value === currentValue) {
                     element = ittrInput;
@@ -510,7 +510,7 @@ $(function() {
     var inputs = $this.closest('.control-group-wrap').find('input,textarea');
     var input = inputs[0];
     if (inputs[0].type === 'radio') {
-      for (var i = 0; i < inputs.size(); i++) {
+      for (var i = 0; i < inputs.length; i++) {
         var ittr_input = inputs[i];
         if (ittr_input.checked) {
           input = ittr_input;
