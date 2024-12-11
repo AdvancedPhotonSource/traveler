@@ -685,6 +685,24 @@ button.editable {
   margin-bottom: 20px;
 }
 
+.form-horizontal .control-group .help-block,
+.form-horizontal .control-group .help-inline,
+.form-horizontal .control-group .radio_text,
+.form-horizontal .control-group .checkbox > span {
+  margin-left: 10px;
+}
+
+.form-horizontal .control-group input[type='number'],
+.form-horizontal .control-group input[type='text'],
+.form-horizontal .control-group input[type='tel'],
+.form-horizontal .control-group input[type='date'],
+.form-horizontal .control-group input[type='email'],
+.form-horizontal .control-group input[type='time'],
+.form-horizontal .control-group input[type='url'],
+.form-horizontal .control-group textarea {
+  width: 220px;
+}
+
 .form-horizontal .control-label {
   float: left;
   width: 160px;
