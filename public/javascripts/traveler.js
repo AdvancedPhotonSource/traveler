@@ -81,7 +81,7 @@ function setStatus(s) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot change the status: ' +
+          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the status: ' +
             jqXHR.responseText +
             '</div>'
         );
@@ -110,7 +110,7 @@ function saveDiscrepancyLog(log) {
   })
     .done(function() {
       $('#message').append(
-        '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Discrepancy log data saved</div>'
+        '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Discrepancy log data saved</div>'
       );
       // reload the discrepancy log
       window.location.reload(true);
@@ -118,7 +118,7 @@ function saveDiscrepancyLog(log) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot save discrepancy log data</div>'
+          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot save discrepancy log data</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -267,7 +267,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }
@@ -307,7 +307,7 @@ $(function() {
         .done(function(data, status, jqXHR) {
           var timestamp = jqXHR.getResponseHeader('Date');
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Note saved ' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Note saved ' +
               livespan(timestamp) +
               '</div>'
           );
@@ -345,7 +345,7 @@ $(function() {
         .fail(function(jqXHR) {
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot save the note: ' +
+              '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot save the note: ' +
                 jqXHR.responseText +
                 '</div>'
             );
@@ -438,7 +438,7 @@ $(function() {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -526,7 +526,7 @@ $(function() {
       typeof binder.accessor.target[input.name] !== 'number'
     ) {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>The input value is not a number!</div>'
+        '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The input value is not a number!</div>'
       );
       $(window).scrollTop($('#message div:last-child').offset().top - 40);
       return;
@@ -544,7 +544,7 @@ $(function() {
       .done(function(data, status, jqXHR) {
         var timestamp = jqXHR.getResponseHeader('Date');
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Change saved ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Change saved ' +
             livespan(timestamp) +
             '</div>'
         );
@@ -573,7 +573,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot change the value: ' +
+            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the value: ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -722,7 +722,7 @@ $(function() {
       .done(function(json, status, jqXHR) {
         var timestamp = jqXHR.getResponseHeader('Date');
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>File uploaded ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>File uploaded ' +
             livespan(timestamp) +
             '</div>'
         );
@@ -756,7 +756,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot upload the file: ' +
+            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot upload the file: ' +
               (jqXHR.responseText || 'unknown') +
               '</div>'
           );
@@ -856,7 +856,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot create discrepancy log</div>'
+            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot create discrepancy log</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }

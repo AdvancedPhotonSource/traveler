@@ -26,7 +26,7 @@ $(function() {
         document.location.href = data.location;
       } else {
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>The changes were saved ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The changes were saved ' +
             livespan(timestamp) +
             '.</div>'
         );

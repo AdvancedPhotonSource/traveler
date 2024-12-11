@@ -18,7 +18,7 @@ function initTable(list, oTable) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>Cannot reach the server for sharing information.</div>'
+          '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot reach the server for sharing information.</div>'
         );
       }
     });
@@ -215,7 +215,7 @@ function addto(data, table, list) {
       }
       //show message
       $('#message').append(
-        '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button><strong>' +
+        '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button><strong>' +
           name +
           '</strong> is already in the ' +
           list +
@@ -230,7 +230,7 @@ function addto(data, table, list) {
         processData: false,
         success: function(res, status, jqXHR) {
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
               jqXHR.responseText +
               '</div>'
           );
@@ -239,7 +239,7 @@ function addto(data, table, list) {
         error: function(jqXHR) {
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the ' +
+              '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the ' +
                 list +
                 ' share list : ' +
                 jqXHR.responseText +
@@ -251,7 +251,7 @@ function addto(data, table, list) {
     }
   } else {
     $('#message').append(
-      '<div class="alert"><button class="close" data-dismiss="alert">x</button>' +
+      '<div class="alert"><button class="btn-close" data-bs-dismiss="alert"></button>' +
         list +
         ' name is empty. </div>'
     );
@@ -281,7 +281,7 @@ $(function() {
     var value = $('select[name="public"]').val();
     if (initAccess === value) {
       $('#message').append(
-        '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>The setting is not changed.</div>'
+        '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The setting is not changed.</div>'
       );
     } else {
       $.ajax({
@@ -294,7 +294,7 @@ $(function() {
         processData: false,
         success: function(res, status, jqXHR) {
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
               jqXHR.responseText +
               '</div>'
           );
@@ -304,7 +304,7 @@ $(function() {
         error: function(jqXHR) {
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the public access setting : ' +
+              '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the public access setting : ' +
                 jqXHR.responseText +
                 '</div>'
             );

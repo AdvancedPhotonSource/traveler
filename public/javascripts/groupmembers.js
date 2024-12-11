@@ -101,7 +101,7 @@ $(function() {
     })
       .success(function(data, status, jqXHR) {
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'User ' +
             displayName +
             ' has been added to this group.' +
@@ -158,7 +158,7 @@ $(function() {
     })
       .success(function(data, status, jqXHR) {
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'User ' +
             displayName +
             ' has been added to this group.' +
@@ -185,7 +185,7 @@ $(function() {
     })
       .success(function(data, status, jqXHR) {
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'Display Name updated to "' +
             $('#displayName').val() +
             '"' +
@@ -194,7 +194,7 @@ $(function() {
       })
       .fail(function(jqXHR) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>' +
+          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'Error: ' +
             jqXHR.responseText +
             '</div>'

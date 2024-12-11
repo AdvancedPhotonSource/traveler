@@ -567,16 +567,16 @@ function cloneForm(id, type, title) {
   })
     .done(function(d) {
       $('#message').append(
-        '<div class="alert alert-success">' +
-          '<button class="close" data-dismiss="alert">x</button>The form was cloned. ' +
+        '<div class="alert alert-success alert-dismissible">' +
+          '<button class="btn-close" data-bs-dismiss="alert"></button>The form was cloned. ' +
           d +
           '</div>'
       );
     })
     .fail(function(jqXHR) {
       $('#message').append(
-        '<div class="alert alert-error">' +
-          '<button class="close" data-dismiss="alert">x</button>' +
+        '<div class="alert alert-error alert-dismissible">' +
+          '<button class="btn-close" data-bs-dismiss="alert"></button>' +
           jqXHR.responseText +
           '.</div>'
       );

@@ -147,7 +147,7 @@ $(function() {
     if (inArray(name, groupTable.fnGetData())) {
       //show message
       $('#message').append(
-        '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>The group named <strong>' +
+        '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The group named <strong>' +
           name +
           '</strong> is already in the group list. </div>'
       );
@@ -163,7 +163,7 @@ $(function() {
         }),
         success: function(data, status, jqXHR) {
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
               jqXHR.responseText +
               '</div>'
           );
@@ -171,7 +171,7 @@ $(function() {
         },
         error: function(jqXHR) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the group list : ' +
+            '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the group list : ' +
               jqXHR.responseText +
               '</div>'
           );

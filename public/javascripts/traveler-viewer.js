@@ -91,7 +91,7 @@ function renderNotes() {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+          '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -192,7 +192,7 @@ $(function() {
     })
     .fail(function() {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+        '<div class="alert alert-error alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
       );
       $(window).scrollTop($('#message div:last-child').offset().top - 40);
     })

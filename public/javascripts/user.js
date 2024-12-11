@@ -18,7 +18,7 @@ $(function() {
     });
     if (roles.sort().join() === currentRoles.sort().join()) {
       $('#message').append(
-        '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>Nothing was changed.</div>'
+        '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Nothing was changed.</div>'
       );
     } else {
       var request = $.ajax({
@@ -37,14 +37,14 @@ $(function() {
           var timestamp = request.getResponseHeader('Date');
           var dateObj = moment(timestamp);
           $('#message').append(
-            '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>The modification was saved at ' +
+            '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The modification was saved at ' +
               dateObj.format('HH:mm:ss') +
               '.</div>'
           );
         })
         .fail(function(jqXHR, status, error) {
           $('#message').append(
-            '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>The save request failed. You might need to try again or contact the admin.</div>'
+            '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The save request failed. You might need to try again or contact the admin.</div>'
           );
         })
         .always(function() {});
