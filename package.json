@@ -30,6 +30,7 @@
     "jade": "1.10.0",
     "jquery": "^3.7",
     "jquery-ui": "^1.14.0",
+    "jquery-jeditable": "2.0.19",
     "jstransformer-marked": "1.0.1",
     "ldapjs": "1.0.0",
     "lodash": "^4.17.11",
