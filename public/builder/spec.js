@@ -214,7 +214,7 @@
   };
 
   exports['filetype'] = function tmpl_filetype() {
-    return '<div class="mb-3"><div class="form-label">File type</div><div class="form-control"><input type="text" name="filetype" /><div class="form-text">Leave blank for default file formats (PDF, excel & image/text formats). Specify for a specific file format (ex: zip)</div></div></div>';
+    return '<div class="mb-3"><div class="form-label">File type</div><input class="form-control" type="text" name="filetype" /><div class="form-text">Leave blank for default file formats (PDF, excel & image/text formats). Specify for a specific file format (ex: zip)</div></div>';
   };
 
   // width.jade compiled template
