@@ -251,7 +251,7 @@ function addto(data, table, list) {
     }
   } else {
     $('#message').append(
-      '<div class="alert"><button class="btn-close" data-bs-dismiss="alert"></button>' +
+      '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
         list +
         ' name is empty. </div>'
     );
