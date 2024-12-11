@@ -212,7 +212,10 @@ function autosaveWipOnDone() {
     processData: false,
   })
     .done(function(data, textStatus, request) {
-      if ($('#togglewip') && $('#togglewip')[0].innerText === showUnsavedText) {
+      if (
+        $('#togglewip').length &&
+        $('#togglewip')[0].innerText === showUnsavedText
+      ) {
         $('#wipHtmlStatus').html(unsavedText);
         $('#togglewip')[0].innerText = showSavedText;
       }
