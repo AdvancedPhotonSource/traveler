@@ -507,7 +507,7 @@ function radio_edit($cgr) {
     $.map(radio_buttons, function(button, i) {
       model['radio_text_' + i] = $(button).prop('value');
     });
-    var length = radio_buttons.size();
+    var length = radio_buttons.length;
     for (var i = 0; i < length; i++) {
       add_radio(
         $radio_group,
