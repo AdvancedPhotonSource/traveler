@@ -95,19 +95,23 @@ $(function() {
     );
   }
 
-  $('#groupname').typeahead(
-    {
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'groupnames',
-      display: 'displayName',
-      limit: 20,
-      source: travelerGlobal.groupnames,
-    }
-  );
+  if (travelerGlobal.groupnames === undefined) {
+    travelerGlobal.groupnames = {};
+
+    $('#groupname').typeahead(
+      {
+        minLength: 1,
+        highlight: true,
+        hint: true,
+      },
+      {
+        name: 'groupnames',
+        display: 'displayName',
+        limit: 20,
+        source: travelerGlobal.groupnames,
+      }
+    );
+  }
 
   var groupColumns = [
     selectColumn,
