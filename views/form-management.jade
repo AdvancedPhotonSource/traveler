@@ -35,12 +35,12 @@ block content
           .modal-footer
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#submitted-forms', data-toggle='tab') Submitted #{viewConfig.terminology.form}s
-        li
-          a(href='#released-forms', data-toggle='tab')  Released #{viewConfig.terminology.form}s
-        li
-          a(href='#archived-forms', data-toggle='tab') Archived #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link.active(href='#submitted-forms', data-bs-toggle='tab') Submitted #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link(href='#released-forms', data-bs-toggle='tab')  Released #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link(href='#archived-forms', data-bs-toggle='tab') Archived #{viewConfig.terminology.form}s
       .tab-content
         #submitted-forms.tab-pane.active
           .btn-toolbar
