@@ -77,21 +77,23 @@ function modifyFromModal(cb) {
 $(function() {
   updateAjaxURL(prefix);
 
-  travelerGlobal.usernames.initialize();
+  if (travelerGlobal.usernames === undefined) {
+    travelerGlobal.usernames = {};
 
-  $('#username').typeahead(
-    {
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'usernames',
-      display: 'displayName',
-      limit: 20,
-      source: travelerGlobal.usernames,
-    }
-  );
+    $('#username').typeahead(
+      {
+        minLength: 1,
+        highlight: true,
+        hint: true,
+      },
+      {
+        name: 'usernames',
+        display: 'displayName',
+        limit: 20,
+        source: travelerGlobal.usernames,
+      }
+    );
+  }
 
   $('#groupname').typeahead(
     {
