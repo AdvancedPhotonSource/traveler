@@ -35,24 +35,23 @@ block content
           include:marked ./docs/contact.md
 
       .span3.sidebar
-        ul#affixlist.nav.nav-list.nav-stacked.bs-docs-sidenav
-          li
-            a(href='#basics') Basics
-          li
-            a(href='#travelers') Travelers
-          li
-            a(href='#forms') Forms
-          li
-            a(href='#binders') Binders
-          li
-            a(href='#api') API
-          li
-            a(href='#faq') FAQ
-          li
-            a(href='#contact') Contact
+        ul.nav.flex-column.nav-list.nav-stacked.bs-docs-sidenav.affix
+          li.nav-item
+            a.nav-link(href='#basics') Basics
+          li.nav-item
+            a.nav-link(href='#travelers') Travelers
+          li.nav-item
+            a.nav-link(href='#forms') Forms
+          li.nav-item
+            a.nav-link(href='#binders') Binders
+          li.nav-item
+            a.nav-link(href='#api') API
+          li.nav-item
+            a.nav-link(href='#faq') FAQ
+          li.nav-item
+            a.nav-link(href='#contact') Contact
 
 
 block js
   script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
   script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
-  script(type='text/javascript', src='#{prefix}/javascripts/docs.js')
