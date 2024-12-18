@@ -1,36 +1,17 @@
 doctype html
-html
-  head
+extends layout
+
+block head
     meta(http-equiv='X-UA-Compatible', content='IE=Edge')
     title #{orgName} Traveler :: about :: manage forms in traveler
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-    link(rel='stylesheet', href='#{prefix}/font-awesome-4.0.3/css/font-awesome.css')
-    link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
-  body(data-spy='scroll', data-target='.bs-docs-sidebar')
-    .navbar.navbar-inverse.navbar-fixed-top
-      .navbar-inner
-        .container-fluid
-          button.btn.btn-navbar(type='button', data-bs-toggle='collapse', data-target='.nav-collapse')
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.brand(href='http://www.frib.msu.edu/', target='_blank') FRIB
-          .nav-collapse.collapse
-            ul.nav
-              li
-                a(href='https://controls.frib.msu.edu/', target='_blank') Controls
-              li.active
-                a(href='#{prefix}/') Traveler
-              li
-                a(href='https://controls.frib.msu.edu/controlshelp/', target='_blank') Report a problem
-              li
-                a(href='#{prefix}/logout') Logout
-    //- .container-fluid
+    link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')    
+    link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')      
+block content
     .container
       .row
         .span3.bs-docs-sidebar
-          ul.nav.nav-list.bs-docs-sidenav.affix(data-offset-top='282', data-spy='affix', style="top: 40px;")
+          ul.nav.flex-column.nav-list.nav-stacked.bs-docs-sidenav.affix
             li.nav-item
               a.nav-link(href='#manage') Manage forms
             li.nav-item
