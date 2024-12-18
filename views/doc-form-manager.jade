@@ -5,13 +5,13 @@ html
     title #{orgName} Traveler :: about :: manage forms in traveler
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-      link(rel='stylesheet', href='#{prefix}/font-awesome-4.0.3/css/font-awesome.css')
+    link(rel='stylesheet', href='#{prefix}/font-awesome-4.0.3/css/font-awesome.css')
     link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
   body(data-spy='scroll', data-target='.bs-docs-sidebar')
     .navbar.navbar-inverse.navbar-fixed-top
       .navbar-inner
         .container-fluid
-          button.btn.btn-navbar(type='button', data-toggle='collapse', data-target='.nav-collapse')
+          button.btn.btn-navbar(type='button', data-bs-toggle='collapse', data-target='.nav-collapse')
             span.icon-bar
             span.icon-bar
             span.icon-bar
@@ -31,16 +31,16 @@ html
       .row
         .span3.bs-docs-sidebar
           ul.nav.nav-list.bs-docs-sidenav.affix(data-offset-top='282', data-spy='affix', style="top: 40px;")
-            li
-              a(href='#manage') Manage forms
-            li
-              a(href='#add') Use an available form
-            li
-              a(href='#switch') Switch form
-            li
-              a(href='#alias') Set form alias
-            li
-              a(href='#progress') Progress estimation
+            li.nav-item
+              a.nav-link(href='#manage') Manage forms
+            li.nav-item
+              a.nav-link(href='#add') Use an available form
+            li.nav-item
+              a.nav-link(href='#switch') Switch form
+            li.nav-item
+              a.nav-link(href='#alias') Set form alias
+            li.nav-item
+              a.nav-link(href='#progress') Progress estimation
         .span9
           section#manage
             .page-header
