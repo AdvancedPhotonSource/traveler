@@ -16,7 +16,7 @@ html
       - var appName = "Traveler"
         if (viewConfig.deploymentName)
           - appName += " - " + viewConfig.deploymentName      
-      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navigationBarContent', aria-controls="navigationBarContent", aria-expanded="false", aria-label="Toggle navigation")
+      button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navigationBarContent', aria-controls="navigationBarContent", aria-expanded="false", aria-label="Toggle navigation")
         span.navbar-toggler-icon      
       a.navbar-brand(href='#{prefix}/') #{appName}
       .collapse.navbar-collapse#navigationBarContent
