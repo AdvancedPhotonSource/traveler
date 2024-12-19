@@ -21,9 +21,11 @@ block content
             != html
         #validation.well.hide
       .span3.sidebar
-    .btn-group(data-toggle='buttons-radio')
-      button.btn.btn-info#show-validation Show validation
-      button.btn.btn-info#hide-validation.active Hide validation
+    .btn-group(data-bs-toggle='buttons-radio')
+      input.btn-check#show-validation(type='radio', name='validation-toggle')
+      label.btn.btn-outline-primary(for="show-validation") Show validation
+      input.btn-check#hide-validation(type='radio', name='validation-toggle' checked)
+      label.btn.btn-outline-primary(for="hide-validation") Hide validation
 
 block js
   script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
