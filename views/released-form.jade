@@ -33,9 +33,11 @@ block content
             != base.html
         #validation.well.hide
       .span3.sidebar
-    .btn-group(data-toggle='buttons-radio')
-      button.btn.btn-info#show-validation Show validation
-      button.btn.btn-info#hide-validation.active Hide validation
+    .btn-group(data-bs-toggle='buttons-radio')
+      input.btn-check#show-validation(type='radio', name='validation-toggle')
+      label.btn.btn-outline-primary(for="show-validation") Show validation
+      input.btn-check#hide-validation(type='radio', name='validation-toggle' checked)
+      label.btn.btn-outline-primary(for="hide-validation") Hide validation
     if (locals.session && locals.session.userid && locals.session.roles && (locals.session.roles.indexOf('admin') !== -1 || locals.session.roles.indexOf('manager') !== -1))
       if (status === 1)
         .btn-group
