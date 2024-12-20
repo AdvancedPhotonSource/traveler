@@ -703,15 +703,23 @@ button.editable {
   width: 220px;
 }
 
+.form-horizontal {
+  font-size: 14px;
+  padding-top: 5px;
+}
+
 .form-horizontal .control-label {
   float: left;
   width: 160px;
-  padding-top: 5px;
   /* text-align: right; */
 }
 
 .form-horizontal .controls {
-  margin-left: 160px;
+  margin-left: 180px;
+}
+
+.form-horizontal .control-group.radio-group {
+  display: inline-block;
 }
 
 .form-horizontal .control-group.radio-group .radio {
