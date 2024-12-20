@@ -15,10 +15,12 @@ block content
   .container
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body
+          .modal-footer
     h3 Title:
       = ' '
       span#title.editable #{form.title}
