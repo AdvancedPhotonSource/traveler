@@ -710,8 +710,8 @@ button.editable {
   /* text-align: right; */
 }
 
-.form-horizontal .control-group.radio-group .controls {
-  display: inline-block;
+.form-horizontal .controls {
+  margin-left: 160px;
 }
 
 .form-horizontal .control-group.radio-group .radio {
