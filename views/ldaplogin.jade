@@ -10,7 +10,7 @@ block head
 block content
     .container(style="margin-top: 25px")
         if errorMessage
-            div.alert.alert-error
+            div.alert.alert-danger
                 p An error occurred: #{errorMessage}
 
         form.form-horizontal(name='login', action='./', method='POST')
