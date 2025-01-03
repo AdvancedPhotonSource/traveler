@@ -179,42 +179,6 @@ $(function() {
     document.forms[0].reset();
   });
 
-  $('#user-update').click(function() {
-    var selected = fnGetSelected(userTable, 'row-selected');
-    if (selected.length) {
-      $('#modalLabel').html(
-        'Update the following ' +
-          selected.length +
-          ' users from the application? '
-      );
-      $('#modal .modal-body').empty();
-      selected.forEach(function(row) {
-        var data = userTable.fnGetData(row);
-        $('#modal .modal-body').append(
-          '<div id="' + data._id + '">' + data.name + '</div>'
-        );
-      });
-      $('#modal .modal-footer').html(
-        '<button id="update" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
-      );
-      $('#update').click(function(e) {
-        e.preventDefault();
-        $('#update').prop('disabled', true);
-        updateFromModal(function() {
-          userTable.fnReloadAjax();
-        });
-      });
-      $('#modal').modal('show');
-    } else {
-      $('#modalLabel').html('Alert');
-      $('#modal .modal-body').html('No users has been selected!');
-      $('#modal .modal-footer').html(
-        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
-      );
-      $('#modal').modal('show');
-    }
-  });
-
   $('#user-modify').click(function() {
     var selected = fnGetSelected(userTable, 'row-selected');
     if (selected.length) {
