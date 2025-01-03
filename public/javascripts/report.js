@@ -86,7 +86,10 @@ function constructTable(table, travelers, colMap) {
     aoColumns: systemColumns.concat(discrepancyColumns).concat(userColumns),
     oTableTools: oTableTools,
     iDisplayLength: -1,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     sDom: sDom,
   });
 
