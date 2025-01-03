@@ -200,6 +200,10 @@ module.exports = function(app) {
       return listADGroups(req, res);
     }
 
+    if ('_' in req.query) {
+      delete req.query['_'];
+    }
+
     Group.find(req.query)
       .populate('members')
       .exec(function(err, groups) {
@@ -265,16 +269,16 @@ module.exports = function(app) {
   });
 
   app.put('/groups/:id/addmember/:user', auth.ensureAuthenticated, function(
-      req,
-      res
+    req,
+    res
   ) {
     if (
-        req.session.roles === undefined ||
-        req.session.roles.indexOf('admin') === -1
+      req.session.roles === undefined ||
+      req.session.roles.indexOf('admin') === -1
     ) {
       return res
-          .status(403)
-          .send('You are not authorized to access this resource. ');
+        .status(403)
+        .send('You are not authorized to access this resource. ');
     }
     let fullname = req.params.user;
     if (!fullname || fullname.length == 0) {
@@ -299,16 +303,16 @@ module.exports = function(app) {
       const uid = result[0].sAMAccountName.toLowerCase();
       if (uid.length == 0) {
         return res
-            .status(404)
-            .send('Could not find user with name ' + req.params.user);
+          .status(404)
+          .send('Could not find user with name ' + req.params.user);
       }
 
       // If user isn't already in user table, store it with no special roles.
       User.findOne({ _id: uid }, function(err, user) {
         if (err) {
           return res
-              .status(500)
-              .send('Error finding user; please check configuration');
+            .status(500)
+            .send('Error finding user; please check configuration');
         }
         if (!user) {
           user = new User({
@@ -337,8 +341,8 @@ module.exports = function(app) {
         }
         if (!group) {
           return res
-              .status(404)
-              .json({ error: 'Cannot find group with id ' + req.params.id });
+            .status(404)
+            .json({ error: 'Cannot find group with id ' + req.params.id });
         }
         const theuid = group.members.find(function(name) {
           return name == uid;
@@ -349,10 +353,10 @@ module.exports = function(app) {
         }
         group.members.push(uid);
         Group.findOneAndUpdate(
-            {
-              _id: req.params.id,
-            },
-            { members: group.members }
+          {
+            _id: req.params.id,
+          },
+          { members: group.members }
         ).exec(function(err) {
           if (err) {
             console.error(err);
@@ -380,7 +384,7 @@ module.exports = function(app) {
     }
     let data = req.body;
     if (!data || data.length == 0) {
-      return res.status(403).send("You must provide at least one userid");
+      return res.status(403).send('You must provide at least one userid');
     }
     Group.findOne({ _id: req.params.id }, function(err, group) {
       if (err) {
@@ -393,9 +397,11 @@ module.exports = function(app) {
           .json({ error: 'Cannot find group with id ' + req.params.id });
       }
       const members = group.members.filter(function(name) {
-          return data.findIndex(function(member) {
+        return (
+          data.findIndex(function(member) {
             return member._id === name;
-          }) === -1;
+          }) === -1
+        );
       });
       Group.findOneAndUpdate(
         {
@@ -551,9 +557,9 @@ module.exports = function(app) {
   });
 
   app.get('/groupnames', auth.ensureAuthenticated, function(req, res) {
-      if (ad.groupSearchFilter) {
-        return listADGroups(req, res);
-      }
+    if (ad.groupSearchFilter) {
+      return listADGroups(req, res);
+    }
 
     Group.find().exec(function(err, groups) {
       if (err) {
@@ -567,6 +573,6 @@ module.exports = function(app) {
   });
 
   app.get('/adgroups', auth.ensureAuthenticated, function(req, res) {
-      return listADGroups(req, res);
+    return listADGroups(req, res);
   });
 };

@@ -121,7 +121,10 @@ $(function() {
   ];
 
   var groupTable = $('#groups-table').dataTable({
-    sAjaxSource: '/groups/json?deleted=false',
+    sAjaxSource: '/groups/json',
+    fnServerParams: function(aoData) {
+      aoData.push({ name: 'deleted', value: 'false' });
+    },
     sAjaxDataProp: '',
     fnInitComplete: function() {
       Holder.run({
