@@ -413,7 +413,7 @@ var selectColumn = {
 var userIdColumn = {
   sTitle: 'User Id',
   mRender: function(data) {
-    return '<label>' + data + '</label>';
+    return '<a href="' + prefix + '/users/' + data + '">' + data + '</a>';
   },
   mData: '_id',
   bSortable: true,
