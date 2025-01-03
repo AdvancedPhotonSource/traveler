@@ -44,22 +44,6 @@ function removeMembersFromModal(group, table) {
 $(function() {
   updateAjaxURL(prefix);
 
-  travelerGlobal.usernames.initialize();
-
-  $('#username').typeahead(
-    {
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'usernames',
-      display: 'displayName',
-      limit: 20,
-      source: travelerGlobal.usernames,
-    }
-  );
-
   var memberColumns = [selectColumn, userIdColumn, fullNameNoLinkColumn];
 
   var memberTable = $('#members-table').dataTable({
@@ -99,7 +83,7 @@ $(function() {
       contentType: 'application/json',
       data: JSON.stringify({}),
     })
-      .success(function(data, status, jqXHR) {
+      .done(function(data, status, jqXHR) {
         $('#message').append(
           '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'User ' +
@@ -107,12 +91,14 @@ $(function() {
             ' has been added to this group.' +
             '</div>'
         );
-        $(that).addClass('text-success');
         memberTable.fnReloadAjax();
       })
       .fail(function(jqXHR) {
-        $(that).append(' : ' + jqXHR.responseText);
-        $(that).addClass('text-error');
+        $('#message').append(
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
+            jqXHR.responseText +
+            '</div>'
+        );
       })
       .always(function() {});
   });
@@ -183,7 +169,7 @@ $(function() {
       contentType: 'application/json',
       data: JSON.stringify({ name: $('#displayName').val() }),
     })
-      .success(function(data, status, jqXHR) {
+      .done(function(data, status, jqXHR) {
         $('#message').append(
           '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
             'Display Name updated to "' +
