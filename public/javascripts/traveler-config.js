@@ -176,23 +176,23 @@ $(function() {
         });
         devices.initialize();
       }
+
+      $('#newDevice').typeahead(
+        {
+          minLength: 1,
+          highlight: true,
+          hint: true,
+        },
+        {
+          name: 'devices',
+          limit: 20,
+          display: 'inventoryId',
+          source: devices,
+        }
+      );
     } else if (!devices) {
       devices = [];
     }
-
-    $('#newDevice').typeahead(
-      {
-        minLength: 1,
-        highlight: true,
-        hint: true,
-      },
-      {
-        name: 'devices',
-        limit: 20,
-        display: 'inventoryId',
-        source: devices,
-      }
-    );
 
     $('#confirm').click(function(confirmE) {
       confirmE.preventDefault();
