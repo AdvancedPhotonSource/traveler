@@ -280,11 +280,11 @@ module.exports = function(app) {
         .status(403)
         .send('You are not authorized to access this resource. ');
     }
-    let fullname = req.params.user;
-    if (!fullname || fullname.length == 0) {
-      return res.status(403).send("You must provide a user's full name");
+    let username = req.params.user;
+    if (!username || username.length == 0) {
+      return res.status(403).send('You must provide a username');
     }
-    let nameFilter = ad.nameFilter.replace('_name', fullname + '*');
+    let nameFilter = ad.searchFilter.replace('_id', username);
     let opts = {
       filter: nameFilter,
       attributes: ad.memberAttributes,
@@ -296,9 +296,9 @@ module.exports = function(app) {
         return res.status(500).send(err);
       }
       if (result.length == 0) {
-        return res.status(404).send('No user with name ' + fullname);
+        return res.status(404).send('No user with username ' + username);
       } else if (result.length > 1) {
-        return res.status(403).send('User ' + fullname + ' is not unique');
+        return res.status(403).send('User ' + username + ' is not unique');
       }
       const uid = result[0].sAMAccountName.toLowerCase();
       if (uid.length == 0) {
