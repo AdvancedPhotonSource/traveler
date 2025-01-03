@@ -188,6 +188,7 @@ $(function() {
       $('#modal .modal-body').empty();
       $('#modal .modal-body').append(
         '<form id="modal-roles" class="form-inline">' +
+          '<label class="checkbox"><input id="modal-api" type="checkbox" value="api">api</label> ' +
           '<label class="checkbox"><input id="modal-manager" type="checkbox" value="manager">manager</label> ' +
           '<label class="checkbox"><input id="modal-admin" type="checkbox" value="admin">admin</label> ' +
           '<label class="checkbox"><input id="read_all_forms" type="checkbox" value="read_all_forms">read_all_forms</label> ' +
