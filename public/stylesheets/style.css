@@ -275,9 +275,12 @@ ul.dropdown-menu input[type='checkbox'] {
 
 .control-group-buttons {
   position: relative;
-  right: 150px;
   float: right;
   margin-top: inherit;
+}
+
+.traveler-control-group-buttons {
+  right: 150px;
 }
 
 .file-upload-buttons {

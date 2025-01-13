@@ -498,7 +498,7 @@ $(function() {
     $('#complete').prop('disabled', true);
     if ($cgw.children('.control-group-buttons').length === 0) {
       $cgw.prepend(
-        '<div class="control-group-buttons"><button value="save" class="btn btn-primary">Save</button> <button value="reset" class="btn btn-secondary">Reset</button></div>'
+        '<div class="traveler-control-group-buttons control-group-buttons"><button value="save" class="btn btn-primary">Save</button> <button value="reset" class="btn btn-secondary">Reset</button></div>'
       );
     }
   }
