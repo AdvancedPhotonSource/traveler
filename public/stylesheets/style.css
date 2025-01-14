@@ -279,10 +279,6 @@ ul.dropdown-menu input[type='checkbox'] {
   margin-top: inherit;
 }
 
-.traveler-control-group-buttons {
-  right: 150px;
-}
-
 .file-upload-buttons {
   position: relative;
   float: right;
@@ -513,6 +509,11 @@ button.editable {
   .bs-docs-sidenav > li > a {
     width: 230px \9;
     /* Override the previous IE8-9 hack */
+  }
+
+  .traveler-control-group-buttons {
+    position: absolute;
+    right: 350px;
   }
 }
 
