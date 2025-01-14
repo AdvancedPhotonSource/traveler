@@ -1109,6 +1109,13 @@ function section_edit($cgr) {
   var legend = 'Section name';
   if ($cgr) {
     legend = $('legend span.label-text', $cgr).text();
+    if (legend === '') {
+      prefix_length = $('legend span.section-number', $cgr).text().length;
+      prefix_length += 1;
+
+      complete_legend = $('legend', $cgr).text();
+      legend = complete_legend.substr(prefix_length);
+    }
   }
   var $section = $(input.section());
   var $legend = $(spec.legend());
