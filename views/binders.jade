@@ -4,8 +4,9 @@ block head
   title #{orgName} Binder
   meta(name='viewport', content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
-  link(rel='stylesheet', href='#{prefix}/datatables/css/dataTables.bootstrap.css')
+  //- TODO#339 check if this is needed. 
+  //- link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
+  link(rel='stylesheet', href='#{prefix}/datatables/css/jquery.dataTables.css')
   link(rel='stylesheet', href='#{prefix}/font-awesome-4.3.0/css/font-awesome.css')
   link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
@@ -14,7 +15,7 @@ block content
     var prefix = '!{prefix}';
   .container-fluid
     .btn-toolbar
-      .btn-group
+      .btn-group.m-1
         a.btn.btn-primary#new(href='#{prefix}/binders/new', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='create a new binder')
           i.fa.fa-paperclip.fa-lg
           | &nbsp;New Binder
@@ -22,35 +23,37 @@ block content
         button.btn.btn-primary#clone(data-toggle='tooltip', title='clone selected binder')
           i.fa.fa-copy.fa-lg
           | &nbsp;Clone
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-info#reload
           i.fa.fa-refresh.fa-lg
           | &nbsp;Reload all tables
-      .btn-group
+      .btn-group.m-1
         a.btn.btn-info#all-binders(href='#{prefix}/publicbinders/', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='see all public binders')
           i.fa.fa-institution.fa-lg
           | &nbsp;All public binders
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body.modal-body-visible
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body
+          .modal-footer
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#mybinders', data-toggle='tab') My binders
+        li.nav-item
+          a.nav-link.active(href='#mybinders', data-bs-toggle='tab') My binders
         if (viewConfig.transferOwnership)
-          li
-            a(href='#transferredbinders', data-toggle='tab') Transferred binders
+          li.nav-item
+            a.nav-link(href='#transferredbinders', data-bs-toggle='tab') Transferred binders
         if (viewConfig.shareUsers)
-          li
-            a(href='#sharedbinders', data-toggle='tab') Shared binders
+          li.nav-item
+            a.nav-link(href='#sharedbinders', data-bs-toggle='tab') Shared binders
         if (viewConfig.shareGroups)
-          li
-            a(href='#groupsharedbinders', data-toggle='tab') Group shared binders
-        li
-          a(href='#archivedbinders', data-toggle='tab') Archived binders
+          li.nav-item
+            a.nav-link(href='#groupsharedbinders', data-bs-toggle='tab') Group shared binders
+        li.nav-item
+          a.nav-link(href='#archivedbinders', data-bs-toggle='tab') Archived binders
       .tab-content
         #mybinders.tab-pane.active
           .btn-toolbar
@@ -114,12 +117,9 @@ block content
 
 
 block js
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-1.9.1.js')
+  script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
   script(type='text/javascript', src='#{prefix}/datatables/js/jquery.dataTables.js')
-  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/ZeroClipboard.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/TableTools.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/dataTables.bootstrap.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
   script(type='text/javascript', src='#{prefix}/dependencies/moment.js')
   script(type='text/javascript', src='#{prefix}/javascripts/table.js')
   script(type='text/javascript', src='#{prefix}/javascripts/ajax-helper.js')

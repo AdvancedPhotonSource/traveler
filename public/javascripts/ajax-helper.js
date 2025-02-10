@@ -18,13 +18,13 @@ function ajax401(prefix) {
     if (jqXHR.status >= 400) {
       if (jqXHR.status === 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Session expired. Please click <a href="' +
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Session expired. Please click <a href="' +
             prefix +
             '/login" target="_blank" + linkTarget>traveler log in</a></div>'
         );
       } else {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>HTTP request failed. Reason: ' +
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>HTTP request failed. Reason: ' +
             jqXHR.responseText +
             '</div>'
         );

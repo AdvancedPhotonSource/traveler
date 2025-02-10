@@ -8,7 +8,7 @@ function noneSelectedModal() {
   $('#modalLabel').html('Alert');
   $('#modal .modal-body').html('No traveler has been selected!');
   $('#modal .modal-footer').html(
-    '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
 }
@@ -38,7 +38,10 @@ $(function() {
     bAutoWidth: false,
     bPaginate: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, -1], [10, 'All']],
+    aLengthMenu: [
+      [10, -1],
+      [10, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -49,7 +52,10 @@ $(function() {
         images: 'img.user',
       });
     },
-    aaSorting: [[2, 'asc'], [3, 'asc']],
+    aaSorting: [
+      [2, 'asc'],
+      [3, 'asc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -68,7 +74,10 @@ $(function() {
     .always();
 
   $('#sort').click(function() {
-    worksTable.fnSort([[1, 'asc'], [2, 'asc']]);
+    worksTable.fnSort([
+      [1, 'asc'],
+      [2, 'asc'],
+    ]);
   });
 
   $('span.time').each(function() {

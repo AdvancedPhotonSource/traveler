@@ -4,8 +4,7 @@ block head
   title #{orgName} Admin
   meta(name='viewport', content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
-  link(rel='stylesheet', href='#{prefix}/datatables/css/dataTables.bootstrap.css')
+  link(rel='stylesheet', href='#{prefix}/datatables/css/jquery.dataTables.css')
   link(rel='stylesheet', href='#{prefix}/font-awesome-4.3.0/css/font-awesome.css')
   link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
@@ -15,16 +14,18 @@ block content
   .container-fluid
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body(style='overflow-y: visible;')
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body(style='overflow-y: visible;')
+          .modal-footer
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#users', data-toggle='tab') Users
-        li
-          a(href='#groups', data-toggle='tab') Groups
+        li.nav-item
+          a.nav-link.active(href='#users', data-bs-toggle='tab') Users
+        li.nav-item
+          a.nav-link(href='#groups', data-bs-toggle='tab') Groups
       .tab-content
         #users.tab-pane.active
           .well
@@ -58,10 +59,6 @@ block content
               button.btn.btn-info#user-modify
                 i.fa.fa-wrench.fa-lg
                 | &nbsp;Modify role
-            .btn-group
-              button.btn.btn-warning#user-update
-                i.fa.fa-refresh.fa-lg
-                | &nbsp;Update profile
 
           table#users-table.table.table-bordered.table-hover
         #groups.tab-pane
@@ -81,12 +78,9 @@ block content
 
 
 block js
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-1.9.1.js')
+  script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
   script(type='text/javascript', src='#{prefix}/datatables/js/jquery.dataTables.js')
-  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/ZeroClipboard.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/TableTools.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/dataTables.bootstrap.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
   script(type='text/javascript', src='#{prefix}/dependencies/moment.js')
   script(type='text/javascript', src='#{prefix}/javascripts/table.js')
   script(type='text/javascript', src='#{prefix}/javascripts/ajax-helper.js')

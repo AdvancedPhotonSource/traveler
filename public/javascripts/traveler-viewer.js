@@ -66,7 +66,7 @@ function renderNotes() {
           $(element)
             .closest('.controls')
             .append(
-              '<div class="note-buttons"><b>notes</b>: <a class="notes-number" href="#" data-toggle="tooltip" title="show/hide notes"><span class="badge badge-info">' +
+              '<div class="note-buttons"><b>notes</b>: <a class="notes-number" href="#" data-toggle="tooltip" title="show/hide notes"><span class="badge rounded-pill text-bg-primary">' +
                 found.length +
                 '</span></a> <a class="new-note" href="#" data-toggle="tooltip" title="new note"><i class="fa fa-file-o fa-lg"></i></a></div>'
             );
@@ -91,7 +91,7 @@ function renderNotes() {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -192,7 +192,7 @@ $(function() {
     })
     .fail(function() {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+        '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
       );
       $(window).scrollTop($('#message div:last-child').offset().top - 40);
     })

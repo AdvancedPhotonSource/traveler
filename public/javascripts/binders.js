@@ -65,13 +65,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: binderAoColumns,
-    aaSorting: [[10, 'desc'], [8, 'desc']],
+    aaSorting: [
+      [10, 'desc'],
+      [8, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -102,13 +108,20 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: transferredBinderAoColumns,
-    aaSorting: [[11, 'desc'], [9, 'desc'], [8, 'desc']],
+    aaSorting: [
+      [11, 'desc'],
+      [9, 'desc'],
+      [8, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -137,13 +150,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: sharedBinderAoColumns,
-    aaSorting: [[9, 'desc'], [7, 'desc']],
+    aaSorting: [
+      [9, 'desc'],
+      [7, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -173,13 +192,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: groupSharedBinderAoColumns,
-    aaSorting: [[8, 'desc'], [10, 'desc']],
+    aaSorting: [
+      [8, 'desc'],
+      [10, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -208,13 +233,19 @@ $(function() {
     bAutoWidth: false,
     bProcessing: true,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
     bDeferRender: true,
     aoColumns: archivedBinderAoColumns,
-    aaSorting: [[3, 'desc'], [9, 'desc']],
+    aaSorting: [
+      [3, 'desc'],
+      [9, 'desc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -253,7 +284,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No work binder has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -270,7 +301,7 @@ $(function() {
         '<form class="form-inline"><input id="username" type="text" placeholder="Last, First" name="name" class="input" required></form>'
       );
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
 
@@ -302,7 +333,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No work binder has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -315,7 +346,7 @@ $(function() {
         $('#modal .modal-body').append(formatItemUpdate(data));
       });
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
       $('#submit').click(function() {

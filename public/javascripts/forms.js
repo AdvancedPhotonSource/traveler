@@ -415,7 +415,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No form has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -428,7 +428,7 @@ $(function() {
         $('#modal .modal-body').append(formatItemUpdate(data));
       });
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
       $('#submit').click(function() {
@@ -444,7 +444,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No form has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -461,7 +461,7 @@ $(function() {
         '<form class="form-inline"><input id="username" type="text" placeholder="Last, First" name="name" class="input" required></form>'
       );
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
 
@@ -485,14 +485,14 @@ $(function() {
     }
   });
 
-  $('#clone').click(function() {
+  $('#clone').on('click', function() {
     var activeTable = $('.tab-pane.active table').dataTable();
     var selected = fnGetSelected(activeTable, 'row-selected');
     if (selected.length === 0) {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No form has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     } else {
@@ -505,7 +505,7 @@ $(function() {
         $('#modal .modal-body').append(cloneItem(data));
       });
       $('#modal .modal-footer').html(
-        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
       $('#submit').click(function() {
@@ -515,13 +515,14 @@ $(function() {
   });
 
   $('#reload').click(function() {
-    formTable.fnReloadAjax();
-    transferredFormTable.fnReloadAjax();
-    sharedFormTable.fnReloadAjax();
-    groupSharedFormTable.fnReloadAjax();
-    releasedFormTable.fnReloadAjax();
-    archivedFormTable.fnReloadAjax();
-    archivedReleasedFormTable.fnReloadAjax();
+    if (formTable.length) formTable.fnReloadAjax();
+    if (transferredFormTable.length) transferredFormTable.fnReloadAjax();
+    if (sharedFormTable.length) sharedFormTable.fnReloadAjax();
+    if (groupSharedFormTable.length) groupSharedFormTable.fnReloadAjax();
+    if (releasedFormTable.length) releasedFormTable.fnReloadAjax();
+    if (archivedFormTable.length) archivedFormTable.fnReloadAjax();
+    if (archivedReleasedFormTable.length)
+      archivedReleasedFormTable.fnReloadAjax();
   });
   // binding events
   selectEvent();

@@ -1,7 +1,7 @@
 /*global moment: false*/
 function appendMessage(message) {
   $('#message').append(
-    '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>' +
+    '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
       message +
       '</div>'
   );

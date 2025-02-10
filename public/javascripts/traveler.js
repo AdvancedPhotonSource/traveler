@@ -81,7 +81,7 @@ function setStatus(s) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot change the status: ' +
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the status: ' +
             jqXHR.responseText +
             '</div>'
         );
@@ -110,7 +110,7 @@ function saveDiscrepancyLog(log) {
   })
     .done(function() {
       $('#message').append(
-        '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Discrepancy log data saved</div>'
+        '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Discrepancy log data saved</div>'
       );
       // reload the discrepancy log
       window.location.reload(true);
@@ -118,7 +118,7 @@ function saveDiscrepancyLog(log) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot save discrepancy log data</div>'
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot save discrepancy log data</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -137,7 +137,7 @@ function showConfirmation(action) {
     validationMessage(document.getElementById('form'))
   );
   $('#modal .modal-footer').html(
-    '<button value="submit" class="btn btn-primary" data-dismiss="modal">Submit</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button value="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
   $('#modal button[value="submit"]').click(action);
@@ -150,7 +150,7 @@ function showValidation() {
       'Please finish the input before validating the form.'
     );
     $('#modal .modal-footer').html(
-      '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modal').modal('show');
     return;
@@ -242,7 +242,7 @@ $(function() {
             $(element)
               .closest('.controls')
               .append(
-                '<div class="note-buttons"><b>notes</b>: <a class="notes-number" href="#" data-toggle="tooltip" title="show/hide notes"><span class="badge badge-info">' +
+                '<div class="note-buttons"><b>notes</b>: <a class="notes-number" href="#" data-toggle="tooltip" title="show/hide notes"><span class="badge rounded-pill text-bg-primary">' +
                   found.length +
                   '</span></a> <a class="new-note" href="#" data-toggle="tooltip" title="new note"><i class="fa fa-file-o fa-lg"></i></a></div>'
               );
@@ -267,7 +267,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }
@@ -288,7 +288,7 @@ $(function() {
         '"></div></div></form>'
     );
     $('#modal .modal-footer').html(
-      '<button value="submit" class="btn btn-primary" data-dismiss="modal">Submit</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
+      '<button value="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
     );
     $('#modal').modal('show');
     $('#modal button[value="submit"]').click(function() {
@@ -307,7 +307,7 @@ $(function() {
         .done(function(data, status, jqXHR) {
           var timestamp = jqXHR.getResponseHeader('Date');
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Note saved ' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Note saved ' +
               livespan(timestamp) +
               '</div>'
           );
@@ -345,7 +345,7 @@ $(function() {
         .fail(function(jqXHR) {
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot save the note: ' +
+              '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot save the note: ' +
                 jqXHR.responseText +
                 '</div>'
             );
@@ -400,7 +400,7 @@ $(function() {
               currentValue = found[0].value;
               if (found[0].inputType === 'radio') {
                 // Update element to match the value
-                for (var i = 0; i < inputElements.size(); i++) {
+                for (var i = 0; i < inputElements.length; i++) {
                   var ittrInput = inputElements[i];
                   if (ittrInput.value === currentValue) {
                     element = ittrInput;
@@ -438,7 +438,7 @@ $(function() {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot get saved traveler data</div>'
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot get saved traveler data</div>'
         );
         $(window).scrollTop($('#message div:last-child').offset().top - 40);
       }
@@ -498,7 +498,7 @@ $(function() {
     $('#complete').prop('disabled', true);
     if ($cgw.children('.control-group-buttons').length === 0) {
       $cgw.prepend(
-        '<div class="pull-right control-group-buttons"><button value="save" class="btn btn-primary">Save</button> <button value="reset" class="btn">Reset</button></div>'
+        '<div class="traveler-control-group-buttons control-group-buttons"><button value="save" class="btn btn-primary">Save</button> <button value="reset" class="btn btn-secondary">Reset</button></div>'
       );
     }
   }
@@ -510,7 +510,7 @@ $(function() {
     var inputs = $this.closest('.control-group-wrap').find('input,textarea');
     var input = inputs[0];
     if (inputs[0].type === 'radio') {
-      for (var i = 0; i < inputs.size(); i++) {
+      for (var i = 0; i < inputs.length; i++) {
         var ittr_input = inputs[i];
         if (ittr_input.checked) {
           input = ittr_input;
@@ -526,7 +526,7 @@ $(function() {
       typeof binder.accessor.target[input.name] !== 'number'
     ) {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>The input value is not a number!</div>'
+        '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The input value is not a number!</div>'
       );
       $(window).scrollTop($('#message div:last-child').offset().top - 40);
       return;
@@ -544,7 +544,7 @@ $(function() {
       .done(function(data, status, jqXHR) {
         var timestamp = jqXHR.getResponseHeader('Date');
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Change saved ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Change saved ' +
             livespan(timestamp) +
             '</div>'
         );
@@ -573,7 +573,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot change the value: ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the value: ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -722,7 +722,7 @@ $(function() {
       .done(function(json, status, jqXHR) {
         var timestamp = jqXHR.getResponseHeader('Date');
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>File uploaded ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>File uploaded ' +
             livespan(timestamp) +
             '</div>'
         );
@@ -756,7 +756,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot upload the file: ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot upload the file: ' +
               (jqXHR.responseText || 'unknown') +
               '</div>'
           );
@@ -837,7 +837,7 @@ $(function() {
             '</form>'
         );
         $('#modal .modal-footer').html(
-          '<button value="submit" class="btn btn-primary">Submit</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+          '<button value="submit" class="btn btn-primary">Submit</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
         );
         $('#modal').modal('show');
         if (travelerStatus === 1 || travelerStatus === 1.5) {
@@ -856,7 +856,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot create discrepancy log</div>'
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot create discrepancy log</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }

@@ -4,8 +4,9 @@ block head
   title #{orgName} Forms
   meta(name='viewport', content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
-  link(rel='stylesheet', href='#{prefix}/datatables/css/dataTables.bootstrap.css')
+  //- TODO#339 check if this is needed. 
+  link(rel='stylesheet', href='#{prefix}/bootstrap-responsive-tabs/css/bootstrap-responsive-tabs.css')
+  link(rel='stylesheet', href='#{prefix}/datatables/css/jquery.dataTables.css')
   link(rel='stylesheet', href='#{prefix}/font-awesome-4.3.0/css/font-awesome.css')
   link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
@@ -14,52 +15,54 @@ block content
     var prefix = '!{prefix}';
   .container-fluid
     .btn-toolbar
-      .btn-group
+      .btn-group.m-1
         a.btn.btn-primary#new(href='#{prefix}/forms/new', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='create new empty #{viewConfig.terminology.form}s')
           i.fa.fa-file-o.fa-lg
           | &nbsp;New #{viewConfig.terminology.form}
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-primary#clone(data-toggle='tooltip', title='clone selected #{viewConfig.terminology.form}')
           i.fa.fa-copy.fa-lg
           | &nbsp;Clone
-      .btn-group
+      .btn-group.m-1
         a.btn.btn-info#all-forms(href='#{prefix}/publicforms/', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='see all public #{viewConfig.terminology.form}s')
           i.fa.fa-institution.fa-lg
           | &nbsp;All public #{viewConfig.terminology.form}s
-      .btn-group
+      .btn-group.m-1
         button.btn.btn-info#reload
           i.fa.fa-refresh.fa-lg
           | &nbsp;Reload all tables
       if (locals.session && locals.session.userid && locals.session.roles && (locals.session.roles.indexOf('admin') !== -1 || locals.session.roles.indexOf('manager') !== -1))
-        .btn-group
+        .btn-group.m-1
           a.btn.btn-info#form-management(href='#{prefix}/form-management/', target='#{viewConfig.linkTarget}', data-toggle='tooltip', title='manage #{viewConfig.terminology.form}s')
             i.fa.fa-suitcase.fa-lg
             | &nbsp;Manage forms
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body.modal-body-visible
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body
+          .modal-footer
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#forms', data-toggle='tab') My draft #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link.active(href='#forms', data-bs-toggle='tab' role='tab') My draft #{viewConfig.terminology.form}s
         if (viewConfig.transferOwnership)
-          li
-            a(href='#transferredforms', data-toggle='tab') Transferred draft #{viewConfig.terminology.form}s
+          li.nav-item
+            a.nav-link(href='#transferredforms', data-bs-toggle='tab' role='tab') Transferred draft #{viewConfig.terminology.form}s
         if (viewConfig.shareUsers)
-          li
-            a(href='#sharedfroms', data-toggle='tab') Shared draft #{viewConfig.terminology.form}s
+          li.nav-item
+            a.nav-link(href='#sharedfroms', data-bs-toggle='tab' role='tab') Shared draft #{viewConfig.terminology.form}s
         if (viewConfig.shareGroups)
-          li
-            a(href='#groupsharedfroms', data-toggle='tab') Group shared draft #{viewConfig.terminology.form}s
-        li
-          a(href='#releasedforms', data-toggle='tab') Released #{viewConfig.terminology.form}s
-        li
-          a(href='#archivedforms', data-toggle='tab') Archived draft #{viewConfig.terminology.form}s
-        li
-          a(href='#archived-released-forms', data-toggle='tab') Archived released #{viewConfig.terminology.form}s
+          li.nav-item
+            a.nav-link(href='#groupsharedfroms', data-bs-toggle='tab' role='tab') Group shared draft #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link(href='#releasedforms', data-bs-toggle='tab' role='tab') Released #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link(href='#archivedforms', data-bs-toggle='tab' role='tab') Archived draft #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link(href='#archived-released-forms', data-bs-toggle='tab' role='tab') Archived released #{viewConfig.terminology.form}s
       .tab-content
         #forms.tab-pane.active
           .btn-toolbar
@@ -129,12 +132,10 @@ block content
 
 
 block js
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-1.9.1.js')
+  script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap-responsive-tabs/js/jquery.bootstrap-responsive-tabs.min.js')
   script(type='text/javascript', src='#{prefix}/datatables/js/jquery.dataTables.js')
-  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/ZeroClipboard.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/TableTools.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/dataTables.bootstrap.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
   script(type='text/javascript', src='#{prefix}/dependencies/moment.js')
   script(type='text/javascript', src='#{prefix}/javascripts/table.js')
   script(type='text/javascript', src='#{prefix}/javascripts/ajax-helper.js')

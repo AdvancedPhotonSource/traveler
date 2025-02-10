@@ -79,25 +79,27 @@ function modifyRolesFromModal(cb) {
 $(function() {
   updateAjaxURL(prefix);
 
-  travelerGlobal.usernames.initialize();
+  if (travelerGlobal.usernames === undefined) {
+    travelerGlobal.usernames = {};
 
-  $('#username').typeahead(
-    {
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'usernames',
-      display: 'displayName',
-      limit: 20,
-      source: travelerGlobal.usernames,
-    }
-  );
+    $('#username').typeahead(
+      {
+        minLength: 1,
+        highlight: true,
+        hint: true,
+      },
+      {
+        name: 'usernames',
+        display: 'displayName',
+        limit: 20,
+        source: travelerGlobal.usernames,
+      }
+    );
+  }
 
   var userColumns = [
     selectColumn,
-    useridColumn,
+    userIdColumn,
     fullNameNoLinkColumn,
     rolesColumn,
     lastVisitedOnColumn,
@@ -113,7 +115,10 @@ $(function() {
     },
     bAutoWidth: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -132,7 +137,7 @@ $(function() {
     if (inArray(name, userTable.fnGetData())) {
       //show message
       $('#message').append(
-        '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>The user named <strong>' +
+        '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The user named <strong>' +
           name +
           '</strong> is already in the user list. </div>'
       );
@@ -156,7 +161,7 @@ $(function() {
         }),
         success: function(data, status, jqXHR) {
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
               jqXHR.responseText +
               '</div>'
           );
@@ -164,7 +169,7 @@ $(function() {
         },
         error: function(jqXHR) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the share list : ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the share list : ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -172,42 +177,6 @@ $(function() {
       });
     }
     document.forms[0].reset();
-  });
-
-  $('#user-update').click(function() {
-    var selected = fnGetSelected(userTable, 'row-selected');
-    if (selected.length) {
-      $('#modalLabel').html(
-        'Update the following ' +
-          selected.length +
-          ' users from the application? '
-      );
-      $('#modal .modal-body').empty();
-      selected.forEach(function(row) {
-        var data = userTable.fnGetData(row);
-        $('#modal .modal-body').append(
-          '<div id="' + data._id + '">' + data.name + '</div>'
-        );
-      });
-      $('#modal .modal-footer').html(
-        '<button id="update" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
-      );
-      $('#update').click(function(e) {
-        e.preventDefault();
-        $('#update').prop('disabled', true);
-        updateFromModal(function() {
-          userTable.fnReloadAjax();
-        });
-      });
-      $('#modal').modal('show');
-    } else {
-      $('#modalLabel').html('Alert');
-      $('#modal .modal-body').html('No users has been selected!');
-      $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
-      );
-      $('#modal').modal('show');
-    }
   });
 
   $('#user-modify').click(function() {
@@ -219,6 +188,7 @@ $(function() {
       $('#modal .modal-body').empty();
       $('#modal .modal-body').append(
         '<form id="modal-roles" class="form-inline">' +
+          '<label class="checkbox"><input id="modal-api" type="checkbox" value="api">api</label> ' +
           '<label class="checkbox"><input id="modal-manager" type="checkbox" value="manager">manager</label> ' +
           '<label class="checkbox"><input id="modal-admin" type="checkbox" value="admin">admin</label> ' +
           '<label class="checkbox"><input id="read_all_forms" type="checkbox" value="read_all_forms">read_all_forms</label> ' +
@@ -232,7 +202,7 @@ $(function() {
         );
       });
       $('#modal .modal-footer').html(
-        '<button id="modify" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="modify" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modify').click(function(e) {
         e.preventDefault();
@@ -246,7 +216,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No users has been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     }

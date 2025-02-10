@@ -1,18 +1,23 @@
 body {
   position: relative;
-  padding-top: 40px;
 }
+
 .a-color {
   color: #0088cc;
 }
 
 /* Tweak navbar brand link to be super sleek
 -------------------------------------------------- */
-body > .navbar {
-  font-size: 13px;
+.navbar {
+  font-size: 14px;
+  padding: 0;
+  border-bottom: solid lightgray 1px;
+  margin-bottom: 10px;
 }
+
 /* Change the docs' brand */
-body > .navbar .brand {
+.navbar-brand {
+  font-size: 14px;
   padding-right: 0;
   padding-left: 0;
   margin-left: 20px;
@@ -25,11 +30,13 @@ body > .navbar .brand {
   -moz-transition: all 0.2s linear;
   transition: all 0.2s linear;
 }
-body > .navbar .brand:hover {
+
+.navbar-brand:hover {
   text-decoration: none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 30px rgba(255, 255, 255, 0.4);
 }
+
 /* Sections
 -------------------------------------------------- */
 
@@ -37,10 +44,12 @@ body > .navbar .brand:hover {
 section {
   padding-top: 30px;
 }
+
 section > .page-header,
 section > .lead {
   color: #5a5a5a;
 }
+
 section > ul li {
   margin-bottom: 5px;
 }
@@ -81,6 +90,7 @@ hr.soften {
 .twitter-typeahead .tt-hint {
   margin-bottom: 0;
 }
+
 .tt-menu {
   min-width: 160px;
   margin-top: 2px;
@@ -88,8 +98,8 @@ hr.soften {
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  *border-right-width: 2px;
-  *border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
@@ -105,6 +115,7 @@ hr.soften {
   display: block;
   padding: 3px 20px;
 }
+
 .tt-suggestion.tt-cursor {
   color: #fff;
   background-color: #0081c2;
@@ -122,28 +133,33 @@ hr.soften {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
+
 .tt-suggestion.tt-cursor a {
   color: #fff;
 }
+
 .tt-suggestion p {
   margin: 0;
 }
+
 /* FRIB style */
 
-.progress {
-  text-align: center;
-  margin-bottom: 0;
+.progress-bar-container {
   position: relative;
+  width: auto;
+  height: auto;
 }
 
-.progress.active {
-  background: #ffff00;
-}
-
-.progress-value {
+.progress-bar-text {
+  text-align: center;
   position: absolute;
-  right: 0;
-  left: 0;
+  top: 0;
+  width: 100%;
+  font-size: small;
+}
+
+.progress-stacked.active {
+  background: #ffff00;
 }
 
 /* section for the main page
@@ -153,6 +169,7 @@ hr.soften {
   text-align: center;
   color: #5a5a5a;
 }
+
 .main h1 {
   margin: 60px 0 10px;
   font-size: 60px;
@@ -160,10 +177,12 @@ hr.soften {
   line-height: 1;
   letter-spacing: -1px;
 }
+
 .main p {
   font-size: 16px;
   line-height: 1.5;
 }
+
 .main .main-byline {
   margin-bottom: 40px;
   font-size: 20px;
@@ -171,6 +190,7 @@ hr.soften {
   line-height: 1.25;
   color: #999;
 }
+
 .main-img {
   display: block;
   margin: 0 auto 30px;
@@ -188,6 +208,7 @@ hr.soften {
   height: 40px;
   /*overflow: hidden;*/
 }
+
 .user img {
   width: 100%;
   height: auto;
@@ -201,18 +222,22 @@ hr.soften {
   margin-top: 60px;
   font-size: 11px;
 }
+
 rect {
   stroke: #eee;
   fill: #aaa;
   fill-opacity: 0.8;
 }
+
 rect.parent {
   cursor: pointer;
   fill: steelblue;
 }
+
 text {
   pointer-events: none;
 }
+
 .nowrap {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -234,26 +259,32 @@ text {
 ul.dropdown-menu input[type='checkbox'] {
   margin-left: 0;
 }
+
 .ui-autocomplete {
   z-index: 1510 !important;
 }
+
 .ui-state-highlight {
   height: 3em;
   line-height: 1em;
 }
+
 .control-group-highlight {
   background-color: #c09853;
 }
+
 .control-group-buttons {
   position: relative;
   float: right;
   margin-top: inherit;
 }
+
 .file-upload-buttons {
   position: relative;
   float: right;
   margin-top: inherit;
 }
+
 .control-focus {
   background-color: #f5f5f5;
 }
@@ -280,6 +311,7 @@ figcaption {
 .fe-type {
   display: none;
 }
+
 .input-history {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -308,6 +340,15 @@ figcaption {
 /* legend */
 .output-control-group legend {
   padding-top: 40px;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 20px;
+  font-size: 21px;
+  line-height: 40px;
+  color: #333333;
+  border: 0;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .inline-checkbox {
@@ -330,6 +371,7 @@ figcaption {
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
 }
+
 .bs-docs-sidenav > li > a {
   display: block;
   width: 190px \9;
@@ -368,11 +410,13 @@ figcaption {
   -moz-border-radius: 6px 6px 0 0;
   border-radius: 6px 6px 0 0;
 }
+
 .bs-docs-sidenav > li:last-child > a {
   -webkit-border-radius: 0 0 6px 6px;
   -moz-border-radius: 0 0 6px 6px;
   border-radius: 0 0 6px 6px;
 }
+
 .bs-docs-sidenav > .active > a {
   position: relative;
   z-index: 2;
@@ -386,6 +430,7 @@ figcaption {
   box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.1),
     inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
+
 /* Chevrons */
 .bs-docs-sidenav .icon-chevron-right {
   float: right;
@@ -393,20 +438,27 @@ figcaption {
   margin-right: -6px;
   opacity: 0.25;
 }
+
 .bs-docs-sidenav > li > a:hover {
   background-color: #f5f5f5;
 }
+
 .bs-docs-sidenav a:hover .icon-chevron-right {
   opacity: 0.5;
 }
+
 .bs-docs-sidenav .active .icon-chevron-right,
 .bs-docs-sidenav .active a:hover .icon-chevron-right {
   background-image: url(../img/glyphicons-halflings-white.png);
   opacity: 1;
 }
+
 .bs-docs-sidenav.affix {
+  position: fixed;
+  right: 80px;
   top: 80px;
 }
+
 .bs-docs-sidenav.affix-bottom {
   position: absolute;
   top: auto;
@@ -453,9 +505,15 @@ button.editable {
   .bs-docs-sidenav {
     width: 258px;
   }
+
   .bs-docs-sidenav > li > a {
     width: 230px \9;
     /* Override the previous IE8-9 hack */
+  }
+
+  .traveler-control-group-buttons {
+    position: absolute;
+    right: 350px;
   }
 }
 
@@ -470,11 +528,13 @@ button.editable {
     padding-left: 10px;
     padding-right: 10px;
   }
+
   /* Inline-block quick links for more spacing */
   .quick-links li {
     display: inline-block;
     margin: 5px;
   }
+
   /* When affixed, space properly */
   .bs-docs-sidenav {
     top: 0;
@@ -483,6 +543,7 @@ button.editable {
     margin-right: 0;
   }
 }
+
 /**
  * Tablet to desktop
  */
@@ -491,15 +552,18 @@ button.editable {
   body {
     padding-top: 0;
   }
+
   /* Adjust sidenav width */
   .bs-docs-sidenav {
     width: 166px;
     margin-top: 20px;
   }
+
   .bs-docs-sidenav.affix {
     top: 0;
   }
 }
+
 /**
  * Tablet
  */
@@ -508,27 +572,33 @@ button.editable {
   body {
     padding-top: 0;
   }
+
   /* Widen masthead and social buttons to fill body padding */
   .main .span4 {
     margin-bottom: 40px;
   }
+
   .bs-docs-social {
     margin: 0 -20px;
   }
+
   /* Space out the show-grid examples */
   .show-grid[class*='span'] {
     margin-bottom: 5px;
   }
+
   /* Sidenav */
   .bs-docs-sidenav {
     width: auto;
     margin-bottom: 20px;
   }
+
   .bs-docs-sidenav.affix {
     position: static;
     width: auto;
     top: 0;
   }
+
   /* Unfloat the back to top link in footer */
   .footer {
     margin-left: -20px;
@@ -536,10 +606,12 @@ button.editable {
     padding-left: 20px;
     padding-right: 20px;
   }
+
   .footer p {
     margin-bottom: 9px;
   }
 }
+
 /**
  * Landscape phones
  */
@@ -548,18 +620,22 @@ button.editable {
   body {
     padding-top: 0;
   }
+
   /* Change up some type stuff */
   h2 small {
     display: block;
   }
+
   /* Downsize the jumbotrons */
   /* main on home */
   .main h1 {
     font-size: 30px;
   }
+
   .main-byline {
     font-size: 18px;
   }
+
   /* Tighten up footer */
   .footer {
     padding-top: 20px;
@@ -597,4 +673,60 @@ button.editable {
   border-color: white;
   border-radius: 9px;
   height: fit-content;
+}
+
+.form-horizontal .control-group:before,
+.form-horizontal .control-group:after {
+  display: table;
+  line-height: 0;
+  content: '';
+}
+
+.form-horizontal .control-group:after {
+  clear: both;
+}
+
+.form-horizontal .control-group {
+  margin-bottom: 20px;
+}
+
+.form-horizontal .control-group .help-block,
+.form-horizontal .control-group .help-inline,
+.form-horizontal .control-group .radio_text,
+.form-horizontal .control-group .checkbox > span {
+  margin-left: 10px;
+}
+
+.form-horizontal .control-group input[type='number'],
+.form-horizontal .control-group input[type='text'],
+.form-horizontal .control-group input[type='tel'],
+.form-horizontal .control-group input[type='date'],
+.form-horizontal .control-group input[type='email'],
+.form-horizontal .control-group input[type='time'],
+.form-horizontal .control-group input[type='url'],
+.form-horizontal .control-group textarea {
+  width: 220px;
+}
+
+.form-horizontal {
+  font-size: 14px;
+  padding-top: 5px;
+}
+
+.form-horizontal .control-label {
+  float: left;
+  width: 160px;
+  /* text-align: right; */
+}
+
+.form-horizontal .controls {
+  margin-left: 180px;
+}
+
+.form-horizontal .control-group.radio-group {
+  display: inline-block;
+}
+
+.form-horizontal .control-group.radio-group .radio {
+  display: block;
 }

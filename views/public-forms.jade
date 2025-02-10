@@ -4,8 +4,7 @@ block head
   title #{orgName} Traveler - public forms
   meta(name='viewport', content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
-  link(rel='stylesheet', href='#{prefix}/datatables/css/dataTables.bootstrap.css')
+  link(rel='stylesheet', href='#{prefix}/datatables/css/jquery.dataTables.css')
   link(rel='stylesheet', href='#{prefix}/font-awesome-4.3.0/css/font-awesome.css')
   link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
@@ -15,29 +14,28 @@ block content
   .container-fluid
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body.modal-body-visible
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body
+          .modal-footer
     h3 Public accessible #{viewConfig.terminology.form}s
     div
       ul.nav.nav-tabs
-        li.active
-          a(href='#draft-forms', data-toggle='tab') draft #{viewConfig.terminology.form}s
-        li
-          a(href='#released-forms', data-toggle='tab') Released #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link.active(href='#draft-forms', data-bs-toggle='tab') Draft #{viewConfig.terminology.form}s
+        li.nav-item
+          a.nav-link(href='#released-forms', data-bs-toggle='tab') Released #{viewConfig.terminology.form}s
       .tab-content
         #draft-forms.tab-pane.active
           table#public-forms-table.table.table-bordered.table-hover
         #released-forms.tab-pane
           table#released-forms-table.table.table-bordered.table-hover
 block js
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-1.9.1.js')
+  script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
   script(type='text/javascript', src='#{prefix}/datatables/js/jquery.dataTables.js')
-  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/ZeroClipboard.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/TableTools.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/dataTables.bootstrap.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
   script(type='text/javascript', src='#{prefix}/dependencies/moment.js')
   script(type='text/javascript', src='#{prefix}/javascripts/table.js')
   script(type='text/javascript', src='#{prefix}/javascripts/ajax-helper.js')

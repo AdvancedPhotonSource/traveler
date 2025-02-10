@@ -59,7 +59,7 @@ $(function() {
         error: function(jqXHR) {
           $(that).text(initValue[that.id]);
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the traveler config : ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the traveler config : ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -123,7 +123,7 @@ $(function() {
           $this.val(deadline);
           if (jqXHR.status !== 401) {
             $('#message').append(
-              '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the traveler config :  ' +
+              '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the traveler config :  ' +
                 jqXHR.responseText +
                 '</div>'
             );
@@ -176,23 +176,23 @@ $(function() {
         });
         devices.initialize();
       }
+
+      $('#newDevice').typeahead(
+        {
+          minLength: 1,
+          highlight: true,
+          hint: true,
+        },
+        {
+          name: 'devices',
+          limit: 20,
+          display: 'inventoryId',
+          source: devices,
+        }
+      );
     } else if (!devices) {
       devices = [];
     }
-
-    $('#newDevice').typeahead(
-      {
-        minLength: 1,
-        highlight: true,
-        hint: true,
-      },
-      {
-        name: 'devices',
-        limit: 20,
-        display: 'inventoryId',
-        source: devices,
-      }
-    );
 
     $('#confirm').click(function(confirmE) {
       confirmE.preventDefault();
@@ -226,7 +226,7 @@ $(function() {
           .fail(function(jqXHR) {
             if (jqXHR.status !== 401) {
               $('#message').append(
-                '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot add the tag</div>'
+                '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot add the tag</div>'
               );
               $(window).scrollTop(
                 $('#message div:last-child').offset().top - 40
@@ -254,7 +254,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot remove the device</div>'
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot remove the device</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }
@@ -312,7 +312,7 @@ $(function() {
           .fail(function(jqXHR) {
             if (jqXHR.status !== 401) {
               $('#message').append(
-                '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot add the tag</div>'
+                '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot add the tag</div>'
               );
               $(window).scrollTop(
                 $('#message div:last-child').offset().top - 40
@@ -339,7 +339,7 @@ $(function() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot remove the tag</div>'
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot remove the tag</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }

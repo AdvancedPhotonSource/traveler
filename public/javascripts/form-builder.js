@@ -67,7 +67,7 @@ function sendRequest(data, cb, option) {
         document.location.href = data.location;
       } else {
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>The changes were saved ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The changes were saved ' +
             livespan(timestamp) +
             '.</div>'
         );
@@ -98,14 +98,14 @@ function archive_prior_released_forms(selected) {
   })
     .done(function(data, textStatus, request) {
       $('#message').append(
-        '<div class="alert alert-success"><button class="close" data-dismiss="alert"></button>' +
+        '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
           data +
           '</div>'
       );
     })
     .fail(function(data, textStatus, request) {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert"></button>' +
+        '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
           data +
           '</div>'
       );
@@ -213,7 +213,7 @@ function autosaveWipOnDone() {
   })
     .done(function(data, textStatus, request) {
       if (
-        $('#togglewip').size() &&
+        $('#togglewip').length &&
         $('#togglewip')[0].innerText === showUnsavedText
       ) {
         $('#wipHtmlStatus').html(unsavedText);
@@ -255,7 +255,7 @@ function done_button(view, $out) {
   return function(e) {
     e.preventDefault();
     // validate the userkey according to current form
-    var userKeyInput = $('.well.spec input[name="userkey"]');
+    var userKeyInput = $('.card-body input[name="userkey"]');
     var userkey = userKeyInput.val();
     if (typeof userkey !== 'undefined') {
       userkey = userkey.trim();
@@ -277,7 +277,7 @@ function done_button(view, $out) {
     }
     view.unbind();
     $(this)
-      .closest('.spec')
+      .closest('.card')
       .remove();
     // assign unique name if not yet
     $('input, textarea', $out).each(function() {
@@ -437,7 +437,7 @@ function add_radio($radio_group, $radio_value_spec, $done, count, model) {
 }
 
 function radio_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
 
   var radio_group_name;
 
@@ -474,13 +474,16 @@ function radio_edit($cgr) {
   }
 
   // Assign components to the configure view
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $required,
-    $add_radio_button,
-    $radio_value_spec,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $required,
+      $add_radio_button,
+      $radio_value_spec,
+      $done
+    )
   );
 
   var $new_cgr = $(
@@ -504,7 +507,7 @@ function radio_edit($cgr) {
     $.map(radio_buttons, function(button, i) {
       model['radio_text_' + i] = $(button).prop('value');
     });
-    var length = radio_buttons.size();
+    var length = radio_buttons.length;
     for (var i = 0; i < length; i++) {
       add_radio(
         $radio_group,
@@ -555,7 +558,7 @@ function radio_edit($cgr) {
 }
 
 function checkbox_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var checkbox_text = 'checkbox text';
@@ -573,12 +576,15 @@ function checkbox_edit($cgr) {
   var $checkbox_text = $(spec.checkbox_text());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $checkbox_text,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $checkbox_text,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">checkbox</span></div>'
@@ -599,7 +605,7 @@ function checkbox_edit($cgr) {
 }
 
 function text_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -620,13 +626,16 @@ function text_edit($cgr) {
   var $help = $(spec.help());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $placeholder,
-    $help,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $placeholder,
+      $help,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">text</span></div>'
@@ -648,7 +657,7 @@ function text_edit($cgr) {
 }
 
 function figure_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var src = '';
   var alt = '';
   var figcaption = '';
@@ -666,12 +675,15 @@ function figure_edit($cgr) {
   var $figcaption = $(spec.figcaption());
   var $width = $(spec.width());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $file,
-    $alt,
-    $width,
-    $figcaption,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $file,
+      $alt,
+      $width,
+      $figcaption,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">figure</span></div>'
@@ -771,7 +783,7 @@ function figure_edit($cgr) {
         var location = jqXHR.getResponseHeader('Location');
         var timestamp = jqXHR.getResponseHeader('Date');
         $('#message').append(
-          '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>File uploaded ' +
+          '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>File uploaded ' +
             livespan(timestamp) +
             '</div>'
         );
@@ -807,7 +819,7 @@ function figure_edit($cgr) {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot upload the file: ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot upload the file: ' +
               (jqXHR.responseText || 'unknown') +
               '</div>'
           );
@@ -826,7 +838,7 @@ function figure_edit($cgr) {
 }
 
 function other_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -850,14 +862,17 @@ function other_edit($cgr) {
   var $help = $(spec.help());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $type,
-    $label,
-    $userkey,
-    $placeholder,
-    $help,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $type,
+      $label,
+      $userkey,
+      $placeholder,
+      $help,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">other</span></div>'
@@ -883,7 +898,7 @@ function other_edit($cgr) {
 }
 
 function textarea_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -909,14 +924,17 @@ function textarea_edit($cgr) {
   var $help = $(spec.help());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $placeholder,
-    $rows,
-    $help,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $placeholder,
+      $rows,
+      $help,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">textarea</span></div>'
@@ -954,7 +972,7 @@ function rangeText(min, max) {
 }
 
 function number_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var userkey = '';
   var placeholder = '';
@@ -984,15 +1002,18 @@ function number_edit($cgr) {
   var $max = $(spec.max());
   var $required = $(spec.required());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $userkey,
-    $placeholder,
-    $help,
-    $min,
-    $max,
-    $required,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $userkey,
+      $placeholder,
+      $help,
+      $min,
+      $max,
+      $required,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">number</span></div>'
@@ -1022,7 +1043,7 @@ function number_edit($cgr) {
 }
 
 function file_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var label = 'label';
   var required = false;
   var userkey = '';
@@ -1044,13 +1065,16 @@ function file_edit($cgr) {
 
   var $help = $(spec.help());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append(
-    $label,
-    $required,
-    $userkey,
-    $filetype,
-    $help,
-    $done
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append(
+      $label,
+      $required,
+      $userkey,
+      $filetype,
+      $help,
+      $done
+    )
   );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">file</span></div>'
@@ -1081,15 +1105,25 @@ function file_edit($cgr) {
 }
 
 function section_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var legend = 'Section name';
   if ($cgr) {
     legend = $('legend span.label-text', $cgr).text();
+    if (legend === '') {
+      prefix_length = $('legend span.section-number', $cgr).text().length;
+      prefix_length += 1;
+
+      complete_legend = $('legend', $cgr).text();
+      legend = complete_legend.substr(prefix_length);
+    }
   }
   var $section = $(input.section());
   var $legend = $(spec.legend());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append($legend, $done);
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append($legend, $done)
+  );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">section</span></div>'
   ).append($section);
@@ -1110,7 +1144,7 @@ function section_edit($cgr) {
 }
 
 function rich_edit($cgr) {
-  $('#output .well.spec').remove();
+  $('#output .card').remove();
   var html = '';
   if ($cgr) {
     html = $('.tinymce', $cgr).html();
@@ -1118,7 +1152,10 @@ function rich_edit($cgr) {
   var $rich = $(input.rich());
   var $rich_textarea = $(spec.rich_textarea());
   var $done = $(spec.done());
-  var $edit = $('<div class="well spec"></div>').append($rich_textarea, $done);
+  var $card = $('<div class="card"></div>');
+  var $edit = $card.append(
+    $('<div class="card-body"></div>').append($rich_textarea, $done)
+  );
   var $new_cgr = $(
     '<div class="control-group-wrap" data-status="editing"><span class="fe-type">rich</span></div>'
   ).append($rich);
@@ -1144,7 +1181,7 @@ function rich_edit($cgr) {
       $('.tinymce', $rich).html(tinymce.activeEditor.getContent());
       tinymce.remove();
       $(this)
-        .closest('.spec')
+        .closest('.card')
         .remove();
       $rich.closest('.control-group-wrap').removeAttr('data-status');
       var resultParent = $rich[0];
@@ -1266,7 +1303,7 @@ function modalAlert(label, body) {
   $('#modal .modal-body').empty();
   $('#modal .modal-body').append(body);
   $('#modal .modal-footer').html(
-    '<button data-dismiss="modal" aria-hidden="true" class="btn">OK</button>'
+    '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">OK</button>'
   );
   $('#modal').modal('show');
 }
@@ -1426,7 +1463,7 @@ function binding_events() {
 
   $('#save').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert(
         'Finish editing first',
         'Please close all the opened edit area by clicking the "Done" button, and save the changes if needed.'
@@ -1449,7 +1486,7 @@ function binding_events() {
 
   $('#numbering').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert(
         'Finish editing first',
         'Please close all the opened edit area by clicking the "Done" button, and then generate the numbering if needed.'
@@ -1462,7 +1499,7 @@ function binding_events() {
   });
 
   $('#preview').click(function(e) {
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       e.preventDefault();
       modalAlert(
         'Save changes first',
@@ -1484,7 +1521,7 @@ function binding_events() {
 
   $('#saveas').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert();
       return;
     }
@@ -1493,10 +1530,10 @@ function binding_events() {
     $('#modalLabel').html('Save the form as (a new one)');
     $('#modal .modal-body').empty();
     $('#modal .modal-body').append(
-      '<form class="form-horizontal" id="modalform"><div class="control-group"><label class="control-label">Form title</label><div class="controls"><input id="new-title" type="text" class="input"></div></div></form>'
+      '<form class="form-horizontal" id="modalform"><div class="mb-3"><label class="form-label">Form title</label><input class="form-control" id="new-title" type="text" class="input"></div></form>'
     );
     $('#modal .modal-footer').html(
-      '<button value="confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
+      '<button value="confirm" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
     );
     $('#modal').modal('show');
     $('#modal button[value="confirm"]').click(function() {
@@ -1515,7 +1552,7 @@ function binding_events() {
 
   $('#submit').click(function(e) {
     e.preventDefault();
-    if ($('#output .well.spec').length) {
+    if ($('#output .card').length) {
       modalAlert(
         'Finish editing first',
         'Please close all the opened edit area by clicking the "Done" button, and save the changes if needed.'
@@ -1548,9 +1585,9 @@ function binding_events() {
     $('#modal .modal-body').empty();
     let defaultTitle = $('#formtitle').text();
     $('#modal .modal-body').append(
-      '<form class="form-horizontal" id="modalform"> <div class="control-group"> <label class="control-label">Form title</label> <div class="controls"><input id="release-title" type="text" value="' +
+      '<form class="form-horizontal" id="modalform"> <div class="mb-3"> <label class="form-label">Form title</label><input class="form-control" id="release-title" type="text" value="' +
         defaultTitle +
-        '" class="input"> </div> </div> </form>'
+        '" class="input"> </div> </form>'
     );
 
     let priorVersionsTable = null;
@@ -1615,7 +1652,7 @@ function binding_events() {
       filterEvent();
     }
     $('#modal .modal-footer').html(
-      '<button value="confirm" class="btn btn-primary" data-dismiss="modal">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
+      '<button value="confirm" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Cancel</button>'
     );
     $('#modal').modal('show');
     $('#modal button[value="confirm"]').click(function() {

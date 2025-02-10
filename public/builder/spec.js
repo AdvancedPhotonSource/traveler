@@ -97,27 +97,27 @@
 
   // add_radio_button.jade compiled template
   exports['add_radio_button'] = function tmpl_add_radio_button() {
-    return '<div class="control-group"><div class="control-label">Add Radio Button</div><div class="controls"><button value="add_radio_button" class="btn btn-primary">+</button></div></div>';
+    return '<div class="mb-3"><div class="form-label">Add Radio Button</div><button value="add_radio_button" class="btn btn-primary">+</button></div>';
   };
 
   // alt.jade compiled template
   exports['alt'] = function tmpl_alt() {
-    return '<div class="control-group"><div class="control-label">Image alternate text</div><div class="controls"><input type="text" disabled="disabled" name="alt"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Image alternate text</div><input class="form-control" type="text" disabled="disabled" name="alt"/></div>';
   };
 
   // checkbox_text.jade compiled template
   exports['checkbox_text'] = function tmpl_checkbox_text() {
-    return '<div class="control-group"><div class="control-label">Text</div><div class="controls"><input type="text" name="checkbox_text"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Text</div><input class="form-control" type="text" name="checkbox_text"/></div>';
   };
 
   // done.jade compiled template
   exports['done'] = function tmpl_done() {
-    return '<div class="control-group"><div class="controls"><button type="submit" class="btn btn-primary">Done</button></div></div>';
+    return '<button type="submit" class="btn btn-primary">Done</button>';
   };
 
   // figcaption.jade compiled template
   exports['figcaption'] = function tmpl_figcaption() {
-    return '<div class="control-group"><div class="control-label">Figure caption</div><div class="controls"><input type="text" disabled="disabled" name="figcaption"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Figure caption</div><input class="form-control" type="text" disabled="disabled" name="figcaption"/></div>';
   };
 
   // generic_text_input.jade compiled template
@@ -126,31 +126,31 @@
     var locals_ = locals || {},
       label = locals_.label;
     buf.push(
-      '<div class="control-group"><div class="control-label">' +
+      '<div class="mb-3"><div class="form-label">' +
         jade.escape((jade.interp = label) == null ? '' : jade.interp) +
-        '</div><div class="controls"><input type="text" name="radio_text"/></div></div>'
+        '</div><input class="form-control" type="text" name="radio_text"/></div>'
     );
     return buf.join('');
   };
 
   // height.jade compiled template
   exports['height'] = function tmpl_height() {
-    return '<div class="control-group"><div class="control-label">Height</div><div class="controls"><input type="number" disabled="disabled" name="height" step="any"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Height</div><input class="form-control" type="number" disabled="disabled" name="height" step="any"/></div>';
   };
 
   // help.jade compiled template
   exports['help'] = function tmpl_help() {
-    return '<div class="control-group"><div class="control-label">Help</div><div class="controls"><input type="text" name="help"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Help</div><input class="form-control" type="text" name="help"/></div>';
   };
 
   // hold.jade compiled template
   exports['hold'] = function tmpl_hold() {
-    return '<div class="control-group"><div class="control-label">Holder</div><div class="controls"><input type="text" placeholder="Hold owner" name="holder"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Holder</div><input class="form-control" type="text" placeholder="Hold owner" name="holder"/></div>';
   };
 
   // imagefile.jade compiled template
   exports['imagefile'] = function tmpl_imagefile() {
-    return '<div class="control-group"><div class="control-label">Select an image</div><div class="controls"><input name="userimage" type="file"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Select an image</div><input class="form-control" name="userimage" type="file"/></div>';
   };
 
   // inputtype.jade compiled template
@@ -160,66 +160,66 @@
 
   // label.jade compiled template
   exports['label'] = function tmpl_label() {
-    return '<div class="control-group"><div class="control-label">Label</div><div class="controls"><input type="text" name="label"/><span class="help-inline"> Keep the label brief and unique</span></div></div>';
+    return '<div class="mb-3"><div class="form-label">Label</div><input class="form-control" type="text" name="label"/><div class="form-text"> Keep the label brief and unique</div></div>';
   };
 
   // legend.jade compiled template
   exports['legend'] = function tmpl_legend() {
-    return '<div class="control-group"><div class="control-label">Section legend</div><div class="controls"><input type="text" name="legend"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Section legend</div><input class="form-control" type="text" name="legend"/></div>';
   };
 
   // max.jade compiled template
   exports['max'] = function tmpl_max() {
-    return '<div class="control-group"><div class="control-label">Max</div><div class="controls"><input type="number" name="max" step="any"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Max</div><input class="form-control" type="number" name="max" step="any"/></div>';
   };
 
   // min.jade compiled template
   exports['min'] = function tmpl_min() {
-    return '<div class="control-group"><div class="control-label">Min</div><div class="controls"><input type="number" name="min" step="any"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Min</div><input class="form-control" type="number" name="min" step="any"/></div>';
   };
 
   // placeholder.jade compiled template
   exports['placeholder'] = function tmpl_placeholder() {
-    return '<div class="control-group"><div class="control-label">Placeholder</div><div class="controls"><input type="text" name="placeholder"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Placeholder</div><input class="form-control" type="text" name="placeholder"/></div>';
   };
 
   // required.jade compiled template
   exports['required'] = function tmpl_required() {
-    return '<div class="control-group"><div class="control-label">Required</div><div class="controls"><label class="checkbox"><input type="checkbox" name="required"/><span>required</span></label></div></div>';
+    return '<div class="mb-3 form-check"><input class="form-check-input" type="checkbox" name="required"/><label class="form-check-label">Required</label></div>';
   };
 
   // rich_textarea.jade compiled template
   exports['rich_textarea'] = function tmpl_rich_textarea() {
-    return '<div class="control-group"><div class="control-label">Rich editor</div><div class="controls"><textarea rows="10" class="tinymce"></textarea></div></div>';
+    return '<div class="mb-3"><div class="form-label">Rich editor</div><div class="form-control"><textarea rows="10" class="tinymce"></textarea></div></div>';
   };
 
   // rows.jade compiled template
   exports['rows'] = function tmpl_rows() {
-    return '<div class="control-group"><div class="control-label">Row</div><div class="controls"><input type="number" placeholder="Number of rows" name="rows"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Row</div><input class="form-control" type="number" placeholder="Number of rows" name="rows"/></div>';
   };
 
   // type.jade compiled template
   exports['type'] = function tmpl_type() {
-    return '<div class="control-group"><div class="control-label">Type</div><div class="controls"><select name="type"><option value="text">Text</option><option value="number">Number</option><option value="date">Date</option><option value="datetime-local">Date Time</option><option value="email">Email</option><option value="tel">Phone number</option><option value="time">Time</option><option value="url">URL</option></select></div></div>';
+    return '<div class="mb-3"><div class="form-label">Type</div><div class="form-control"><select name="type"><option value="text">Text</option><option value="number">Number</option><option value="date">Date</option><option value="datetime-local">Date Time</option><option value="email">Email</option><option value="tel">Phone number</option><option value="time">Time</option><option value="url">URL</option></select></div></div>';
   };
 
   // unit.jade compiled template
   exports['unit'] = function tmpl_unit() {
-    return '<div class="control-group"><div class="control-label">Unit</div><div class="controls"><input type="text" name="unit"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Unit</div><input class="form-control" type="text" name="unit"/></div>';
   };
 
   // userkey.jade compiled template
   exports['userkey'] = function tmpl_userkey() {
-    return '<div class="control-group"><div class="control-label">User defined key</div><div class="controls"><input type="text" name="userkey" pattern="[a-zA-Z_0-9]{1,30}"/><span class="help-inline">Only letter, number, and "_" allowed (Example: MagMeas_1)</span></div></div>';
+    return '<div class="mb-3"><div class="form-label">User defined key</div><input class="form-control" type="text" name="userkey" pattern="[a-zA-Z_0-9]{1,30}"/><div class="form-text">Only letter, number, and "_" allowed (Example: MagMeas_1)</div></div>';
   };
 
   exports['filetype'] = function tmpl_filetype() {
-    return '<div class="control-group"><div class="control-label">File type</div><div class="controls"><input type="text" name="filetype" /><span class="help-inline">Leave blank for default file formats (PDF, excel & image/text formats). Specify for a specific file format (ex: zip)</span></div></div>';
+    return '<div class="mb-3"><div class="form-label">File type</div><input class="form-control" type="text" name="filetype" /><div class="form-text">Leave blank for default file formats (PDF, excel & image/text formats). Specify for a specific file format (ex: zip)</div></div>';
   };
 
   // width.jade compiled template
   exports['width'] = function tmpl_width() {
-    return '<div class="control-group"><div class="control-label">Width</div><div class="controls"><input type="number" disabled="disabled" name="width" step="any"/></div></div>';
+    return '<div class="mb-3"><div class="form-label">Width</div><input class="form-control" type="number" disabled="disabled" name="width" step="any"/></div>';
   };
 
   // attach to window or export with commonJS

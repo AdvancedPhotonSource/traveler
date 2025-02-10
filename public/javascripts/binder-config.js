@@ -27,7 +27,7 @@ function setStatus(s) {
     .fail(function(jqXHR) {
       if (jqXHR.status !== 401) {
         $('#message').append(
-          '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot change the status: ' +
+          '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot change the status: ' +
             jqXHR.responseText +
             '</div>'
         );
@@ -87,7 +87,7 @@ function tagEvents() {
           .fail(function(jqXHR) {
             if (jqXHR.status !== 401) {
               $('#message').append(
-                '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot add the tag</div>'
+                '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot add the tag</div>'
               );
               $(window).scrollTop(
                 $('#message div:last-child').offset().top - 40
@@ -114,7 +114,7 @@ function tagEvents() {
       .fail(function(jqXHR) {
         if (jqXHR.status !== 401) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot remove the tag</div>'
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot remove the tag</div>'
           );
           $(window).scrollTop($('#message div:last-child').offset().top - 40);
         }
@@ -142,7 +142,7 @@ function editEvents(initValue) {
         error: function(jqXHR) {
           $(that).text(initValue[that.id]);
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the binder config : ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the binder config : ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -199,7 +199,7 @@ function updateWorks(updates, cb) {
       var timestamp = jqXHR.getResponseHeader('Date');
       timestamp = livespan(timestamp);
       var updateMsg =
-        '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>Works updated ' +
+        '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Works updated ' +
         timestamp +
         '</div>';
 
@@ -210,7 +210,7 @@ function updateWorks(updates, cb) {
     })
     .fail(function(jqXHR, status, error) {
       $('#message').append(
-        '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the works: ' +
+        '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the works: ' +
           jqXHR.responseText +
           '</div>'
       );
@@ -285,7 +285,10 @@ $(function() {
     bAutoWidth: false,
     bPaginate: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, -1], [10, 'All']],
+    aLengthMenu: [
+      [10, -1],
+      [10, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -298,7 +301,10 @@ $(function() {
       works = worksTable.fnGetData();
       changeEvents();
     },
-    aaSorting: [[1, 'asc'], [2, 'asc']],
+    aaSorting: [
+      [1, 'asc'],
+      [2, 'asc'],
+    ],
     sDom: sDomNoTools,
   });
 
@@ -317,7 +323,7 @@ $(function() {
         '</div>'
     );
     $('#modal .modal-footer').html(
-      '<button id="remove" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+      '<button id="remove" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
     );
     $('#modal').modal('show');
     $('#remove').click(function() {

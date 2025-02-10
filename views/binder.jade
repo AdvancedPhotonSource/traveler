@@ -5,8 +5,7 @@ block head
   title #{orgName} - binder - #{binder.title}
   meta(name='viewport', content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
-  link(rel='stylesheet', href='#{prefix}/datatables/css/dataTables.bootstrap.css')
+  link(rel='stylesheet', href='#{prefix}/datatables/css/jquery.dataTables.css')
   link(rel='stylesheet', href='#{prefix}/font-awesome-4.3.0/css/font-awesome.css')
   link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
@@ -17,7 +16,7 @@ block content
     h3 #{binder.title}
       != ' '
       .btn-group
-        button.btn.btn-info(data-toggle='collapse', data-target='#details') Details
+        button.btn.btn-info(data-bs-toggle='collapse', data-bs-target='#details') Details
       .btn-group
         button.btn.btn-info#sort
           i.fa.fa-sort-numeric-asc.fa-large
@@ -57,10 +56,12 @@ block content
         span.time #{binder.updatedOn}
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body.modal-body-visible
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body
+          .modal-footer
     form#report-form.hidden(action='#{prefix}/travelers/report/', method='post')
     if (viewConfig.showBinderValue)
       #value-progress
@@ -70,12 +71,9 @@ block content
     table#work-table.table.table-bordered.table-hover
 
 block js
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-1.9.1.js')
+  script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
   script(type='text/javascript', src='#{prefix}/datatables/js/jquery.dataTables.js')
-  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/ZeroClipboard.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/TableTools.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/dataTables.bootstrap.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
   script(type='text/javascript', src='#{prefix}/dependencies/moment.js')
   script(type='text/javascript', src='#{prefix}/javascripts/table.js')
   script(type='text/javascript', src='#{prefix}/javascripts/ajax-helper.js')

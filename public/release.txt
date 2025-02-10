@@ -1,3 +1,19 @@
+APS 1.7.0
+# Dependency Upgrades 
+- jquery >3.7
+- jquery-ui > 1.14
+- jquery-jeditable = 2.0.19
+- Latest datatables.net compatible with old datatables sytnax and latest jquery (1.13.11)
+- bootstrap = 5.3.3
+- bootstrap-responsive-tabs > 2.0.3
+- Clean up unused dependencies. 
+## Dependency Syntax
+- Necessary syntax updates to support the above updated dependencies. 
+# Misc
+- Resolve misc bug fixes such as admin user list page. 
+# Changes
+- PR: #340 
+
 APS 1.6.5
 - Resolve issue where traveler will not functional unless it has sections defined.  
 

@@ -8,9 +8,7 @@ block head
     title #{orgName} - forms - #{title}
   meta(name='viewport', content='width=device-width, initial-scale=1.0')
   link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/bootstrap/css/bootstrap-responsive.css')
-  link(rel='stylesheet', href='#{prefix}/datatables/css/dataTables.bootstrap.css')
-  link(rel='stylesheet', href='#{prefix}/jquery/ui-lightness/jquery-ui-1.10.2.custom.css')
+  link(rel='stylesheet', href='#{prefix}/datatables/css/jquery.dataTables.css')  
   link(rel='stylesheet', href='#{prefix}/font-awesome-4.3.0/css/font-awesome.css')
   link(rel='stylesheet', href='#{prefix}/stylesheets/style.css')
 
@@ -26,10 +24,12 @@ block content
   .container
     #message
     #modal.modal.hide.fade(tabindex='-1',role='dialog',data-backdrop='static',aria-labelledby='modalLabel',aria-hidden='true')
-      .modal-header
-        h3#modalLabel
-      .modal-body
-      .modal-footer
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3#modalLabel
+          .modal-body
+          .modal-footer
     h3#formtitle #{title}
     p Type: 
       | &nbsp;#{formType}
@@ -40,7 +40,7 @@ block content
     if wipHtml
       div#wipHtmlStatus Rendering unsaved version of the form.
       .btn-group
-        button.btn#togglewip Show saved
+        button.btn.btn-secondary#togglewip Show saved
     .well-large
       form.form-horizontal#output
         if (wipHtml)
@@ -50,37 +50,37 @@ block content
   .button-footer.container#footer-buttons
     if (status === 0)
       .btn-group.dropup
-        button.btn.dropdown-toggle(data-toggle='dropdown')#input-items Basic inputs
+        button.btn.btn-light.dropdown-toggle(data-bs-toggle='dropdown')#input-items Basic inputs
           span.caret
-        ul.dropdown-menu
+        ul.dropdown-menu.dropdown-menu-light
           li#add-checkbox
-            a Checkbox
+            a.dropdown-item Checkbox
           li#add-radio
-            a Radio
+            a.dropdown-item Radio
           li#add-text
-            a Text
+            a.dropdown-item Text
           li#add-figure
-            a Figure
+            a.dropdown-item Figure
           li#add-par
-            a Paragraph
+            a.dropdown-item Paragraph
           li#add-number
-            a Number
+            a.dropdown-item Number
           li#add-file
-            a Upload file
+            a.dropdown-item Upload file
           li#add-other
-            a other types
+            a.dropdown-item other types
       .btn-group.dropup
-        button.btn.dropdown-toggle(data-toggle='dropdown')#struct-items Advanced control
+        button.btn.btn-light.dropdown-toggle(data-bs-toggle='dropdown')#struct-items Advanced control
           span.caret
-        ul.dropdown-menu
+        ul.dropdown-menu.dropdown-menu-light
           //- li#add-grid
           //-   a Grid
-          li#add-section
+          li.dropdown-item#add-section
             a Section
-          li#add-rich
+          li.dropdown-item#add-rich
             a Rich instruction
       .btn-group
-        button.btn#adjust Adjust location
+        button.btn.btn-light#adjust Adjust location
       .btn-group
         button.btn.btn-primary#save Save
     .btn-group
@@ -106,9 +106,9 @@ block content
           button.btn.btn-primary#obsolete(data-toggle='tooltip', title='Obsolete the form') Obsolete
 
 block js
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-1.9.1.js')
-  script(type='text/javascript', src='#{prefix}/jquery/jquery-ui-1.10.2.custom.js')
-  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.js')
+  script(type='text/javascript', src='#{prefix}/jquery/jquery.js')
+  script(type='text/javascript', src='#{prefix}/jquery-ui/jquery-ui.js')
+  script(type='text/javascript', src='#{prefix}/bootstrap/js/bootstrap.bundle.js')
   script(type='text/javascript', src='#{prefix}/rivets/rivets.min.js')
   script(type='text/javascript', src='#{prefix}/tinymce/tinymce.min.js')
   script(type='text/javascript', src='#{prefix}/tinymce/jquery.tinymce.min.js')
@@ -120,8 +120,5 @@ block js
   script(type='text/javascript', src='#{prefix}/javascripts/util.js')
   script(type='text/javascript', src='#{prefix}/javascripts/ajax-helper.js')
   script(type='text/javascript', src='#{prefix}/datatables/js/jquery.dataTables.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/ZeroClipboard.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/TableTools.js')
-  script(type='text/javascript', src='#{prefix}/datatables/js/dataTables.bootstrap.js')
   script(type='text/javascript', src='#{prefix}/javascripts/table.js')
   script(type='text/javascript', src='#{prefix}/javascripts/form-builder.js')

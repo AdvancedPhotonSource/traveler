@@ -413,7 +413,7 @@ var selectColumn = {
 var userIdColumn = {
   sTitle: 'User Id',
   mRender: function(data) {
-    return '<label>' + data + '</label>';
+    return '<a href="' + prefix + '/users/' + data + '">' + data + '</a>';
   },
   mData: '_id',
   bSortable: true,
@@ -567,16 +567,16 @@ function cloneForm(id, type, title) {
   })
     .done(function(d) {
       $('#message').append(
-        '<div class="alert alert-success">' +
-          '<button class="close" data-dismiss="alert">x</button>The form was cloned. ' +
+        '<div class="alert alert-success alert-dismissible">' +
+          '<button class="btn-close" data-bs-dismiss="alert"></button>The form was cloned. ' +
           d +
           '</div>'
       );
     })
     .fail(function(jqXHR) {
       $('#message').append(
-        '<div class="alert alert-error">' +
-          '<button class="close" data-dismiss="alert">x</button>' +
+        '<div class="alert alert-danger alert-dismissible">' +
+          '<button class="btn-close" data-bs-dismiss="alert"></button>' +
           jqXHR.responseText +
           '.</div>'
       );
@@ -592,7 +592,7 @@ function cloneModal(id, type) {
   );
 
   $('#modal .modal-footer').html(
-    '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+    '<button id="submit" class="btn btn-primary">Confirm</button><button id="return" data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
   );
   $('#modal').modal('show');
   $('#submit').click(function() {
@@ -963,22 +963,29 @@ var deviceTravelerLinkColumn = {
 };
 
 function progressBar(active, finished, inProgress, text, width) {
-  var w = width || '100px';
   var t = text || '';
-  var bar = $(
-    '<div class="progress" style="width: ' +
-      w +
-      ';"><div class="bar bar-success" style="width:' +
-      finished +
-      '%;"></div><div class="bar bar-info" style="width:' +
-      inProgress +
-      '%;"></div><div class="progress-value">' +
-      t +
-      '</div></div>'
-  );
+
+  var progressAdditionalStyle = '';
+  var progressBarAdditionalStyle = '';
+
   if (active) {
-    bar.addClass('active').addClass('progress-striped');
+    progressAdditionalStyle += 'active';
+    progressBarAdditionalStyle += 'progress-bar-striped progress-bar-animated';
   }
+
+  bar = $(
+    `<div class="progress-bar-container">` +
+      `<div class="progress-stacked ${progressAdditionalStyle}">` +
+      `<div class="progress" role="progressbar" aria-valuenow="${finished}" aria-valuemin="0" aria-valuemax="100" style="width: ${finished}%">` +
+      `<div class="progress-bar bg-success ${progressBarAdditionalStyle}"></div>` +
+      `</div>` +
+      `<div class="progress" role="progressbar" aria-valuenow="${inProgress}" aria-valuemin="0" aria-valuemax="100" style="width: ${inProgress}%">` +
+      `<div class="progress-bar bg-info ${progressBarAdditionalStyle}"></div>` +
+      `</div>` +
+      `</div><div class="progress-bar-text">${t}</div>` +
+      `</div>`
+  );
+
   return bar[0].outerHTML;
 }
 

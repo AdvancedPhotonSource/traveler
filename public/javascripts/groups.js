@@ -77,35 +77,41 @@ function modifyFromModal(cb) {
 $(function() {
   updateAjaxURL(prefix);
 
-  travelerGlobal.usernames.initialize();
+  if (travelerGlobal.usernames === undefined) {
+    travelerGlobal.usernames = {};
 
-  $('#username').typeahead(
-    {
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'usernames',
-      display: 'displayName',
-      limit: 20,
-      source: travelerGlobal.usernames,
-    }
-  );
+    $('#username').typeahead(
+      {
+        minLength: 1,
+        highlight: true,
+        hint: true,
+      },
+      {
+        name: 'usernames',
+        display: 'displayName',
+        limit: 20,
+        source: travelerGlobal.usernames,
+      }
+    );
+  }
 
-  $('#groupname').typeahead(
-    {
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'groupnames',
-      display: 'displayName',
-      limit: 20,
-      source: travelerGlobal.groupnames,
-    }
-  );
+  if (travelerGlobal.groupnames === undefined) {
+    travelerGlobal.groupnames = {};
+
+    $('#groupname').typeahead(
+      {
+        minLength: 1,
+        highlight: true,
+        hint: true,
+      },
+      {
+        name: 'groupnames',
+        display: 'displayName',
+        limit: 20,
+        source: travelerGlobal.groupnames,
+      }
+    );
+  }
 
   var groupColumns = [
     selectColumn,
@@ -115,7 +121,10 @@ $(function() {
   ];
 
   var groupTable = $('#groups-table').dataTable({
-    sAjaxSource: '/groups/json?deleted=false',
+    sAjaxSource: '/groups/json',
+    fnServerParams: function(aoData) {
+      aoData.push({ name: 'deleted', value: 'false' });
+    },
     sAjaxDataProp: '',
     fnInitComplete: function() {
       Holder.run({
@@ -124,7 +133,10 @@ $(function() {
     },
     bAutoWidth: false,
     iDisplayLength: 10,
-    aLengthMenu: [[10, 50, 100, -1], [10, 50, 100, 'All']],
+    aLengthMenu: [
+      [10, 50, 100, -1],
+      [10, 50, 100, 'All'],
+    ],
     oLanguage: {
       sLoadingRecords: 'Please wait - loading data from the server ...',
     },
@@ -144,7 +156,7 @@ $(function() {
     if (inArray(name, groupTable.fnGetData())) {
       //show message
       $('#message').append(
-        '<div class="alert alert-info"><button class="close" data-dismiss="alert">x</button>The group named <strong>' +
+        '<div class="alert alert-info alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>The group named <strong>' +
           name +
           '</strong> is already in the group list. </div>'
       );
@@ -160,7 +172,7 @@ $(function() {
         }),
         success: function(data, status, jqXHR) {
           $('#message').append(
-            '<div class="alert alert-success"><button class="close" data-dismiss="alert">x</button>' +
+            '<div class="alert alert-success alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>' +
               jqXHR.responseText +
               '</div>'
           );
@@ -168,7 +180,7 @@ $(function() {
         },
         error: function(jqXHR) {
           $('#message').append(
-            '<div class="alert alert-error"><button class="close" data-dismiss="alert">x</button>Cannot update the group list : ' +
+            '<div class="alert alert-danger alert-dismissible"><button class="btn-close" data-bs-dismiss="alert"></button>Cannot update the group list : ' +
               jqXHR.responseText +
               '</div>'
           );
@@ -194,7 +206,7 @@ $(function() {
         );
       });
       $('#modal .modal-footer').html(
-        '<button id="delete" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="delete" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#delete').click(function(e) {
         e.preventDefault();
@@ -208,7 +220,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No groups have been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     }
@@ -240,7 +252,7 @@ $(function() {
       });
       $('#modal .modal-body').append('</form>');
       $('#modal .modal-footer').html(
-        '<button id="modify" class="btn btn-primary">Confirm</button><button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button id="modify" class="btn btn-primary">Confirm</button><button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modify').click(function(e) {
         e.preventDefault();
@@ -254,7 +266,7 @@ $(function() {
       $('#modalLabel').html('Alert');
       $('#modal .modal-body').html('No groups have been selected!');
       $('#modal .modal-footer').html(
-        '<button data-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
+        '<button data-bs-dismiss="modal" aria-hidden="true" class="btn">Return</button>'
       );
       $('#modal').modal('show');
     }
