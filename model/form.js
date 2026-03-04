@@ -208,7 +208,12 @@ var createForm = function(json, newFormResultCallBack) {
   formToCreate.html = json.html || '';
   formToCreate.formType = json.formType || 'normal';
   formToCreate.sharedWith = [];
-  new Form(formToCreate).save(newFormResultCallBack);
+  new Form(formToCreate)
+    .save()
+    .then(function(newForm) {
+      newFormResultCallBack(null, newForm);
+    })
+    .catch(newFormResultCallBack);
 };
 
 module.exports = {
