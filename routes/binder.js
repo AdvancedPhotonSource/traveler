@@ -753,7 +753,7 @@ module.exports = function(app) {
           .send('Work ' + req.params.wid + ' not found in the binder.');
       }
 
-      work.remove();
+      work.deleteOne();
       p.updatedBy = req.session.userid;
       p.updatedOn = Date.now();
 

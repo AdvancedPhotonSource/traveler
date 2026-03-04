@@ -46,10 +46,9 @@ mongoAddress += ':' + (mongoConfig.server_port || '27017');
 mongoAddress += '/' + (mongoConfig.traveler_db || 'traveler');
 
 var mongoOptions = {
-  native_parser: true,
-  poolSize: 5,
+  maxPoolSize: 5,
   connectTimeoutMS: 30000,
-  keepAlive: 1,
+  keepAlive: true,
 };
 
 // Set authentication options if specified
@@ -61,6 +60,7 @@ if (mongoConfig.auth) {
   mongoOptions.auth = config.mongo.auth;
 }
 
+mongoose.set('strictQuery', true);
 mongoose.connect(mongoAddress, mongoOptions);
 mongoose.connection.on('connected', function() {
   logger.info('Mongoose default connection opened.');

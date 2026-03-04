@@ -151,7 +151,7 @@ var binder = {
         .send('Work ' + req.params.wid + ' not found in the binder.');
     }
 
-    work.remove();
+    work.deleteOne();
     binder.updatedBy = userId;
     binder.updatedOn = Date.now();
 

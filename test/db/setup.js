@@ -23,10 +23,12 @@ var mongoHost = mongoConfig.server_address || 'localhost';
 var mongoPort = mongoConfig.server_port || '27017';
 var TEST_DB = 'mongodb://' + mongoHost + ':' + mongoPort + '/traveler_test';
 
+mongoose.set('strictQuery', true);
+
 var mongoOptions = {
-  poolSize: 2,
+  maxPoolSize: 2,
   connectTimeoutMS: 30000,
-  keepAlive: 1,
+  keepAlive: true,
 };
 
 // Use credentials from mongo.json if present, with authSource pointing to

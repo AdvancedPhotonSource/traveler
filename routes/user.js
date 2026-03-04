@@ -98,7 +98,7 @@ function updateUserProfile(user, res) {
         error: user._id + ' is not unique!',
       });
     }
-    user.update(
+    user.updateOne(
       {
         name: result[0].displayName,
         email: result[0].mail,
