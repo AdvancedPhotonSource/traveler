@@ -200,20 +200,21 @@ function updateBinderProgress(travelerDoc) {
         _id: travelerDoc._id,
       },
     },
-  }).exec(function(err, binders) {
-    if (err) {
-      return console.error(
+  })
+    .then(function(binders) {
+      binders.forEach(function(binder) {
+        binder.updateWorkProgress(travelerDoc);
+        binder.updateProgress();
+      });
+    })
+    .catch(function(err) {
+      console.error(
         'cannot find binders for traveler ' +
           travelerDoc._id +
           ', error: ' +
           err.message
       );
-    }
-    binders.forEach(function(binder) {
-      binder.updateWorkProgress(travelerDoc);
-      binder.updateProgress();
     });
-  });
 }
 
 traveler.pre('save', function(next) {
