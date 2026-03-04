@@ -566,7 +566,7 @@ describe('Binder model - database acceptance', function() {
         if (err) return done(err);
         Binder.deleteOne({ _id: doc._id }, function(err, result) {
           if (err) return done(err);
-          result.n.should.equal(1);
+          result.deletedCount.should.equal(1);
           done();
         });
       });

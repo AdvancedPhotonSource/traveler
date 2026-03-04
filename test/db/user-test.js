@@ -231,7 +231,7 @@ describe('User model - database acceptance', function() {
         if (err) return done(err);
         User.deleteOne({ _id: 'todelete' }, function(err, result) {
           if (err) return done(err);
-          result.n.should.equal(1);
+          result.deletedCount.should.equal(1);
           done();
         });
       });
@@ -240,7 +240,7 @@ describe('User model - database acceptance', function() {
     it('should return n=0 for non-existent user', function(done) {
       User.deleteOne({ _id: 'nosuchuser' }, function(err, result) {
         if (err) return done(err);
-        result.n.should.equal(0);
+        result.deletedCount.should.equal(0);
         done();
       });
     });
@@ -349,7 +349,7 @@ describe('User model - database acceptance', function() {
           if (err) return done(err);
           Group.deleteOne({ _id: 'grp-harddel' }, function(err, result) {
             if (err) return done(err);
-            result.n.should.equal(1);
+            result.deletedCount.should.equal(1);
             done();
           });
         });
