@@ -40,55 +40,71 @@ describe('History model - database acceptance', function() {
         t: 'Form',
         i: oid,
         c: [{ p: 'title', v: 'My Form' }],
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.b.should.equal('testuser');
-        doc.t.should.equal('Form');
-        doc.i.toString().should.equal(oid.toString());
-        doc.c.should.have.lengthOf(1);
-        doc.c[0].p.should.equal('title');
-        doc.c[0].v.should.equal('My Form');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.b.should.equal('testuser');
+          doc.t.should.equal('Form');
+          doc.i.toString().should.equal(oid.toString());
+          doc.c.should.have.lengthOf(1);
+          doc.c[0].p.should.equal('title');
+          doc.c[0].v.should.equal('My Form');
+          done();
+        })
+        .catch(done);
     });
 
     it('should use Date as type for the a field', function(done) {
       var now = new Date();
       var oid = new mongoose.Types.ObjectId();
-      new History({ a: now, b: 'user1', t: 'Form', i: oid }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        (doc.a instanceof Date).should.be.true;
-        done();
-      });
+      new History({ a: now, b: 'user1', t: 'Form', i: oid })
+        .save()
+        .then(function(doc) {
+          (doc.a instanceof Date).should.be.true;
+          done();
+        })
+        .catch(done);
     });
 
     it('should fail validation when required field b is missing', function(done) {
       var oid = new mongoose.Types.ObjectId();
-      new History({ a: new Date(), t: 'Form', i: oid }).save(function(err) {
-        err.should.exist;
-        err.errors.should.have.property('b');
-        done();
-      });
+      new History({ a: new Date(), t: 'Form', i: oid }).save().then(
+        function() {
+          done(new Error('Expected validation error'));
+        },
+        function(err) {
+          err.should.exist;
+          err.errors.should.have.property('b');
+          done();
+        }
+      );
     });
 
     it('should fail validation when required field t is missing', function(done) {
       var oid = new mongoose.Types.ObjectId();
-      new History({ a: new Date(), b: 'user1', i: oid }).save(function(err) {
-        err.should.exist;
-        err.errors.should.have.property('t');
-        done();
-      });
+      new History({ a: new Date(), b: 'user1', i: oid }).save().then(
+        function() {
+          done(new Error('Expected validation error'));
+        },
+        function(err) {
+          err.should.exist;
+          err.errors.should.have.property('t');
+          done();
+        }
+      );
     });
 
     it('should fail validation when required field i is missing', function(done) {
-      new History({ a: new Date(), b: 'user1', t: 'Form' }).save(function(err) {
-        err.should.exist;
-        err.errors.should.have.property('i');
-        done();
-      });
+      new History({ a: new Date(), b: 'user1', t: 'Form' }).save().then(
+        function() {
+          done(new Error('Expected validation error'));
+        },
+        function(err) {
+          err.should.exist;
+          err.errors.should.have.property('i');
+          done();
+        }
+      );
     });
 
     it('should store multiple change objects in the c array', function(done) {
@@ -103,13 +119,15 @@ describe('History model - database acceptance', function() {
           { p: 'status', v: 0.5 },
           { p: 'description', v: 'Updated desc' },
         ],
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.c.should.have.lengthOf(3);
-        doc.c[1].p.should.equal('status');
-        doc.c[1].v.should.equal(0.5);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.c.should.have.lengthOf(3);
+          doc.c[1].p.should.equal('status');
+          doc.c[1].v.should.equal(0.5);
+          done();
+        })
+        .catch(done);
     });
 
     it('should store Mixed-type values in change.v', function(done) {
@@ -124,40 +142,42 @@ describe('History model - database acceptance', function() {
           { p: 'boolField', v: true },
           { p: 'objField', v: { nested: 'value' } },
         ],
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.c[0].v.should.equal(42);
-        doc.c[1].v.should.equal(true);
-        doc.c[2].v.should.deep.equal({ nested: 'value' });
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.c[0].v.should.equal(42);
+          doc.c[1].v.should.equal(true);
+          doc.c[2].v.should.deep.equal({ nested: 'value' });
+          done();
+        })
+        .catch(done);
     });
 
     it('should create a History doc with empty c array', function(done) {
       var oid = new mongoose.Types.ObjectId();
-      new History({ a: new Date(), b: 'user1', t: 'Form', i: oid }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new History({ a: new Date(), b: 'user1', t: 'Form', i: oid })
+        .save()
+        .then(function(doc) {
           doc.c.should.have.lengthOf(0);
           done();
-        }
-      );
+        })
+        .catch(done);
     });
   });
 
   describe('#read', function() {
     it('should find History by _id', function(done) {
       var oid = new mongoose.Types.ObjectId();
-      new History({ a: new Date(), b: 'user1', t: 'Form', i: oid }).save(
-        function(err, saved) {
-          if (err) return done(err);
-          History.findById(saved._id, function(err, doc) {
-            if (err) return done(err);
-            doc.should.exist;
-            done();
-          });
-        }
-      );
+      new History({ a: new Date(), b: 'user1', t: 'Form', i: oid })
+        .save()
+        .then(function(saved) {
+          return History.findById(saved._id);
+        })
+        .then(function(doc) {
+          doc.should.exist;
+          done();
+        })
+        .catch(done);
     });
 
     it('should find History records by target document id (i field)', function(done) {
@@ -170,11 +190,11 @@ describe('History model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          History.find({ i: oid1 }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(2);
-            done();
-          });
+          return History.find({ i: oid1 });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(2);
+          done();
         })
         .catch(done);
     });
@@ -192,12 +212,12 @@ describe('History model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          History.find({ t: 'ReleasedForm' }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].t.should.equal('ReleasedForm');
-            done();
-          });
+          return History.find({ t: 'ReleasedForm' });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].t.should.equal('ReleasedForm');
+          done();
         })
         .catch(done);
     });
@@ -211,11 +231,11 @@ describe('History model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          History.find({ b: 'alice' }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(2);
-            done();
-          });
+          return History.find({ b: 'alice' });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(2);
+          done();
         })
         .catch(done);
     });
@@ -280,12 +300,7 @@ describe('History model - database acceptance', function() {
           return saved.saveWithHistory('dave');
         })
         .then(function(updated) {
-          return new Promise(function(resolve, reject) {
-            History.count({ i: updated._id }, function(err, count) {
-              if (err) return reject(err);
-              resolve(count);
-            });
-          });
+          return History.countDocuments({ i: updated._id });
         })
         .then(function(count) {
           count.should.equal(2);
@@ -320,55 +335,58 @@ describe('History model - database acceptance', function() {
 
   describe('addVersion plugin integration - Form', function() {
     it('should start _v at 0 on creation (incrementVersion must be called explicitly)', function(done) {
-      new Form({ title: 'HasTitle', html: '', createdBy: 'tester' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'HasTitle', html: '', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
           doc._v.should.equal(0);
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should increment _v when incrementVersion() is called for a modified title', function(done) {
-      new Form({ html: '', createdBy: 'tester' }).save(function(err, doc) {
-        if (err) return done(err);
-        var v0 = doc._v; // 0
-        doc.set('title', 'New Title');
-        doc.incrementVersion();
-        doc.save(function(err, updated) {
-          if (err) return done(err);
-          updated._v.should.be.above(v0);
-          done();
-        });
-      });
+      new Form({ html: '', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          var v0 = doc._v; // 0
+          doc.set('title', 'New Title');
+          doc.incrementVersion();
+          return doc.save().then(function(updated) {
+            updated._v.should.be.above(v0);
+            done();
+          });
+        })
+        .catch(done);
     });
 
     it('should increment _v when incrementVersion() is called for a modified description', function(done) {
-      new Form({ html: '', createdBy: 'tester' }).save(function(err, doc) {
-        if (err) return done(err);
-        var v0 = doc._v;
-        doc.set('description', 'A new description');
-        doc.incrementVersion();
-        doc.save(function(err, updated) {
-          if (err) return done(err);
-          updated._v.should.be.above(v0);
-          done();
-        });
-      });
+      new Form({ html: '', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          var v0 = doc._v;
+          doc.set('description', 'A new description');
+          doc.incrementVersion();
+          return doc.save().then(function(updated) {
+            updated._v.should.be.above(v0);
+            done();
+          });
+        })
+        .catch(done);
     });
 
     it('should not increment _v when only a non-versioned field (owner) is modified', function(done) {
-      new Form({ html: '', createdBy: 'tester' }).save(function(err, doc) {
-        if (err) return done(err);
-        var v0 = doc._v; // 0
-        doc.set('owner', 'newowner');
-        // incrementVersion() NOT called — owner is not in fieldsToVersion
-        doc.save(function(err, updated) {
-          if (err) return done(err);
-          updated._v.should.equal(v0); // unchanged
-          done();
-        });
-      });
+      new Form({ html: '', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          var v0 = doc._v; // 0
+          doc.set('owner', 'newowner');
+          // incrementVersion() NOT called — owner is not in fieldsToVersion
+          return doc.save().then(function(updated) {
+            updated._v.should.equal(v0); // unchanged
+            done();
+          });
+        })
+        .catch(done);
     });
   });
 

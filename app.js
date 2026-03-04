@@ -48,7 +48,6 @@ mongoAddress += '/' + (mongoConfig.traveler_db || 'traveler');
 var mongoOptions = {
   maxPoolSize: 5,
   connectTimeoutMS: 30000,
-  keepAlive: true,
 };
 
 // Set authentication options if specified

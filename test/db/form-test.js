@@ -64,71 +64,75 @@ describe('Form model - database acceptance', function() {
 
   describe('#create - pre-save hook', function() {
     it('should create a form with empty html and produce empty mapping/labels/types', function(done) {
-      new Form({ title: 'Empty', html: '', createdBy: 'tester' }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        doc.mapping.should.deep.equal({});
-        doc.labels.should.deep.equal({});
-        doc.types.should.deep.equal({});
-        done();
-      });
+      new Form({ title: 'Empty', html: '', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          doc.mapping.should.deep.equal({});
+          doc.labels.should.deep.equal({});
+          doc.types.should.deep.equal({});
+          done();
+        })
+        .catch(done);
     });
 
     it('should parse html and populate mapping keyed by userkey', function(done) {
-      new Form({ title: 'T1', html: SIMPLE_HTML, createdBy: 'tester' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'T1', html: SIMPLE_HTML, createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
           doc.mapping.should.have.property('temp_key', 'temperature');
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should parse html and populate labels keyed by input name', function(done) {
-      new Form({ title: 'T2', html: SIMPLE_HTML, createdBy: 'tester' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'T2', html: SIMPLE_HTML, createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
           doc.labels.should.have.property('temperature', 'Temperature');
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should parse html and populate types keyed by input name', function(done) {
-      new Form({ title: 'T3', html: SIMPLE_HTML, createdBy: 'tester' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'T3', html: SIMPLE_HTML, createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
           doc.types.should.have.property('temperature', 'number');
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should parse html with multiple inputs correctly', function(done) {
-      new Form({ title: 'T4', html: TWO_INPUT_HTML, createdBy: 'tester' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'T4', html: TWO_INPUT_HTML, createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
           doc.mapping.should.have.property('voltage_key', 'voltage');
           doc.labels.should.have.property('voltage', 'Voltage');
           doc.labels.should.have.property('notes', 'Notes');
           doc.types.should.have.property('voltage', 'number');
           // textarea has no type attribute so the value is not stored in MongoDB
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should reject duplicate input names with FormError', function(done) {
-      new Form({ title: 'Bad', html: DUP_NAME_HTML, createdBy: 'tester' }).save(
-        function(err) {
-          err.should.exist;
-          (err instanceof FormError).should.be.true;
-          err.status.should.equal(400);
-          done();
-        }
-      );
+      new Form({ title: 'Bad', html: DUP_NAME_HTML, createdBy: 'tester' })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof FormError).should.be.true;
+            err.status.should.equal(400);
+            done();
+          }
+        );
     });
 
     it('should reject duplicate userkeys with FormError', function(done) {
@@ -136,11 +140,18 @@ describe('Form model - database acceptance', function() {
         title: 'DupKey',
         html: DUP_USERKEY_HTML,
         createdBy: 'tester',
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof FormError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof FormError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should allow radio inputs sharing the same name with consistent userkey', function(done) {
@@ -148,12 +159,14 @@ describe('Form model - database acceptance', function() {
         title: 'Radio',
         html: RADIO_SAME_USERKEY_HTML,
         createdBy: 'tester',
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.should.exist;
-        doc.mapping.should.have.property('choice_key', 'choice');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.should.exist;
+          doc.mapping.should.have.property('choice_key', 'choice');
+          done();
+        })
+        .catch(done);
     });
 
     it('should reject radio inputs with inconsistent userkeys with FormError', function(done) {
@@ -161,35 +174,45 @@ describe('Form model - database acceptance', function() {
         title: 'BadRadio',
         html: RADIO_DIFF_USERKEY_HTML,
         createdBy: 'tester',
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof FormError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof FormError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should create a form with formType normal', function(done) {
-      new Form({ title: 'NormalForm', html: '', formType: 'normal' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'NormalForm', html: '', formType: 'normal' })
+        .save()
+        .then(function(doc) {
           doc.formType.should.equal('normal');
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should create a form with formType discrepancy', function(done) {
-      new Form({ title: 'DiscForm', html: '', formType: 'discrepancy' }).save(
-        function(err, doc) {
-          if (err) return done(err);
+      new Form({ title: 'DiscForm', html: '', formType: 'discrepancy' })
+        .save()
+        .then(function(doc) {
           doc.formType.should.equal('discrepancy');
           done();
-        }
-      );
+        })
+        .catch(done);
     });
 
     it('should reject an invalid formType enum value', function(done) {
-      new Form({ title: 'BadType', html: '', formType: 'invalid' }).save(
+      new Form({ title: 'BadType', html: '', formType: 'invalid' }).save().then(
+        function() {
+          done(new Error('Expected validation error'));
+        },
         function(err) {
           err.should.exist;
           done();
@@ -200,17 +223,17 @@ describe('Form model - database acceptance', function() {
 
   describe('#read', function() {
     it('should find a form by _id', function(done) {
-      new Form({ title: 'FindMe', html: '', createdBy: 'tester' }).save(
-        function(err, saved) {
-          if (err) return done(err);
-          Form.findById(saved._id, function(err, doc) {
-            if (err) return done(err);
-            doc.should.exist;
-            doc.title.should.equal('FindMe');
-            done();
-          });
-        }
-      );
+      new Form({ title: 'FindMe', html: '', createdBy: 'tester' })
+        .save()
+        .then(function(saved) {
+          return Form.findById(saved._id);
+        })
+        .then(function(doc) {
+          doc.should.exist;
+          doc.title.should.equal('FindMe');
+          done();
+        })
+        .catch(done);
     });
 
     it('should find forms by status', function(done) {
@@ -220,12 +243,12 @@ describe('Form model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          Form.find({ status: 0 }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].title.should.equal('Draft1');
-            done();
-          });
+          return Form.find({ status: 0 });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].title.should.equal('Draft1');
+          done();
         })
         .catch(done);
     });
@@ -237,12 +260,12 @@ describe('Form model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          Form.find({ createdBy: 'alice' }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].title.should.equal('A');
-            done();
-          });
+          return Form.find({ createdBy: 'alice' });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].title.should.equal('A');
+          done();
         })
         .catch(done);
     });
@@ -254,12 +277,12 @@ describe('Form model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          Form.find({ archived: false }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].title.should.equal('Active');
-            done();
-          });
+          return Form.find({ archived: false });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].title.should.equal('Active');
+          done();
         })
         .catch(done);
     });
@@ -267,84 +290,90 @@ describe('Form model - database acceptance', function() {
 
   describe('#defaults', function() {
     it('should default status to 0 (draft)', function(done) {
-      new Form({ title: 'Defaults', html: '' }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.status.should.equal(0);
-        done();
-      });
+      new Form({ title: 'Defaults', html: '' })
+        .save()
+        .then(function(doc) {
+          doc.status.should.equal(0);
+          done();
+        })
+        .catch(done);
     });
 
     it('should default archived to false', function(done) {
-      new Form({ title: 'DefArch', html: '' }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.archived.should.equal(false);
-        done();
-      });
+      new Form({ title: 'DefArch', html: '' })
+        .save()
+        .then(function(doc) {
+          doc.archived.should.equal(false);
+          done();
+        })
+        .catch(done);
     });
 
     it('should default formType to normal', function(done) {
-      new Form({ title: 'DefType', html: '' }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.formType.should.equal('normal');
-        done();
-      });
+      new Form({ title: 'DefType', html: '' })
+        .save()
+        .then(function(doc) {
+          doc.formType.should.equal('normal');
+          done();
+        })
+        .catch(done);
     });
   });
 
   describe('#update - status transitions', function() {
     it('should transition status from 0 to 0.5 (submit for release)', function(done) {
-      new Form({ title: 'Trans1', html: '' }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.status.should.equal(0);
-        Form.findByIdAndUpdate(
-          doc._id,
-          { $set: { status: 0.5 } },
-          { new: true },
-          function(err, updated) {
-            if (err) return done(err);
-            updated.status.should.equal(0.5);
-            done();
-          }
-        );
-      });
+      new Form({ title: 'Trans1', html: '' })
+        .save()
+        .then(function(doc) {
+          doc.status.should.equal(0);
+          return Form.findByIdAndUpdate(
+            doc._id,
+            { $set: { status: 0.5 } },
+            { new: true }
+          );
+        })
+        .then(function(updated) {
+          updated.status.should.equal(0.5);
+          done();
+        })
+        .catch(done);
     });
 
     it('should transition status from 0.5 back to 0 (reject to draft)', function(done) {
-      new Form({ title: 'Trans2', html: '', status: 0.5 }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        Form.findByIdAndUpdate(
-          doc._id,
-          { $set: { status: 0 } },
-          { new: true },
-          function(err, updated) {
-            if (err) return done(err);
-            updated.status.should.equal(0);
-            done();
-          }
-        );
-      });
+      new Form({ title: 'Trans2', html: '', status: 0.5 })
+        .save()
+        .then(function(doc) {
+          return Form.findByIdAndUpdate(
+            doc._id,
+            { $set: { status: 0 } },
+            { new: true }
+          );
+        })
+        .then(function(updated) {
+          updated.status.should.equal(0);
+          done();
+        })
+        .catch(done);
     });
 
     it('should archive a form by setting archived=true and archivedOn', function(done) {
       var archiveDate = new Date();
-      new Form({ title: 'ToArchive', html: '' }).save(function(err, doc) {
-        if (err) return done(err);
-        Form.findByIdAndUpdate(
-          doc._id,
-          { $set: { archived: true, archivedOn: archiveDate, status: 2 } },
-          { new: true },
-          function(err, updated) {
-            if (err) return done(err);
-            updated.archived.should.equal(true);
-            updated.status.should.equal(2);
-            updated.archivedOn.getTime().should.equal(archiveDate.getTime());
-            done();
-          }
-        );
-      });
+      new Form({ title: 'ToArchive', html: '' })
+        .save()
+        .then(function(doc) {
+          return Form.findByIdAndUpdate(
+            doc._id,
+            { $set: { archived: true, archivedOn: archiveDate, status: 2 } },
+            { new: true }
+          );
+        })
+        .then(function(updated) {
+          updated.archived.should.equal(true);
+          updated.status.should.equal(2);
+          updated.archivedOn.getTime().should.equal(archiveDate.getTime());
+          done();
+        })
+        .catch(done);
     });
 
     it('should exclude archived forms from { archived: false } query', function(done) {
@@ -354,12 +383,12 @@ describe('Form model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          Form.find({ archived: false }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].title.should.equal('Live');
-            done();
-          });
+          return Form.find({ archived: false });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].title.should.equal('Live');
+          done();
         })
         .catch(done);
     });
@@ -371,13 +400,15 @@ describe('Form model - database acceptance', function() {
         title: 'Shared',
         html: '',
         sharedWith: [{ _id: 'alice', username: 'alice', access: 0 }],
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.sharedWith.should.have.lengthOf(1);
-        doc.sharedWith[0]._id.should.equal('alice');
-        doc.sharedWith[0].access.should.equal(0);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.sharedWith.should.have.lengthOf(1);
+          doc.sharedWith[0]._id.should.equal('alice');
+          doc.sharedWith[0].access.should.equal(0);
+          done();
+        })
+        .catch(done);
     });
 
     it('should persist sharedGroup subdocuments', function(done) {
@@ -385,12 +416,14 @@ describe('Form model - database acceptance', function() {
         title: 'SharedGrp',
         html: '',
         sharedGroup: [{ _id: 'eng-grp', groupname: 'Engineering', access: 1 }],
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.sharedGroup.should.have.lengthOf(1);
-        doc.sharedGroup[0]._id.should.equal('eng-grp');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.sharedGroup.should.have.lengthOf(1);
+          doc.sharedGroup[0]._id.should.equal('eng-grp');
+          done();
+        })
+        .catch(done);
     });
   });
 
@@ -449,12 +482,7 @@ describe('Form model - database acceptance', function() {
         })
         .then(function(updated) {
           updated.__updates.should.have.lengthOf(2);
-          return new Promise(function(resolve, reject) {
-            History.count({ i: updated._id }, function(err, count) {
-              if (err) return reject(err);
-              resolve(count);
-            });
-          });
+          return History.countDocuments({ i: updated._id });
         })
         .then(function(count) {
           count.should.equal(2);
@@ -480,7 +508,6 @@ describe('Form model - database acceptance', function() {
       return f
         .saveWithHistory('frank')
         .then(function(saved) {
-          var v0 = saved._v;
           saved.set('title', 'VerTest Updated');
           saved.incrementVersion(); // must be called explicitly
           return saved.saveWithHistory('frank');
@@ -493,40 +520,44 @@ describe('Form model - database acceptance', function() {
 
   describe('FormFile model', function() {
     it('should create a FormFile linked to a Form by ObjectId', function(done) {
-      new Form({ title: 'FileForm', html: '' }).save(function(err, form) {
-        if (err) return done(err);
-        new FormFile({
-          form: form._id,
-          uploadedBy: 'tester',
-          inputType: 'file',
-          file: {
-            path: '/uploads/test.pdf',
-            encoding: '7bit',
-            mimetype: 'application/pdf',
-          },
-        }).save(function(err, ff) {
-          if (err) return done(err);
-          ff.form.toString().should.equal(form._id.toString());
-          ff.file.mimetype.should.equal('application/pdf');
-          done();
-        });
-      });
+      new Form({ title: 'FileForm', html: '' })
+        .save()
+        .then(function(form) {
+          return new FormFile({
+            form: form._id,
+            uploadedBy: 'tester',
+            inputType: 'file',
+            file: {
+              path: '/uploads/test.pdf',
+              encoding: '7bit',
+              mimetype: 'application/pdf',
+            },
+          })
+            .save()
+            .then(function(ff) {
+              ff.form.toString().should.equal(form._id.toString());
+              ff.file.mimetype.should.equal('application/pdf');
+              done();
+            });
+        })
+        .catch(done);
     });
 
     it('should find FormFiles by form reference', function(done) {
-      new Form({ title: 'RefForm', html: '' }).save(function(err, form) {
-        if (err) return done(err);
-        new FormFile({ form: form._id, uploadedBy: 'tester' }).save(function(
-          err
-        ) {
-          if (err) return done(err);
-          FormFile.find({ form: form._id }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            done();
-          });
-        });
-      });
+      new Form({ title: 'RefForm', html: '' })
+        .save()
+        .then(function(form) {
+          return new FormFile({ form: form._id, uploadedBy: 'tester' })
+            .save()
+            .then(function() {
+              return FormFile.find({ form: form._id });
+            })
+            .then(function(docs) {
+              docs.should.have.lengthOf(1);
+              done();
+            });
+        })
+        .catch(done);
     });
   });
 });

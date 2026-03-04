@@ -26,37 +26,34 @@ describe('Traveler model - database acceptance', function() {
 
   describe('#create', function() {
     it('should default status to 0 (initialized)', function(done) {
-      new Traveler({ title: 'T1', createdBy: 'tester' }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        doc.status.should.equal(0);
-        done();
-      });
+      new Traveler({ title: 'T1', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          doc.status.should.equal(0);
+          done();
+        })
+        .catch(done);
     });
 
     it('should default totalInput and finishedInput to 0', function(done) {
-      new Traveler({ title: 'T2', createdBy: 'tester' }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        doc.totalInput.should.equal(0);
-        doc.finishedInput.should.equal(0);
-        done();
-      });
+      new Traveler({ title: 'T2', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          doc.totalInput.should.equal(0);
+          doc.finishedInput.should.equal(0);
+          done();
+        })
+        .catch(done);
     });
 
     it('should default archived to false', function(done) {
-      new Traveler({ title: 'T3', createdBy: 'tester' }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        doc.archived.should.equal(false);
-        done();
-      });
+      new Traveler({ title: 'T3', createdBy: 'tester' })
+        .save()
+        .then(function(doc) {
+          doc.archived.should.equal(false);
+          done();
+        })
+        .catch(done);
     });
 
     it('should persist devices, locations, and tags arrays', function(done) {
@@ -65,39 +62,42 @@ describe('Traveler model - database acceptance', function() {
         devices: ['motor1', 'motor2'],
         locations: ['sector-27'],
         tags: ['run1', 'experiment'],
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.devices.should.deep.equal(['motor1', 'motor2']);
-        doc.locations.should.deep.equal(['sector-27']);
-        doc.tags.should.deep.equal(['run1', 'experiment']);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.devices.should.deep.equal(['motor1', 'motor2']);
+          doc.locations.should.deep.equal(['sector-27']);
+          doc.tags.should.deep.equal(['run1', 'experiment']);
+          done();
+        })
+        .catch(done);
     });
 
     it('should persist referenceForm ObjectId', function(done) {
       var oid = new mongoose.Types.ObjectId();
-      new Traveler({ title: 'RefForm', referenceForm: oid }).save(function(
-        err,
-        doc
-      ) {
-        if (err) return done(err);
-        doc.referenceForm.toString().should.equal(oid.toString());
-        done();
-      });
+      new Traveler({ title: 'RefForm', referenceForm: oid })
+        .save()
+        .then(function(doc) {
+          doc.referenceForm.toString().should.equal(oid.toString());
+          done();
+        })
+        .catch(done);
     });
   });
 
   describe('#read', function() {
     it('should find a traveler by _id', function(done) {
-      new Traveler({ title: 'FindMe' }).save(function(err, saved) {
-        if (err) return done(err);
-        Traveler.findById(saved._id, function(err, doc) {
-          if (err) return done(err);
+      new Traveler({ title: 'FindMe' })
+        .save()
+        .then(function(saved) {
+          return Traveler.findById(saved._id);
+        })
+        .then(function(doc) {
           doc.should.exist;
           doc.title.should.equal('FindMe');
           done();
-        });
-      });
+        })
+        .catch(done);
     });
 
     it('should find travelers by status', function(done) {
@@ -107,12 +107,12 @@ describe('Traveler model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          Traveler.find({ status: 1 }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].title.should.equal('Active');
-            done();
-          });
+          return Traveler.find({ status: 1 });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].title.should.equal('Active');
+          done();
         })
         .catch(done);
     });
@@ -124,12 +124,12 @@ describe('Traveler model - database acceptance', function() {
       ];
       Promise.all(saves)
         .then(function() {
-          Traveler.find({ archived: { $ne: true } }, function(err, docs) {
-            if (err) return done(err);
-            docs.should.have.lengthOf(1);
-            docs[0].title.should.equal('Live');
-            done();
-          });
+          return Traveler.find({ archived: { $ne: true } });
+        })
+        .then(function(docs) {
+          docs.should.have.lengthOf(1);
+          docs[0].title.should.equal('Live');
+          done();
         })
         .catch(done);
     });
@@ -140,66 +140,71 @@ describe('Traveler model - database acceptance', function() {
 
     statusValues.forEach(function(s) {
       it('should persist status value ' + s, function(done) {
-        new Traveler({ title: 'StatusTest' }).save(function(err, doc) {
-          if (err) return done(err);
-          Traveler.findByIdAndUpdate(
-            doc._id,
-            { $set: { status: s } },
-            { new: true },
-            function(err, updated) {
-              if (err) return done(err);
-              updated.status.should.equal(s);
-              done();
-            }
-          );
-        });
+        new Traveler({ title: 'StatusTest' })
+          .save()
+          .then(function(doc) {
+            return Traveler.findByIdAndUpdate(
+              doc._id,
+              { $set: { status: s } },
+              { new: true }
+            );
+          })
+          .then(function(updated) {
+            updated.status.should.equal(s);
+            done();
+          })
+          .catch(done);
       });
     });
 
     it('should update totalInput and finishedInput', function(done) {
-      new Traveler({ title: 'Progress' }).save(function(err, doc) {
-        if (err) return done(err);
-        Traveler.findByIdAndUpdate(
-          doc._id,
-          { $set: { totalInput: 10, finishedInput: 7 } },
-          { new: true },
-          function(err, updated) {
-            if (err) return done(err);
-            updated.totalInput.should.equal(10);
-            updated.finishedInput.should.equal(7);
-            done();
-          }
-        );
-      });
+      new Traveler({ title: 'Progress' })
+        .save()
+        .then(function(doc) {
+          return Traveler.findByIdAndUpdate(
+            doc._id,
+            { $set: { totalInput: 10, finishedInput: 7 } },
+            { new: true }
+          );
+        })
+        .then(function(updated) {
+          updated.totalInput.should.equal(10);
+          updated.finishedInput.should.equal(7);
+          done();
+        })
+        .catch(done);
     });
 
     it('should push an input name into touchedInputs', function(done) {
-      new Traveler({ title: 'Touched' }).save(function(err, doc) {
-        if (err) return done(err);
-        Traveler.findByIdAndUpdate(
-          doc._id,
-          { $push: { touchedInputs: 'temperature' } },
-          { new: true },
-          function(err, updated) {
-            if (err) return done(err);
-            updated.touchedInputs.should.include('temperature');
-            done();
-          }
-        );
-      });
+      new Traveler({ title: 'Touched' })
+        .save()
+        .then(function(doc) {
+          return Traveler.findByIdAndUpdate(
+            doc._id,
+            { $push: { touchedInputs: 'temperature' } },
+            { new: true }
+          );
+        })
+        .then(function(updated) {
+          updated.touchedInputs.should.include('temperature');
+          done();
+        })
+        .catch(done);
     });
   });
 
   describe('#delete', function() {
     it('should delete a traveler by _id', function(done) {
-      new Traveler({ title: 'ToDelete' }).save(function(err, doc) {
-        if (err) return done(err);
-        Traveler.deleteOne({ _id: doc._id }, function(err, result) {
-          if (err) return done(err);
+      new Traveler({ title: 'ToDelete' })
+        .save()
+        .then(function(doc) {
+          return Traveler.deleteOne({ _id: doc._id });
+        })
+        .then(function(result) {
           result.deletedCount.should.equal(1);
           done();
-        });
-      });
+        })
+        .catch(done);
     });
   });
 
@@ -211,11 +216,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'text',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal('any text here');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal('any text here');
+          done();
+        })
+        .catch(done);
     });
 
     it('should save inputType=textarea with any string value', function(done) {
@@ -225,11 +232,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'textarea',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal('multi\nline\ntext');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal('multi\nline\ntext');
+          done();
+        })
+        .catch(done);
     });
 
     it('should save inputType=number with a numeric value', function(done) {
@@ -239,11 +248,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'number',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal(3.14);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal(3.14);
+          done();
+        })
+        .catch(done);
     });
 
     it('should reject inputType=number with a non-numeric string value', function(done) {
@@ -253,11 +264,18 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'number',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof DataError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof DataError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should save inputType=number with integer 0', function(done) {
@@ -267,11 +285,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'number',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal(0);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal(0);
+          done();
+        })
+        .catch(done);
     });
 
     it('should save inputType=checkbox with boolean true', function(done) {
@@ -281,11 +301,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'checkbox',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal(true);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal(true);
+          done();
+        })
+        .catch(done);
     });
 
     it('should save inputType=checkbox with boolean false', function(done) {
@@ -295,11 +317,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'checkbox',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal(false);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal(false);
+          done();
+        })
+        .catch(done);
     });
 
     it('should reject inputType=checkbox with a non-boolean string value', function(done) {
@@ -309,11 +333,18 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'checkbox',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof DataError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof DataError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should save inputType=date with yyyy-mm-dd format', function(done) {
@@ -323,11 +354,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'date',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal('2024-03-15');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal('2024-03-15');
+          done();
+        })
+        .catch(done);
     });
 
     it('should reject inputType=date with mm/dd/yyyy format', function(done) {
@@ -337,11 +370,18 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'date',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof DataError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof DataError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should reject inputType=date with a partial date string', function(done) {
@@ -351,11 +391,18 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'date',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof DataError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof DataError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should save inputType=time with hh:mm format', function(done) {
@@ -365,11 +412,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'time',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal('14:30');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal('14:30');
+          done();
+        })
+        .catch(done);
     });
 
     it('should reject inputType=time with h:mm format (missing leading zero)', function(done) {
@@ -379,11 +428,18 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'time',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof DataError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof DataError).should.be.true;
+            done();
+          }
+        );
     });
 
     it('should save inputType=datetime-local with yyyy-mm-ddThh:mm format', function(done) {
@@ -393,11 +449,13 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'datetime-local',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.value.should.equal('2024-03-15T09:30');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.value.should.equal('2024-03-15T09:30');
+          done();
+        })
+        .catch(done);
     });
 
     it('should reject inputType=datetime-local with an invalid datetime string', function(done) {
@@ -407,60 +465,71 @@ describe('Traveler model - database acceptance', function() {
         inputType: 'datetime-local',
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err) {
-        err.should.exist;
-        (err instanceof DataError).should.be.true;
-        done();
-      });
+      })
+        .save()
+        .then(
+          function() {
+            done(new Error('Expected validation error'));
+          },
+          function(err) {
+            err.should.exist;
+            (err instanceof DataError).should.be.true;
+            done();
+          }
+        );
     });
   });
 
   describe('TravelerNote model', function() {
     it('should create a note linked to a traveler by ObjectId', function(done) {
-      new Traveler({ title: 'ForNote' }).save(function(err, traveler) {
-        if (err) return done(err);
-        new TravelerNote({
-          traveler: traveler._id,
-          name: 'observations',
-          value: 'All nominal',
-          inputBy: 'tester',
-          inputOn: new Date(),
-        }).save(function(err, note) {
-          if (err) return done(err);
-          note.traveler.toString().should.equal(traveler._id.toString());
-          note.value.should.equal('All nominal');
-          done();
-        });
-      });
+      new Traveler({ title: 'ForNote' })
+        .save()
+        .then(function(traveler) {
+          return new TravelerNote({
+            traveler: traveler._id,
+            name: 'observations',
+            value: 'All nominal',
+            inputBy: 'tester',
+            inputOn: new Date(),
+          })
+            .save()
+            .then(function(note) {
+              note.traveler.toString().should.equal(traveler._id.toString());
+              note.value.should.equal('All nominal');
+              done();
+            });
+        })
+        .catch(done);
     });
 
     it('should find all notes for a traveler', function(done) {
-      new Traveler({ title: 'MultiNote' }).save(function(err, traveler) {
-        if (err) return done(err);
-        var saves = [
-          new TravelerNote({
-            traveler: traveler._id,
-            value: 'Note 1',
-            inputBy: 'a',
-            inputOn: new Date(),
-          }).save(),
-          new TravelerNote({
-            traveler: traveler._id,
-            value: 'Note 2',
-            inputBy: 'a',
-            inputOn: new Date(),
-          }).save(),
-        ];
-        Promise.all(saves)
-          .then(function() {
-            TravelerNote.find({ traveler: traveler._id }, function(err, notes) {
-              if (err) return done(err);
+      new Traveler({ title: 'MultiNote' })
+        .save()
+        .then(function(traveler) {
+          var saves = [
+            new TravelerNote({
+              traveler: traveler._id,
+              value: 'Note 1',
+              inputBy: 'a',
+              inputOn: new Date(),
+            }).save(),
+            new TravelerNote({
+              traveler: traveler._id,
+              value: 'Note 2',
+              inputBy: 'a',
+              inputOn: new Date(),
+            }).save(),
+          ];
+          return Promise.all(saves)
+            .then(function() {
+              return TravelerNote.find({ traveler: traveler._id });
+            })
+            .then(function(notes) {
               notes.should.have.lengthOf(2);
               done();
             });
-          })
-          .catch(done);
-      });
+        })
+        .catch(done);
     });
   });
 
@@ -475,13 +544,15 @@ describe('Traveler model - database acceptance', function() {
         ],
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.referenceForm.toString().should.equal(formId.toString());
-        doc.records.should.have.lengthOf(2);
-        doc.records[0].name.should.equal('temperature');
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.referenceForm.toString().should.equal(formId.toString());
+          doc.records.should.have.lengthOf(2);
+          doc.records[0].name.should.equal('temperature');
+          done();
+        })
+        .catch(done);
     });
 
     it('should store mixed value types in logData records', function(done) {
@@ -493,27 +564,28 @@ describe('Traveler model - database acceptance', function() {
         ],
         inputBy: 'tester',
         inputOn: new Date(),
-      }).save(function(err, doc) {
-        if (err) return done(err);
-        doc.records[0].value.should.equal(42);
-        doc.records[1].value.should.equal('pass');
-        doc.records[2].value.should.equal(true);
-        done();
-      });
+      })
+        .save()
+        .then(function(doc) {
+          doc.records[0].value.should.equal(42);
+          doc.records[1].value.should.equal('pass');
+          doc.records[2].value.should.equal(true);
+          done();
+        })
+        .catch(done);
     });
 
     it('should find a Log by _id', function(done) {
-      new Log({ inputBy: 'tester', inputOn: new Date() }).save(function(
-        err,
-        saved
-      ) {
-        if (err) return done(err);
-        Log.findById(saved._id, function(err, doc) {
-          if (err) return done(err);
+      new Log({ inputBy: 'tester', inputOn: new Date() })
+        .save()
+        .then(function(saved) {
+          return Log.findById(saved._id);
+        })
+        .then(function(doc) {
           doc.should.exist;
           done();
-        });
-      });
+        })
+        .catch(done);
     });
   });
 });

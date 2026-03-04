@@ -28,7 +28,6 @@ mongoose.set('strictQuery', true);
 var mongoOptions = {
   maxPoolSize: 2,
   connectTimeoutMS: 30000,
-  keepAlive: true,
 };
 
 // Use credentials from mongo.json if present, with authSource pointing to
@@ -51,7 +50,12 @@ function connect(done) {
   if (mongoose.connection.readyState === 1) {
     return done();
   }
-  mongoose.connect(TEST_DB, mongoOptions, done);
+  mongoose
+    .connect(TEST_DB, mongoOptions)
+    .then(function() {
+      done();
+    })
+    .catch(done);
 }
 
 /**
@@ -59,7 +63,12 @@ function connect(done) {
  * @param {Function} done - Mocha done callback
  */
 function disconnect(done) {
-  mongoose.connection.close(done);
+  mongoose.connection
+    .close()
+    .then(function() {
+      done();
+    })
+    .catch(done);
 }
 
 /**

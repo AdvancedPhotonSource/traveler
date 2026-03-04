@@ -241,14 +241,18 @@ binder.methods.updateProgress = function(cb) {
 
   if (this.isModified()) {
     this.progressUpdatedOn = Date.now();
-    this.save(function(err, newBinder) {
-      if (cb) {
-        return cb(err, newBinder);
-      }
-      if (err) {
+    this.save()
+      .then(function(newBinder) {
+        if (cb) {
+          return cb(null, newBinder);
+        }
+      })
+      .catch(function(err) {
+        if (cb) {
+          return cb(err);
+        }
         console.error(err);
-      }
-    });
+      });
   }
 };
 
