@@ -3,7 +3,10 @@
   "version": "1.7.0",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "mocha test/lib/*.js",
+    "test:db": "mocha test/db/setup.js test/db/user-test.js test/db/form-test.js test/db/traveler-test.js test/db/binder-test.js test/db/released-form-test.js test/db/history-test.js --timeout 10000",
+    "test:all": "mocha test/lib/*.js test/db/setup.js test/db/user-test.js test/db/form-test.js test/db/traveler-test.js test/db/binder-test.js test/db/released-form-test.js test/db/history-test.js --timeout 10000"
   },
   "repository": {
     "type": "git",
