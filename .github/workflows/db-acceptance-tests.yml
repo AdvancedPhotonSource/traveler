@@ -16,10 +16,11 @@ jobs:
       max-parallel: 1
       matrix:
         mongodb-version: [
-          #"4.4", 
-          #"6.0", 
-          #"7.0", 
-          "8.0"]
+          "8.0",
+          "7.0",
+          "6.0",
+          "4.4"
+        ]
 
     services:
       mongodb:
