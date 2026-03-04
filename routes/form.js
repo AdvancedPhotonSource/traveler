@@ -42,13 +42,14 @@ module.exports = function(app) {
         },
       },
       'title formType status tags mapping createdBy createdOn updatedBy updatedOn publicAccess sharedWith sharedGroup _v'
-    ).exec(function(err, forms) {
-      if (err) {
+    )
+      .then(function(forms) {
+        res.status(200).json(forms);
+      })
+      .catch(function(err) {
         logger.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(forms);
-    });
+      });
   });
 
   app.get('/transferredforms/json', auth.ensureAuthenticated, function(
@@ -63,13 +64,14 @@ module.exports = function(app) {
         },
       },
       'title formType status tags createdBy createdOn updatedBy updatedOn transferredOn publicAccess sharedWith sharedGroup'
-    ).exec(function(err, forms) {
-      if (err) {
+    )
+      .then(function(forms) {
+        res.status(200).json(forms);
+      })
+      .catch(function(err) {
         logger.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(forms);
-    });
+      });
   });
 
   app.get('/allforms/json', auth.ensureAuthenticated, function(req, res) {
@@ -79,12 +81,12 @@ module.exports = function(app) {
         'title formType status tags createdBy createdOn updatedBy updatedOn sharedWith sharedGroup'
       )
         .lean()
-        .exec(function(err, forms) {
-          if (err) {
-            logger.error(err);
-            return res.status(500).send(err.message);
-          }
+        .then(function(forms) {
           res.status(200).json(forms);
+        })
+        .catch(function(err) {
+          logger.error(err);
+          return res.status(500).send(err.message);
         });
     } else {
       res.status(200).json('You are not authorized to view all forms.');
@@ -97,32 +99,25 @@ module.exports = function(app) {
         _id: req.session.userid,
       },
       'forms'
-    ).exec(function(err, me) {
-      if (err) {
+    )
+      .then(function(me) {
+        if (!me) {
+          return res.status(400).send('cannot identify the current user');
+        }
+        return Form.find(
+          {
+            _id: { $in: me.forms },
+            archived: { $ne: true },
+          },
+          'title formType status tags owner updatedBy updatedOn publicAccess sharedWith sharedGroup'
+        ).then(function(forms) {
+          res.status(200).json(forms);
+        });
+      })
+      .catch(function(err) {
         logger.error(err);
         return res.status(500).send(err.message);
-      }
-      if (!me) {
-        return res.status(400).send('cannot identify the current user');
-      }
-      Form.find(
-        {
-          _id: {
-            $in: me.forms,
-          },
-          archived: {
-            $ne: true,
-          },
-        },
-        'title formType status tags owner updatedBy updatedOn publicAccess sharedWith sharedGroup'
-      ).exec(function(fErr, forms) {
-        if (fErr) {
-          logger.error(fErr);
-          return res.status(500).send(fErr.message);
-        }
-        res.status(200).json(forms);
       });
-    });
   });
 
   app.get('/groupsharedforms/json', auth.ensureAuthenticated, function(
@@ -136,40 +131,33 @@ module.exports = function(app) {
         },
       },
       'forms'
-    ).exec(function(err, groups) {
-      if (err) {
-        logger.error(err);
-        return res.status(500).send(err.message);
-      }
-      var formids = [];
-      var i;
-      var j;
-      // merge the forms arrays
-      for (i = 0; i < groups.length; i += 1) {
-        for (j = 0; j < groups[i].forms.length; j += 1) {
-          if (formids.indexOf(groups[i].forms[j]) === -1) {
-            formids.push(groups[i].forms[j]);
+    )
+      .then(function(groups) {
+        var formids = [];
+        var i;
+        var j;
+        // merge the forms arrays
+        for (i = 0; i < groups.length; i += 1) {
+          for (j = 0; j < groups[i].forms.length; j += 1) {
+            if (formids.indexOf(groups[i].forms[j]) === -1) {
+              formids.push(groups[i].forms[j]);
+            }
           }
         }
-      }
-      Form.find(
-        {
-          _id: {
-            $in: formids,
+        return Form.find(
+          {
+            _id: { $in: formids },
+            archived: { $ne: true },
           },
-          archived: {
-            $ne: true,
-          },
-        },
-        'title formType status tags owner updatedBy updatedOn publicAccess sharedWith sharedGroup'
-      ).exec(function(fErr, forms) {
-        if (fErr) {
-          logger.error(fErr);
-          return res.status(500).send(fErr.message);
-        }
-        res.status(200).json(forms);
+          'title formType status tags owner updatedBy updatedOn publicAccess sharedWith sharedGroup'
+        ).then(function(forms) {
+          res.status(200).json(forms);
+        });
+      })
+      .catch(function(err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
       });
-    });
   });
 
   app.get('/archivedforms/json', auth.ensureAuthenticated, function(req, res) {
@@ -200,15 +188,14 @@ module.exports = function(app) {
         },
       ],
     };
-    Form.find(search, 'title formType status tags updatedBy updatedOn _v').exec(
-      function(err, forms) {
-        if (err) {
-          logger.error(err);
-          return res.status(500).send(err.message);
-        }
+    Form.find(search, 'title formType status tags updatedBy updatedOn _v')
+      .then(function(forms) {
         res.status(200).json(forms);
-      }
-    );
+      })
+      .catch(function(err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
+      });
   });
 
   app.get('/publicforms/', auth.ensureAuthenticated, function(req, res) {
@@ -217,19 +204,16 @@ module.exports = function(app) {
 
   app.get('/publicforms/json', auth.ensureAuthenticated, function(req, res) {
     Form.find({
-      publicAccess: {
-        $in: [0, 1],
-      },
-      archived: {
-        $ne: true,
-      },
-    }).exec(function(err, forms) {
-      if (err) {
+      publicAccess: { $in: [0, 1] },
+      archived: { $ne: true },
+    })
+      .then(function(forms) {
+        res.status(200).json(forms);
+      })
+      .catch(function(err) {
         logger.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(forms);
-    });
+      });
   });
 
   app.get('/forms/new', auth.ensureAuthenticated, function(req, res) {
@@ -302,28 +286,22 @@ module.exports = function(app) {
     reqUtils.exist('id', Form),
     reqUtils.canReadMw('id'),
     function(req, res) {
-      try {
-        ReleasedForm.find(
-          {
-            'base._id': req.params.id,
-            status: 1, // released
-          },
-          function(err, existingForms) {
-            if (err) {
-              return res.status(500).send(error.message);
-            }
-            debug(
-              'found ' +
-                existingForms.length +
-                ' previously released form(s) based on : ' +
-                req.params.id
-            );
-            return res.status(200).json(existingForms);
-          }
-        );
-      } catch (error) {
-        return res.status(500).send(error.message);
-      }
+      ReleasedForm.find({
+        'base._id': req.params.id,
+        status: 1, // released
+      })
+        .then(function(existingForms) {
+          debug(
+            'found ' +
+              existingForms.length +
+              ' previously released form(s) based on : ' +
+              req.params.id
+          );
+          return res.status(200).json(existingForms);
+        })
+        .catch(function(error) {
+          return res.status(500).send(error.message);
+        });
     }
   );
 
@@ -355,26 +333,28 @@ module.exports = function(app) {
         uploadedOn: Date.now(),
       });
 
-      file.save(function(saveErr, newfile) {
-        if (saveErr) {
+      file
+        .save()
+        .then(function(newfile) {
+          var url =
+            (req.proxied ? authConfig.proxied_service : authConfig.service) +
+            '/formfiles/' +
+            newfile.id;
+          res.set('Location', url);
+          return res
+            .status(201)
+            .send(
+              'The uploaded file is at <a target="_blank" href="' +
+                url +
+                '">' +
+                url +
+                '</a>'
+            );
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        var url =
-          (req.proxied ? authConfig.proxied_service : authConfig.service) +
-          '/formfiles/' +
-          newfile.id;
-        res.set('Location', url);
-        return res
-          .status(201)
-          .send(
-            'The uploaded file is at <a target="_blank" href="' +
-              url +
-              '">' +
-              url +
-              '</a>'
-          );
-      });
+        });
     }
   );
 
@@ -464,15 +444,17 @@ module.exports = function(app) {
         return res.status(204).send();
       }
       form.publicAccess = access;
-      form.save(function(saveErr) {
-        if (saveErr) {
+      form
+        .save()
+        .then(function() {
+          return res
+            .status(200)
+            .send('public access is set to ' + req.body.access);
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res
-          .status(200)
-          .send('public access is set to ' + req.body.access);
-      });
+        });
     }
   );
 
@@ -566,39 +548,36 @@ module.exports = function(app) {
           .status(400)
           .send('cannot take the access ' + req.body.access);
       }
-      form.save(function(saveErr) {
-        if (saveErr) {
+      form
+        .save()
+        .then(function() {
+          // check consistency of user's form list
+          var Target;
+          if (req.params.list === 'users') {
+            Target = User;
+          }
+          if (req.params.list === 'groups') {
+            Target = Group;
+          }
+          Target.findByIdAndUpdate(req.params.shareid, {
+            $addToSet: { forms: form._id },
+          })
+            .then(function(target) {
+              if (!target) {
+                logger.error(
+                  'The user/group ' + req.params.userid + ' is not in the db'
+                );
+              }
+            })
+            .catch(function(updateErr) {
+              logger.error(updateErr);
+            });
+          return res.status(200).json(share);
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        // check consistency of user's form list
-        var Target;
-        if (req.params.list === 'users') {
-          Target = User;
-        }
-        if (req.params.list === 'groups') {
-          Target = Group;
-        }
-        Target.findByIdAndUpdate(
-          req.params.shareid,
-          {
-            $addToSet: {
-              forms: form._id,
-            },
-          },
-          function(updateErr, target) {
-            if (updateErr) {
-              logger.error(updateErr);
-            }
-            if (!target) {
-              logger.error(
-                'The user/group ' + req.params.userid + ' is not in the db'
-              );
-            }
-          }
-        );
-        return res.status(200).json(share);
-      });
+        });
     }
   );
 
@@ -673,23 +652,29 @@ module.exports = function(app) {
       form.sharedWith = [];
       form.tags = doc.tags;
 
-      new Form(form).save(function(saveErr, newform) {
-        if (saveErr) {
+      new Form(form)
+        .save()
+        .then(function(newform) {
+          var url =
+            (req.proxied ? authConfig.proxied_service : authConfig.service) +
+            '/forms/' +
+            newform.id +
+            '/';
+          res.set('Location', url);
+          return res
+            .status(201)
+            .send(
+              'You can see the new form at <a href="' +
+                url +
+                '">' +
+                url +
+                '</a>'
+            );
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        var url =
-          (req.proxied ? authConfig.proxied_service : authConfig.service) +
-          '/forms/' +
-          newform.id +
-          '/';
-        res.set('Location', url);
-        return res
-          .status(201)
-          .send(
-            'You can see the new form at <a href="' + url + '">' + url + '</a>'
-          );
-      });
+        });
     }
   );
 
@@ -710,20 +695,22 @@ module.exports = function(app) {
         doc.archivedOn = Date.now();
       }
 
-      doc.save(function(saveErr, newDoc) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function(newDoc) {
+          return res
+            .status(200)
+            .send(
+              'Form ' +
+                req.params.id +
+                ' archived state set to ' +
+                newDoc.archived
+            );
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res
-          .status(200)
-          .send(
-            'Form ' +
-              req.params.id +
-              ' archived state set to ' +
-              newDoc.archived
-          );
-      });
+        });
     }
   );
 

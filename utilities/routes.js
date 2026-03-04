@@ -139,7 +139,12 @@ var binder = {
     binderToCreate.description = description;
     binderToCreate.createdBy = createdBy;
     binderToCreate.createdOn = Date.now();
-    new Binder(binderToCreate).save(newBinderResultCallback);
+    new Binder(binderToCreate)
+      .save()
+      .then(function(newBinder) {
+        newBinderResultCallback(null, newBinder);
+      })
+      .catch(newBinderResultCallback);
   },
 
   deleteWork: function(binder, workId, userId, req, res) {
@@ -194,12 +199,7 @@ var binder = {
           $in: ids,
         },
       })
-      .exec(function(err, items) {
-        if (err) {
-          console.error(err);
-          return res.send(500, err.message);
-        }
-
+      .then(function(items) {
         if (items.length === 0) {
           return res.send(204);
         }
@@ -265,6 +265,10 @@ var binder = {
           }
           return res.json(200, newBinder);
         });
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.send(500, err.message);
       });
   },
 };
@@ -379,7 +383,12 @@ var traveler = {
     if (form.discrepancy) {
       addDiscrepancy(form.discrepancy, traveler);
     }
-    traveler.save(newTravelerCallBack);
+    traveler
+      .save()
+      .then(function(newTraveler) {
+        newTravelerCallBack(null, newTraveler);
+      })
+      .catch(newTravelerCallBack);
   },
   changeArchivedState: function(traveler, archived) {
     traveler.archived = archived;
@@ -498,37 +507,38 @@ var traveler = {
         },
       },
       'name'
-    ).exec(function(dataErr, data) {
-      if (dataErr) {
+    )
+      .then(function(data) {
+        // reset the touched input name list and the finished input number
+        logger.info('reset the touched inputs for traveler ' + doc._id);
+        var labels = {};
+        var activeForm;
+        if (doc.forms.length === 1) {
+          activeForm = doc.forms[0];
+        } else {
+          activeForm = doc.forms.id(doc.activeForm);
+        }
+
+        if (!(activeForm.labels && _.size(activeForm.labels) > 0)) {
+          activeForm.labels = traveler.inputLabels(activeForm.html);
+        }
+        labels = activeForm.labels;
+        // empty the current touched input list
+        doc.touchedInputs = [];
+        data.forEach(function(d) {
+          // check if the data is for the active form
+          if (labels.hasOwnProperty(d.name)) {
+            addInputName(d.name, doc.touchedInputs);
+          }
+        });
+        // finished input
+        doc.finishedInput = doc.touchedInputs.length;
+        cb();
+      })
+      .catch(function(dataErr) {
         logger.error(dataErr);
         return cb(dataErr);
-      }
-      // reset the touched input name list and the finished input number
-      logger.info('reset the touched inputs for traveler ' + doc._id);
-      var labels = {};
-      var activeForm;
-      if (doc.forms.length === 1) {
-        activeForm = doc.forms[0];
-      } else {
-        activeForm = doc.forms.id(doc.activeForm);
-      }
-
-      if (!(activeForm.labels && _.size(activeForm.labels) > 0)) {
-        activeForm.labels = traveler.inputLabels(activeForm.html);
-      }
-      labels = activeForm.labels;
-      // empty the current touched input list
-      doc.touchedInputs = [];
-      data.forEach(function(d) {
-        // check if the data is for the active form
-        if (labels.hasOwnProperty(d.name)) {
-          addInputName(d.name, doc.touchedInputs);
-        }
       });
-      // finished input
-      doc.finishedInput = doc.touchedInputs.length;
-      cb();
-    });
   },
 };
 

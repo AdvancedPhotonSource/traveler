@@ -85,60 +85,44 @@ function cloneTraveler(source, req, res) {
     finishedInput: 0,
   });
 
-  traveler.save(function(err, doc) {
-    if (err) {
+  traveler
+    .save()
+    .then(function(doc) {
+      logger.info('new traveler ' + doc.id + ' created');
+      doc.sharedWith.forEach(function(e) {
+        User.findByIdAndUpdate(e._id, {
+          $addToSet: {
+            travelers: doc._id,
+          },
+        }).catch(function(userErr) {
+          logger.error(userErr);
+        });
+      });
+
+      doc.sharedGroup.forEach(function(e) {
+        Group.findByIdAndUpdate(e._id, {
+          $addToSet: {
+            travelers: doc._id,
+          },
+        }).catch(function(groupErr) {
+          logger.error(groupErr);
+        });
+      });
+
+      var url =
+        (req.proxied ? authConfig.proxied_service : authConfig.service) +
+        '/travelers/' +
+        doc.id +
+        '/';
+      res.set('Location', url);
+      return res.status(201).json({
+        location: url,
+      });
+    })
+    .catch(function(err) {
       console.error(err);
       return res.status(500).send(err.message);
-    }
-    logger.info('new traveler ' + doc.id + ' created');
-    doc.sharedWith.forEach(function(e) {
-      User.findByIdAndUpdate(
-        e._id,
-        {
-          $addToSet: {
-            travelers: doc._id,
-          },
-        },
-        function(userErr, user) {
-          if (userErr) {
-            logger.error(userErr);
-          }
-          if (!user) {
-            logger.error('The user ' + e._id + ' does not in the db');
-          }
-        }
-      );
     });
-
-    doc.sharedGroup.forEach(function(e) {
-      Group.findByIdAndUpdate(
-        e._id,
-        {
-          $addToSet: {
-            travelers: doc._id,
-          },
-        },
-        function(groupErr, user) {
-          if (groupErr) {
-            logger.error(groupErr);
-          }
-          if (!user) {
-            logger.error('The group ' + e._id + ' does not in the db');
-          }
-        }
-      );
-    });
-
-    var url =
-      (req.proxied ? authConfig.proxied_service : authConfig.service) +
-      '/travelers/' +
-      doc.id +
-      '/';
-    res.set('Location', url);
-    return res.status(201).json({
-      location: url,
-    });
-  });
 }
 
 module.exports = function(app) {
@@ -163,12 +147,12 @@ module.exports = function(app) {
       'title description status devices tags sharedWith sharedGroup publicAccess locations createdOn deadline updatedOn updatedBy manPower finishedInput totalInput mapping'
     )
       .lean()
-      .exec(function(err, docs) {
-        if (err) {
-          logger.error(err);
-          return res.status(500).send(err.message);
-        }
+      .then(function(docs) {
         return res.status(200).json(docs);
+      })
+      .catch(function(err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
       });
   });
 
@@ -186,12 +170,12 @@ module.exports = function(app) {
       'title description status devices tags sharedWith sharedGroup publicAccess locations createdOn transferredOn deadline updatedOn updatedBy manPower finishedInput totalInput'
     )
       .lean()
-      .exec(function(err, travelers) {
-        if (err) {
-          logger.error(err);
-          return res.status(500).send(err.message);
-        }
+      .then(function(travelers) {
         res.status(200).json(travelers);
+      })
+      .catch(function(err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
       });
   });
 
@@ -204,34 +188,31 @@ module.exports = function(app) {
         _id: req.session.userid,
       },
       'travelers'
-    ).exec(function(err, me) {
-      if (err) {
+    )
+      .then(function(me) {
+        if (!me) {
+          return res.status(400).send('cannot identify the current user');
+        }
+        return Traveler.find(
+          {
+            _id: {
+              $in: me.travelers,
+            },
+            archived: {
+              $ne: true,
+            },
+          },
+          'title description status devices tags locations createdBy createdOn owner deadline updatedBy updatedOn sharedWith sharedGroup publicAccess manPower finishedInput totalInput'
+        )
+          .lean()
+          .then(function(travelers) {
+            return res.status(200).json(travelers);
+          });
+      })
+      .catch(function(err) {
         logger.error(err);
         return res.status(500).send(err.message);
-      }
-      if (!me) {
-        return res.status(400).send('cannot identify the current user');
-      }
-      Traveler.find(
-        {
-          _id: {
-            $in: me.travelers,
-          },
-          archived: {
-            $ne: true,
-          },
-        },
-        'title description status devices tags locations createdBy createdOn owner deadline updatedBy updatedOn sharedWith sharedGroup publicAccess manPower finishedInput totalInput'
-      )
-        .lean()
-        .exec(function(tErr, travelers) {
-          if (tErr) {
-            logger.error(tErr);
-            return res.status(500).send(tErr.message);
-          }
-          return res.status(200).json(travelers);
-        });
-    });
+      });
   });
 
   app.get('/groupsharedtravelers/json', auth.ensureAuthenticated, function(
@@ -245,39 +226,36 @@ module.exports = function(app) {
         },
       },
       'travelers'
-    ).exec(function(err, groups) {
-      if (err) {
-        logger.error(err);
-        return res.status(500).send(err.message);
-      }
-      var travelerIds = [];
-      var i;
-      var j;
-      // merge the travelers arrays
-      for (i = 0; i < groups.length; i += 1) {
-        for (j = 0; j < groups[i].travelers.length; j += 1) {
-          if (travelerIds.indexOf(groups[i].travelers[j]) === -1) {
-            travelerIds.push(groups[i].travelers[j]);
+    )
+      .then(function(groups) {
+        var travelerIds = [];
+        var i;
+        var j;
+        // merge the travelers arrays
+        for (i = 0; i < groups.length; i += 1) {
+          for (j = 0; j < groups[i].travelers.length; j += 1) {
+            if (travelerIds.indexOf(groups[i].travelers[j]) === -1) {
+              travelerIds.push(groups[i].travelers[j]);
+            }
           }
         }
-      }
-      Traveler.find(
-        {
-          _id: {
-            $in: travelerIds,
+        return Traveler.find(
+          {
+            _id: {
+              $in: travelerIds,
+            },
           },
-        },
-        'title description status devices tags locations createdBy createdOn owner deadline updatedBy updatedOn sharedWith sharedGroup publicAccess manPower finishedInput totalInput'
-      )
-        .lean()
-        .exec(function(tErr, travelers) {
-          if (tErr) {
-            logger.error(tErr);
-            return res.status(500).send(tErr.message);
-          }
-          res.status(200).json(travelers);
-        });
-    });
+          'title description status devices tags locations createdBy createdOn owner deadline updatedBy updatedOn sharedWith sharedGroup publicAccess manPower finishedInput totalInput'
+        )
+          .lean()
+          .then(function(travelers) {
+            res.status(200).json(travelers);
+          });
+      })
+      .catch(function(err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
+      });
   });
 
   app.get('/publictravelers/', auth.ensureAuthenticated, function(req, res) {
@@ -295,13 +273,14 @@ module.exports = function(app) {
       archived: {
         $ne: true,
       },
-    }).exec(function(err, travelers) {
-      if (err) {
+    })
+      .then(function(travelers) {
+        res.status(200).json(travelers);
+      })
+      .catch(function(err) {
         logger.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(travelers);
-    });
+      });
   });
 
   /*  app.get('/currenttravelers/json', auth.ensureAuthenticated, function (req, res) {
@@ -377,12 +356,12 @@ module.exports = function(app) {
       'title description status devices locations archivedOn updatedBy updatedOn deadline sharedWith sharedGroup manPower finishedInput totalInput'
     )
       .lean()
-      .exec(function(err, travelers) {
-        if (err) {
-          logger.error(err);
-          return res.status(500).send(err.message);
-        }
+      .then(function(travelers) {
         return res.status(200).json(travelers);
+      })
+      .catch(function(err) {
+        logger.error(err);
+        return res.status(500).send(err.message);
       });
   });
 
@@ -393,45 +372,47 @@ module.exports = function(app) {
     reqUtils.filter('body', ['form', 'source']),
     function createOrCloneTraveler(req, res) {
       if (req.body.form) {
-        ReleasedForm.findById(req.body.form, function(err, form) {
-          if (err) {
-            logger.error(err);
-            return res.status(500).send(err.message);
-          }
-          if (form) {
-            createTraveler(form, req, res);
-          } else {
-            return res
-              .status(400)
-              .send(
-                `cannot find the released ${config.viewConfig.terminology.form} with id ${req.body.form}`
-              );
-          }
-        });
-      }
-      if (req.body.source) {
-        Traveler.findById(req.body.source, function(err, traveler) {
-          if (err) {
-            logger.error(err);
-            return res.status(500).send(err.message);
-          }
-          if (traveler) {
-            // if (traveler.status === 0) {
-            //   return res.status(400).send('You cannot clone an initialized traveler.');
-            // }
-            if (reqUtils.canRead(req, traveler)) {
-              cloneTraveler(traveler, req, res);
+        ReleasedForm.findById(req.body.form)
+          .then(function(form) {
+            if (form) {
+              createTraveler(form, req, res);
             } else {
               return res
                 .status(400)
-                .send('You cannot clone a traveler that you cannot read.');
+                .send(
+                  `cannot find the released ${config.viewConfig.terminology.form} with id ${req.body.form}`
+                );
             }
-          } else {
-            return res
-              .status(400)
-              .send('cannot find the traveler ' + req.body.source);
-          }
-        });
+          })
+          .catch(function(err) {
+            logger.error(err);
+            return res.status(500).send(err.message);
+          });
+      }
+      if (req.body.source) {
+        Traveler.findById(req.body.source)
+          .then(function(traveler) {
+            if (traveler) {
+              // if (traveler.status === 0) {
+              //   return res.status(400).send('You cannot clone an initialized traveler.');
+              // }
+              if (reqUtils.canRead(req, traveler)) {
+                cloneTraveler(traveler, req, res);
+              } else {
+                return res
+                  .status(400)
+                  .send('You cannot clone a traveler that you cannot read.');
+              }
+            } else {
+              return res
+                .status(400)
+                .send('cannot find the traveler ' + req.body.source);
+            }
+          })
+          .catch(function(err) {
+            logger.error(err);
+            return res.status(500).send(err.message);
+          });
       }
     }
   );
@@ -572,17 +553,18 @@ module.exports = function(app) {
         },
       },
       'name value inputOn inputType'
-    ).exec(function(dataErr, docs) {
-      if (dataErr) {
+    )
+      .then(function(docs) {
+        var userDefined = {};
+        _.mapKeys(mapping, function(name, key) {
+          userDefined[key] = dataForName(name, docs);
+        });
+        output.user_defined = userDefined;
+        return cb(null, output);
+      })
+      .catch(function(dataErr) {
         return cb(dataErr);
-      }
-      var userDefined = {};
-      _.mapKeys(mapping, function(name, key) {
-        userDefined[key] = dataForName(name, docs);
       });
-      output.user_defined = userDefined;
-      return cb(null, output);
-    });
   }
 
   /**
@@ -617,30 +599,31 @@ module.exports = function(app) {
         },
       },
       'name value inputOn inputType'
-    ).exec(function(dataErr, docs) {
-      if (dataErr) {
+    )
+      .then(function(docs) {
+        var userDefined = {};
+        _.mapKeys(mapping, function(name, key) {
+          userDefined[key] = {};
+          userDefined[key].value = dataForName(name, docs);
+          if (_.isObject(labels)) {
+            userDefined[key].label = labels[name];
+          }
+        });
+        var discrepancy = {};
+        _.mapKeys(discrepancyMapping, function(name, key) {
+          discrepancy[key] = {};
+          discrepancy[key].value = dataForName(name, docs);
+          if (_.isObject(discrepancyLabels)) {
+            discrepancy[key].label = discrepancyLabels[name];
+          }
+        });
+        output.user_defined = userDefined;
+        output.discrepancy = discrepancy;
+        return cb(null, output);
+      })
+      .catch(function(dataErr) {
         return cb(dataErr);
-      }
-      var userDefined = {};
-      _.mapKeys(mapping, function(name, key) {
-        userDefined[key] = {};
-        userDefined[key].value = dataForName(name, docs);
-        if (_.isObject(labels)) {
-          userDefined[key].label = labels[name];
-        }
       });
-      var discrepancy = {};
-      _.mapKeys(discrepancyMapping, function(name, key) {
-        discrepancy[key] = {};
-        discrepancy[key].value = dataForName(name, docs);
-        if (_.isObject(discrepancyLabels)) {
-          discrepancy[key].label = discrepancyLabels[name];
-        }
-      });
-      output.user_defined = userDefined;
-      output.discrepancy = discrepancy;
-      return cb(null, output);
-    });
   }
 
   function retrieveLogs(traveler, cb) {
@@ -656,13 +639,14 @@ module.exports = function(app) {
         },
       },
       'referenceForm records inputBy inputOn'
-    ).exec(function(dataErr, logs) {
-      if (dataErr) {
+    )
+      .then(function(logs) {
+        return cb(null, logs);
+      })
+      .catch(function(dataErr) {
         logger.error(dataErr);
         return cb(dataErr);
-      }
-      return cb(null, logs);
-    });
+      });
   }
 
   app.get(
@@ -857,20 +841,22 @@ module.exports = function(app) {
         doc.archivedOn = Date.now();
       }
 
-      doc.save(function(saveErr, newDoc) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function(newDoc) {
+          return res
+            .status(200)
+            .send(
+              'traveler ' +
+                req.params.id +
+                ' archived state set to ' +
+                newDoc.archived
+            );
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res
-          .status(200)
-          .send(
-            'traveler ' +
-              req.params.id +
-              ' archived state set to ' +
-              newDoc.archived
-          );
-      });
+        });
     }
   );
 
@@ -933,19 +919,21 @@ module.exports = function(app) {
         }
         doc.updatedBy = req.session.userid;
         doc.updatedOn = Date.now();
-        doc.save(function(saveErr, newDoc) {
-          if (saveErr) {
+        doc
+          .save()
+          .then(function(newDoc) {
+            var out = {};
+            for (k in req.body) {
+              if (req.body.hasOwnProperty(k) && req.body[k] !== null) {
+                out[k] = newDoc.get(k);
+              }
+            }
+            return res.status(200).json(out);
+          })
+          .catch(function(saveErr) {
             logger.error(saveErr);
             return res.status(500).send(saveErr.message);
-          }
-          var out = {};
-          for (k in req.body) {
-            if (req.body.hasOwnProperty(k) && req.body[k] !== null) {
-              out[k] = newDoc.get(k);
-            }
-          }
-          return res.status(200).json(out);
-        });
+          });
       } else {
         res
           .status(403)
@@ -1024,13 +1012,15 @@ module.exports = function(app) {
       doc.updatedBy = req.session.userid;
       doc.updatedOn = Date.now();
       mqttUtilities.postTravelerStatusChangedMessage(doc);
-      doc.save(function(saveErr) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function() {
+          return res.status(200).send('status updated to ' + req.body.status);
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(200).send('status updated to ' + req.body.status);
-      });
+        });
     }
   );
 
@@ -1059,15 +1049,17 @@ module.exports = function(app) {
       if (added.length === 0) {
         return res.status(204).send();
       }
-      doc.save(function(saveErr) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function() {
+          return res.status(200).json({
+            device: newdevice,
+          });
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(200).json({
-          device: newdevice,
         });
-      });
     }
   );
 
@@ -1083,13 +1075,15 @@ module.exports = function(app) {
       doc.updatedBy = req.session.userid;
       doc.updatedOn = Date.now();
       doc.devices.pull(req.params.number);
-      doc.save(function(saveErr) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function() {
+          return res.status(204).send();
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(204).send();
-      });
+        });
     }
   );
 
@@ -1107,13 +1101,14 @@ module.exports = function(app) {
           },
         },
         'name value inputType inputBy inputOn'
-      ).exec(function(dataErr, docs) {
-        if (dataErr) {
+      )
+        .then(function(docs) {
+          return res.status(200).json(docs);
+        })
+        .catch(function(dataErr) {
           logger.error(dataErr);
           return res.status(500).send(dataErr.message);
-        }
-        return res.status(200).json(docs);
-      });
+        });
     }
   );
 
@@ -1137,34 +1132,41 @@ module.exports = function(app) {
         inputBy: req.session.userid,
         inputOn: Date.now(),
       });
-      data.save(function(dataErr) {
-        if (dataErr) {
+      data
+        .save()
+        .then(function() {
+          doc.manPower.addToSet({
+            _id: req.session.userid,
+            username: req.session.username,
+          });
+          doc.updatedBy = req.session.userid;
+          doc.updatedOn = Date.now();
+          mqttUtilities.postTravelerDataChangedMessage(data, doc);
+          doc.data.push(data._id);
+          // update the finished input number by reset
+          routesUtilities.traveler.resetTouched(doc, function(resetErr) {
+            if (resetErr) {
+              logger.error(resetErr);
+            }
+            // save doc anyway
+            doc
+              .save()
+              .then(function() {
+                return res.status(204).send();
+              })
+              .catch(function(saveErr) {
+                logger.error(saveErr);
+                return res.status(500).send(saveErr.message);
+              });
+          });
+        })
+        .catch(function(dataErr) {
           logger.error(dataErr.message);
           if (dataErr instanceof DataError) {
             return res.status(dataErr.status).send(dataErr.message);
           }
           return res.status(500).send(dataErr.message);
-        }
-        doc.manPower.addToSet({
-          _id: req.session.userid,
-          username: req.session.username,
         });
-        doc.updatedBy = req.session.userid;
-        doc.updatedOn = Date.now();
-        mqttUtilities.postTravelerDataChangedMessage(data, doc);
-        doc.data.push(data._id);
-        // update the finishe input number by reset
-        routesUtilities.traveler.resetTouched(doc, function() {
-          // save doc anyway
-          doc.save(function(saveErr) {
-            if (saveErr) {
-              logger.error(saveErr);
-              return res.status(500).send(saveErr.message);
-            }
-            return res.status(204).send();
-          });
-        });
-      });
     }
   );
 
@@ -1182,13 +1184,14 @@ module.exports = function(app) {
           },
         },
         'name value inputBy inputOn'
-      ).exec(function(noteErr, docs) {
-        if (noteErr) {
+      )
+        .then(function(docs) {
+          return res.status(200).json(docs);
+        })
+        .catch(function(noteErr) {
           logger.error(noteErr);
           return res.status(500).send(noteErr.message);
-        }
-        return res.status(200).json(docs);
-      });
+        });
     }
   );
 
@@ -1210,26 +1213,25 @@ module.exports = function(app) {
         inputBy: req.session.userid,
         inputOn: Date.now(),
       });
-      note.save(function(noteErr) {
-        if (noteErr) {
-          logger.error(noteErr);
-          return res.status(500).send(noteErr.message);
-        }
-        doc.notes.push(note._id);
-        doc.manPower.addToSet({
-          _id: req.session.userid,
-          username: req.session.username,
-        });
-        doc.updatedBy = req.session.userid;
-        doc.updatedOn = Date.now();
-        doc.save(function(saveErr) {
-          if (saveErr) {
-            logger.error(saveErr);
-            return res.status(500).send(saveErr.message);
-          }
+      note
+        .save()
+        .then(function() {
+          doc.notes.push(note._id);
+          doc.manPower.addToSet({
+            _id: req.session.userid,
+            username: req.session.username,
+          });
+          doc.updatedBy = req.session.userid;
+          doc.updatedOn = Date.now();
+          return doc.save();
+        })
+        .then(function() {
           return res.status(204).send();
+        })
+        .catch(function(err) {
+          logger.error(err);
+          return res.status(500).send(err.message);
         });
-      });
     }
   );
 
@@ -1260,20 +1262,16 @@ module.exports = function(app) {
         inputOn: Date.now(),
       });
 
-      data.save(function(dataErr) {
-        if (dataErr) {
-          logger.error(dataErr);
-          return res.status(500).send(dataErr.message);
-        }
-        doc.updatedBy = req.session.userid;
-        doc.updatedOn = Date.now();
-        mqttUtilities.postTravelerDataChangedMessage(data, doc);
-        doc.data.push(data._id);
-        doc.save(function(saveErr) {
-          if (saveErr) {
-            logger.error(saveErr);
-            return res.status(500).send(saveErr.message);
-          }
+      data
+        .save()
+        .then(function() {
+          doc.updatedBy = req.session.userid;
+          doc.updatedOn = Date.now();
+          mqttUtilities.postTravelerDataChangedMessage(data, doc);
+          doc.data.push(data._id);
+          return doc.save();
+        })
+        .then(function() {
           var url =
             (req.proxied ? authConfig.proxied_service : authConfig.service) +
             '/data/' +
@@ -1282,8 +1280,11 @@ module.exports = function(app) {
           return res.status(201).json({
             location: url,
           });
+        })
+        .catch(function(err) {
+          logger.error(err);
+          return res.status(500).send(err.message);
         });
-      });
     }
   );
 
@@ -1346,15 +1347,17 @@ module.exports = function(app) {
         return res.status(204).send();
       }
       traveler.publicAccess = access;
-      traveler.save(function(saveErr) {
-        if (saveErr) {
+      traveler
+        .save()
+        .then(function() {
+          return res
+            .status(200)
+            .send('public access is set to ' + req.body.access);
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res
-          .status(200)
-          .send('public access is set to ' + req.body.access);
-      });
+        });
     }
   );
 
@@ -1445,39 +1448,30 @@ module.exports = function(app) {
       } else {
         share.access = 0;
       }
-      traveler.save(function(saveErr) {
-        if (saveErr) {
-          logger.error(saveErr);
-          return res.status(500).send(saveErr.message);
-        }
-        // check consistency of user's traveler list
-        var Target;
-        if (req.params.list === 'users') {
-          Target = User;
-        }
-        if (req.params.list === 'groups') {
-          Target = Group;
-        }
-        Target.findByIdAndUpdate(
-          req.params.shareid,
-          {
+      traveler
+        .save()
+        .then(function() {
+          // check consistency of user's traveler list
+          var Target;
+          if (req.params.list === 'users') {
+            Target = User;
+          }
+          if (req.params.list === 'groups') {
+            Target = Group;
+          }
+          Target.findByIdAndUpdate(req.params.shareid, {
             $addToSet: {
               travelers: traveler._id,
             },
-          },
-          function(updateErr, target) {
-            if (updateErr) {
-              logger.error(updateErr);
-            }
-            if (!target) {
-              logger.error(
-                'The user/group ' + req.params.userid + ' is not in the db'
-              );
-            }
-          }
-        );
-        return res.status(200).json(share);
-      });
+          }).catch(function(updateErr) {
+            logger.error(updateErr);
+          });
+          return res.status(200).json(share);
+        })
+        .catch(function(saveErr) {
+          logger.error(saveErr);
+          return res.status(500).send(saveErr.message);
+        });
     }
   );
 

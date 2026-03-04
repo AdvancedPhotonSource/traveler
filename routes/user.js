@@ -98,21 +98,20 @@ function updateUserProfile(user, res) {
         error: user._id + ' is not unique!',
       });
     }
-    user.updateOne(
-      {
+    user
+      .updateOne({
         name: result[0].displayName,
         email: result[0].mail,
         office: result[0].physicalDeliveryOfficeName,
         phone: result[0].telephoneNumber,
         mobile: result[0].mobile,
-      },
-      function(err) {
-        if (err) {
-          return res.status(500).json(err);
-        }
+      })
+      .then(function() {
         return res.status(204).send();
-      }
-    );
+      })
+      .catch(function(err) {
+        return res.status(500).json(err);
+      });
   });
 }
 
@@ -175,48 +174,51 @@ function storeUser(req, res, result) {
     roles: roles,
   });
 
-  user.save(function(err, newUser) {
-    if (err) {
+  user
+    .save()
+    .then(function(newUser) {
+      var url =
+        (req.proxied ? authConfig.proxied_service : authConfig.service) +
+        '/users/' +
+        newUser._id;
+      res.set('Location', url);
+      return res
+        .status(201)
+        .send(
+          'The new user is at <a target="_blank" href="' +
+            url +
+            '">' +
+            url +
+            '</a>'
+        );
+    })
+    .catch(function(err) {
       console.error(err);
       return res.status(500).send(err.message);
-    }
-    var url =
-      (req.proxied ? authConfig.proxied_service : authConfig.service) +
-      '/users/' +
-      newUser._id;
-    res.set('Location', url);
-    return res
-      .status(201)
-      .send(
-        'The new user is at <a target="_blank" href="' +
-          url +
-          '">' +
-          url +
-          '</a>'
-      );
-  });
+    });
 }
 
 module.exports = function(app) {
   app.get('/usernames/:name', auth.ensureAuthenticated, function(req, res) {
     User.findOne({
       name: req.params.name,
-    }).exec(function(err, user) {
-      if (err) {
+    })
+      .then(function(user) {
+        if (user) {
+          return res.render(
+            'user',
+            routesUtilities.getRenderObject(req, {
+              user: user,
+              myRoles: req.session.roles,
+            })
+          );
+        }
+        return res.status(404).send(req.params.name + ' not found');
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (user) {
-        return res.render(
-          'user',
-          routesUtilities.getRenderObject(req, {
-            user: user,
-            myRoles: req.session.roles,
-          })
-        );
-      }
-      return res.status(404).send(req.params.name + ' not found');
-    });
+      });
   });
 
   app.post('/users/', auth.ensureAuthenticated, function(req, res) {
@@ -234,27 +236,28 @@ module.exports = function(app) {
     // check if already in db
     User.findOne({
       name: req.body.name,
-    }).exec(function(err, user) {
-      if (err) {
+    })
+      .then(function(user) {
+        if (user) {
+          var url =
+            (req.proxied ? authConfig.proxied_service : authConfig.service) +
+            '/users/' +
+            user._id;
+          return res
+            .status(200)
+            .send(
+              'The user is at <a target="_blank" href="' +
+                url +
+                '">' +
+                url +
+                '</a>'
+            );
+        }
+        addUser(req, res);
+      })
+      .catch(function(err) {
         return res.status(500).send(err.message);
-      }
-      if (user) {
-        var url =
-          (req.proxied ? authConfig.proxied_service : authConfig.service) +
-          '/users/' +
-          user._id;
-        return res
-          .status(200)
-          .send(
-            'The user is at <a target="_blank" href="' +
-              url +
-              '">' +
-              url +
-              '</a>'
-          );
-      }
-      addUser(req, res);
-    });
+      });
   });
 
   app.get('/users/json', auth.ensureAuthenticated, function(req, res) {
@@ -266,38 +269,38 @@ module.exports = function(app) {
         .status(403)
         .send('You are not authorized to access this resource. ');
     }
-    User.find().exec(function(err, users) {
-      if (err) {
+    User.find()
+      .then(function(users) {
+        res.json(users);
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.message,
-        });
-      }
-      res.json(users);
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   app.get('/users/:id', auth.ensureAuthenticated, function(req, res) {
     User.findOne({
       _id: req.params.id,
-    }).exec(function(err, user) {
-      if (err) {
+    })
+      .then(function(user) {
+        if (user) {
+          return res.render(
+            'user',
+            routesUtilities.getRenderObject(req, {
+              user: user,
+              myRoles: req.session.roles,
+            })
+          );
+        }
+        return res
+          .status(404)
+          .send(req.params.id + ' has never logged into the application.');
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (user) {
-        return res.render(
-          'user',
-          routesUtilities.getRenderObject(req, {
-            user: user,
-            myRoles: req.session.roles,
-          })
-        );
-      }
-      return res
-        .status(404)
-        .send(req.params.id + ' has never logged into the application.');
-    });
+      });
   });
 
   app.put('/users/:id', auth.ensureAuthenticated, function(req, res) {
@@ -314,35 +317,28 @@ module.exports = function(app) {
         error: 'json request expected.',
       });
     }
-    User.findOneAndUpdate(
-      {
-        _id: req.params.id,
-      },
-      req.body
-    ).exec(function(err) {
-      if (err) {
+    User.findOneAndUpdate({ _id: req.params.id }, req.body)
+      .then(function() {
+        return res.status(204).send();
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.message,
-        });
-      }
-      return res.status(204).send();
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   // get from the db not ad
   app.get('/users/:id/json', auth.ensureAuthenticated, function(req, res) {
     User.findOne({
       _id: req.params.id,
-    }).exec(function(err, user) {
-      if (err) {
+    })
+      .then(function(user) {
+        return res.json(user);
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.mesage,
-        });
-      }
-      return res.json(user);
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   app.get('/users/:id/refresh', auth.ensureAuthenticated, function(req, res) {
@@ -356,19 +352,20 @@ module.exports = function(app) {
     }
     User.findOne({
       _id: req.params.id,
-    }).exec(function(err, user) {
-      if (err) {
+    })
+      .then(function(user) {
+        if (user) {
+          updateUserProfile(user, res);
+        } else {
+          return res
+            .status(404)
+            .send(req.params.id + ' is not in the application.');
+        }
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (user) {
-        updateUserProfile(user, res);
-      } else {
-        return res
-          .status(404)
-          .send(req.params.id + ' is not in the application.');
-      }
-    });
+      });
   });
 
   // resource /adusers
@@ -471,9 +468,14 @@ module.exports = function(app) {
         return res.json(result);
       });
     } else {
-      Group.find({ name: query + '*' }, function(err, groups) {
-        return res.json(groups);
-      });
+      Group.find({ name: query + '*' })
+        .then(function(groups) {
+          return res.json(groups);
+        })
+        .catch(function(err) {
+          console.error(err);
+          return res.status(500).json({ error: err.message });
+        });
     }
   });
 };
