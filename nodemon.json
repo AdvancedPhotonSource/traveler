@@ -15,7 +15,7 @@
   ],
   "verbose": true,
   "execMap": {
-    "js": "node --harmony"
+    "js": "node"
   },
   "env": {
     "NODE_ENV": "development"

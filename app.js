@@ -231,9 +231,9 @@ if (apiSettings.ssl_key !== undefined) {
 
 // When the node.js application is closed.
 function cleanup() {
-  server._connections = 0;
-  apiserver._connections = 0;
   mongoose.connection.close();
+  server.closeAllConnections();
+  apiserver.closeAllConnections();
 
   server.close(function() {
     apiserver.close(function() {
