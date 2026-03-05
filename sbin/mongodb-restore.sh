@@ -84,7 +84,7 @@ do
         echo "Restoring backup: $chosenBackupDate - $backupTime"
         # Drop current traveler database
         dropCommand="use $MONGO_TRAVELER_DB; \n db.dropDatabase();"
-        echo -e $dropCommand | $MONGO_BIN_DIRECTORY/mongo $MONGO_SERVER_ADDRESS:$MONGO_SERVER_PORT/admin --username $MONGO_ADMIN_USERNAME --password $adminPassword
+        echo -e $dropCommand | $MONGO_BIN_DIRECTORY/mongosh $MONGO_SERVER_ADDRESS:$MONGO_SERVER_PORT/admin --username $MONGO_ADMIN_USERNAME --password $adminPassword
 
         $MONGO_BIN_DIRECTORY/mongorestore \
         --host $MONGO_SERVER_ADDRESS \

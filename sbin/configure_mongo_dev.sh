@@ -9,7 +9,7 @@ source $MY_DIR/configure_paths.sh
 source $TRAVELER_INSTALL_ETC_DIR/mongo-configuration.sh
 
 # Check to see that mongo is installed
-if [ ! -f $MONGO_BIN_DIRECTORY/mongo ]; then
+if [ ! -f $MONGO_BIN_DIRECTORY/mongosh ]; then
   echo "MongoDB was not found in the local directory: $MONGO_BIN_DIRECTORY"
   echo "please run 'make support' from $TRAVELER_ROOT_DIR directory"
   exit 1
@@ -59,7 +59,7 @@ commandjs="$commandjs \n db.createUser({ user: \"$MONGO_ADMIN_USERNAME\", pwd: \
 commandjs="$commandjs \n use $MONGO_TRAVELER_DB;"
 commandjs="$commandjs \n db.createUser( { user: \"$MONGO_TRAVELER_USERNAME\", pwd: \"$travelerPass\", roles: [ { role: \"readWrite\", db: \"$MONGO_TRAVELER_DB\" } ] } )"
 
-echo -e $commandjs | $MONGO_BIN_DIRECTORY/mongo --port $MONGO_SERVER_PORT
+echo -e $commandjs | $MONGO_BIN_DIRECTORY/mongosh --port $MONGO_SERVER_PORT
 
 $TRAVELER_ETC_INIT_DIRECTORY/traveler-mongodb stop
 
