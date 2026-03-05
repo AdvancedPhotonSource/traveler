@@ -5,8 +5,9 @@
   "scripts": {
     "start": "node app",
     "test": "mocha test/lib/*.js",
-    "test:db": "mocha test/db/setup.js test/db/user-test.js test/db/form-test.js test/db/traveler-test.js test/db/binder-test.js test/db/released-form-test.js test/db/history-test.js --timeout 10000",
-    "test:all": "mocha test/lib/*.js test/db/setup.js test/db/user-test.js test/db/form-test.js test/db/traveler-test.js test/db/binder-test.js test/db/released-form-test.js test/db/history-test.js --timeout 10000"
+    "test:db": "mocha test/db/setup.js test/db/user-test.js test/db/form-test.js test/db/traveler-test.js test/db/binder-test.js test/db/released-form-test.js test/db/history-test.js --timeout 10000 --exit",
+    "test:http": "mocha test/http/acceptance-test.js --timeout 15000 --exit",
+    "test:all": "mocha test/lib/req-utils-test.js test/db/setup.js test/db/user-test.js test/db/form-test.js test/db/traveler-test.js test/db/binder-test.js test/db/released-form-test.js test/db/history-test.js test/http/acceptance-test.js --timeout 15000 --exit"
   },
   "repository": {
     "type": "git",
@@ -32,8 +33,8 @@
     "generate-api-key": "^1.0.0",
     "jade": "1.10.0",
     "jquery": "^3.7",
-    "jquery-ui": "^1.14.0",
     "jquery-jeditable": "2.0.19",
+    "jquery-ui": "^1.14.0",
     "jstransformer-marked": "1.0.1",
     "ldapjs": "1.0.0",
     "lodash": "^4.17.11",
@@ -60,7 +61,8 @@
     "lint-staged": "^9.5.0",
     "mocha": "^5.2.0",
     "prettier": "^1.19.1",
-    "sinon": "^7.2.3"
+    "sinon": "^7.2.3",
+    "supertest": "^6.3.4"
   },
   "husky": {
     "hooks": {
