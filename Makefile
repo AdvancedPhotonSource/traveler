@@ -23,8 +23,8 @@ db-restore:
 certificates:
 	$(TOP)/sbin/create_web_service_certificates.sh
 
-dev-mongo:
-	$(TOP)/sbin/configure_mongo_dev.sh
+prep-mongo:
+	$(TOP)/sbin/configure_mongo.sh
 
 default-config:
 	$(TOP)/sbin/create_traveler_config.sh

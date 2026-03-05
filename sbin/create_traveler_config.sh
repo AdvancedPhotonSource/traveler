@@ -18,7 +18,7 @@ if [ ! -f $TRAVELER_INSTALL_ETC_DIR/travelerd_configuration.sh ]; then
 fi
 
 echo -e "\nConfiugre MongoDB"
-$MY_DIR/configure_mongo_dev.sh
+$MY_DIR/configure_mongo.sh
 
 read -p "Would you like to run web application using ssl? (Y/n): " appSSL
 read -p "Would you like to run api using ssl? (Y/n): " apiSSL
