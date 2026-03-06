@@ -1,3 +1,16 @@
+APS 1.7.1
+# Infrastructure Upgrades
+- Upgrade Node.js runtime to version 20.
+- Upgrade Mongoose from version 5 to version 8.
+  - Migrate application and test syntax to Mongoose 8 API.
+  - Resolve save operation issues introduced by the Mongoose 8 migration.
+- Update MongoDB tooling scripts to use current mongo shell syntax.
+- Refactor mongo configuration script to preserve existing configuration when present.
+# Testing
+- Add DB-level acceptance test suite covering User, Group, Form, Traveler, Binder, ReleasedForm, and History models.
+- Add HTTP-level acceptance test suite verifying Express routes, session authentication, and role-based access end-to-end.
+- Add GitHub Actions workflows to run DB and HTTP acceptance tests against MongoDB on every push and pull request to master.
+
 APS 1.7.0
 # Dependency Upgrades 
 - jquery >3.7
