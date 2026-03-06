@@ -83,6 +83,21 @@ describe('Traveler model - database acceptance', function() {
         })
         .catch(done);
     });
+
+    it('should set wasModifiedPaths on the document during pre-save', function(done) {
+      new Traveler({
+        title: 'PathTest',
+        createdBy: 'tester',
+        referenceForm: new mongoose.Types.ObjectId(),
+      })
+        .save()
+        .then(function(doc) {
+          doc.wasModifiedPaths.should.be.an('array');
+          doc.wasModifiedPaths.should.include('title');
+          done();
+        })
+        .catch(done);
+    });
   });
 
   describe('#read', function() {
