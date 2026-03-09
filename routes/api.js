@@ -152,23 +152,31 @@ function performFindEntityReferencedContentsByParentEntityId(
   contentEntityKeys,
   res
 ) {
-  parentEntity.findById(parentEntityId, function(parentErr, parentObj) {
-    performMongoResponse(parentErr, parentObj, res, function() {
-      contentEntity
-        .find(
-          {
-            _id: {
-              $in: parentObj[parentEntityKey],
+  parentEntity
+    .findById(parentEntityId)
+    .then(function(parentObj) {
+      performMongoResponse(null, parentObj, res, function() {
+        contentEntity
+          .find(
+            {
+              _id: {
+                $in: parentObj[parentEntityKey],
+              },
             },
-          },
-          contentEntityKeys
-        )
-        .lean()
-        .exec(function(contentErr, contentObj) {
-          performMongoResponse(contentErr, contentObj, res);
-        });
+            contentEntityKeys
+          )
+          .lean()
+          .then(function(contentObj) {
+            performMongoResponse(null, contentObj, res);
+          })
+          .catch(function(contentErr) {
+            performMongoResponse(contentErr, null, res);
+          });
+      });
+    })
+    .catch(function(parentErr) {
+      performMongoResponse(parentErr, null, res);
     });
-  });
 }
 
 module.exports = function(app) {
@@ -203,8 +211,11 @@ module.exports = function(app) {
       'title status devices tags mapping createdBy clonedBy createdOn deadline updatedBy updatedOn sharedWith finishedInput totalInput'
     )
       .lean()
-      .exec(function(err, travelers) {
-        performMongoResponse(err, travelers, res);
+      .then(function(travelers) {
+        performMongoResponse(null, travelers, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
       });
   });
 
@@ -221,16 +232,16 @@ module.exports = function(app) {
     }
     Traveler.find(search, 'tags')
       .lean()
-      .exec(function(err, travelers) {
-        if (err) {
-          console.error(err);
-          return res.status(500).send(err.message);
-        }
+      .then(function(travelers) {
         var output = [];
         travelers.forEach(function(t) {
           output = _.union(output, t.tags);
         });
         res.status(200).json(output);
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.status(500).send(err.message);
       });
   });
 
@@ -247,16 +258,16 @@ module.exports = function(app) {
     }
     Traveler.find(search, 'mapping')
       .lean()
-      .exec(function(err, travelers) {
-        if (err) {
-          console.error(err);
-          return res.status(500).send(err.message);
-        }
+      .then(function(travelers) {
         var output = [];
         travelers.forEach(function(t) {
           output = _.union(output, _.keys(t.mapping));
         });
         res.status(200).json(output);
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.status(500).send(err.message);
       });
   });
 
@@ -276,45 +287,73 @@ module.exports = function(app) {
         $exists: true,
       };
     }
-    Form.find(search, function(err, forms) {
-      performMongoResponse(err, forms, res);
-    });
+    Form.find(search)
+      .then(function(forms) {
+        performMongoResponse(null, forms, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.get('/apis/forms/:id/', function(req, res) {
-    Form.findById(req.params.id, function(err, forms) {
-      performMongoResponse(err, forms, res);
-    });
+    Form.findById(req.params.id)
+      .then(function(forms) {
+        performMongoResponse(null, forms, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.get('/apis/forms/:id/released/', function(req, res) {
-    ReleasedForm.find({ 'base._id': req.params.id }).exec(function(err, forms) {
-      performMongoResponse(err, forms, res);
-    });
+    ReleasedForm.find({ 'base._id': req.params.id })
+      .then(function(forms) {
+        performMongoResponse(null, forms, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.get('/apis/releasedForms/', function(req, res) {
-    ReleasedForm.find({}, function(err, releasedForms) {
-      performMongoResponse(err, releasedForms, res);
-    });
+    ReleasedForm.find({})
+      .then(function(releasedForms) {
+        performMongoResponse(null, releasedForms, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.get('/apis/releasedForms/:id/', function(req, res) {
-    ReleasedForm.findById(req.params.id, function(err, releasedForms) {
-      performMongoResponse(err, releasedForms, res);
-    });
+    ReleasedForm.findById(req.params.id)
+      .then(function(releasedForms) {
+        performMongoResponse(null, releasedForms, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.get('/apis/binders/', function(req, res) {
-    Binder.find({}, function(err, binders) {
-      performMongoResponse(err, binders, res);
-    });
+    Binder.find({})
+      .then(function(binders) {
+        performMongoResponse(null, binders, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.get('/apis/binders/:id/', function(req, res) {
-    Binder.findById(req.params.id, function(err, binder) {
-      performMongoResponse(err, binder, res);
-    });
+    Binder.findById(req.params.id)
+      .then(function(binder) {
+        performMongoResponse(null, binder, res);
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
+      });
   });
 
   app.post(
@@ -347,12 +386,16 @@ module.exports = function(app) {
     routesUtilities.filterBody(['travelerIds', 'userName'], true),
     checkSystemWritePermissions,
     function(req, res) {
-      Binder.findById(req.params.id, function(err, binder) {
-        performMongoResponse(err, binder, res, function() {
-          var userName = req.body.userName;
-          routesUtilities.binder.addWork(binder, userName, req, res);
+      Binder.findById(req.params.id)
+        .then(function(binder) {
+          performMongoResponse(null, binder, res, function() {
+            var userName = req.body.userName;
+            routesUtilities.binder.addWork(binder, userName, req, res);
+          });
+        })
+        .catch(function(err) {
+          performMongoResponse(err, null, res);
         });
-      });
     }
   );
 
@@ -361,20 +404,34 @@ module.exports = function(app) {
     routesUtilities.filterBody(['workId', 'userName'], true),
     checkSystemWritePermissions,
     function(req, res) {
-      Binder.findById(req.params.id, function(err, binder) {
-        performMongoResponse(err, binder, res, function() {
-          var userName = req.body.userName;
-          var workId = req.body.workId;
-          routesUtilities.binder.deleteWork(binder, workId, userName, req, res);
+      Binder.findById(req.params.id)
+        .then(function(binder) {
+          performMongoResponse(null, binder, res, function() {
+            var userName = req.body.userName;
+            var workId = req.body.workId;
+            routesUtilities.binder.deleteWork(
+              binder,
+              workId,
+              userName,
+              req,
+              res
+            );
+          });
+        })
+        .catch(function(err) {
+          performMongoResponse(err, null, res);
         });
-      });
     }
   );
 
   app.get('/apis/travelers/:id/', function(req, res) {
-    Traveler.findById(req.params.id, function(travelerErr, traveler) {
-      performMongoResponse(travelerErr, traveler, res);
-    });
+    Traveler.findById(req.params.id)
+      .then(function(traveler) {
+        performMongoResponse(null, traveler, res);
+      })
+      .catch(function(travelerErr) {
+        performMongoResponse(travelerErr, null, res);
+      });
   });
 
   app.put(
@@ -408,13 +465,15 @@ module.exports = function(app) {
       doc.updatedBy = req.body.userId;
       doc.updatedOn = Date.now();
       mqttUtilities.postTravelerStatusChangedMessage(doc);
-      doc.save(function(saveErr, newDoc) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function(newDoc) {
+          return res.status(200).json(newDoc);
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(200).json(newDoc);
-      });
+        });
     }
   );
 
@@ -624,30 +683,37 @@ module.exports = function(app) {
       };
     }
 
-    data.save(function(dataErr, result) {
-      if (dataErr) {
+    data
+      .save()
+      .then(function(result) {
+        traveler.updatedBy = inputUserId;
+        traveler.updatedOn = Date.now();
+        mqttUtilities.postTravelerDataChangedMessage(data, traveler);
+        traveler.data.push(data._id);
+        // update the finished input number by reset
+        routesUtilities.traveler.resetTouched(traveler, function(resetErr) {
+          if (resetErr) {
+            logger.error(resetErr);
+          }
+          // save traveler
+          traveler
+            .save()
+            .then(function() {
+              return res.status(201).json(result);
+            })
+            .catch(function(saveErr) {
+              logger.error(saveErr);
+              return next(req, res, 500, saveErr.message);
+            });
+        });
+      })
+      .catch(function(dataErr) {
         logger.error(dataErr.message);
         if (dataErr instanceof DataError) {
           return next(req, res, dataErr.status, dataErr.message);
         }
         return next(req, res, 500, dataErr.message);
-      }
-      traveler.updatedBy = inputUserId;
-      traveler.updatedOn = Date.now();
-      mqttUtilities.postTravelerDataChangedMessage(data, traveler);
-      traveler.data.push(data._id);
-      // update the finished input number by reset
-      routesUtilities.traveler.resetTouched(traveler, function() {
-        // save traveler
-        traveler.save(function(saveErr) {
-          if (saveErr) {
-            logger.error(saveErr);
-            return next(req, res, 500, saveErr.message);
-          }
-          return res.status(201).json(result);
-        });
       });
-    });
   }
 
   /**
@@ -701,17 +767,18 @@ module.exports = function(app) {
         },
       },
       'name value inputOn inputType'
-    ).exec(function(dataErr, docs) {
-      if (dataErr) {
+    )
+      .then(function(docs) {
+        var userDefined = {};
+        _.mapKeys(mapping, function(name, key) {
+          userDefined[key] = dataForName(name, docs);
+        });
+        output.user_defined = userDefined;
+        return cb(null, output);
+      })
+      .catch(function(dataErr) {
         return cb(dataErr);
-      }
-      var userDefined = {};
-      _.mapKeys(mapping, function(name, key) {
-        userDefined[key] = dataForName(name, docs);
       });
-      output.user_defined = userDefined;
-      return cb(null, output);
-    });
   }
 
   /**
@@ -736,51 +803,66 @@ module.exports = function(app) {
         },
       },
       'name value inputOn inputType'
-    ).exec(function(dataErr, docs) {
-      if (dataErr) {
+    )
+      .then(function(docs) {
+        var userDefined = {};
+        _.mapKeys(mapping, function(name, key) {
+          userDefined[key] = {};
+          userDefined[key].value = dataForName(name, docs);
+          if (_.isObject(labels)) {
+            userDefined[key].label = labels[name];
+          }
+        });
+        output.user_defined = userDefined;
+        return cb(null, output);
+      })
+      .catch(function(dataErr) {
         return cb(dataErr);
-      }
-      var userDefined = {};
-      _.mapKeys(mapping, function(name, key) {
-        userDefined[key] = {};
-        userDefined[key].value = dataForName(name, docs);
-        if (_.isObject(labels)) {
-          userDefined[key].label = labels[name];
-        }
       });
-      output.user_defined = userDefined;
-      return cb(null, output);
-    });
   }
 
   app.get('/apis/travelers/:id/keyvalue/', function(req, res) {
-    Traveler.findById(req.params.id, function(travelerErr, traveler) {
-      retrieveKeyvalue(
-        traveler,
-        ['id', 'title', 'status', 'tags', 'devices'],
-        function(err, output) {
-          if (err) {
-            return res.status(500).send(err.message);
-          }
-          return res.status(200).json(output);
+    Traveler.findById(req.params.id)
+      .then(function(traveler) {
+        if (!traveler) {
+          return res.status(410).send('gone');
         }
-      );
-    });
+        retrieveKeyvalue(
+          traveler,
+          ['id', 'title', 'status', 'tags', 'devices'],
+          function(err, output) {
+            if (err) {
+              return res.status(500).send(err.message);
+            }
+            return res.status(200).json(output);
+          }
+        );
+      })
+      .catch(function(travelerErr) {
+        return res.status(500).send(travelerErr.message);
+      });
   });
 
   app.get('/apis/travelers/:id/keylabelvalue/', function(req, res) {
-    Traveler.findById(req.params.id, function(travelerErr, traveler) {
-      retrieveKeyLableValue(
-        traveler,
-        ['id', 'title', 'status', 'tags', 'devices'],
-        function(err, output) {
-          if (err) {
-            return res.status(500).send(err.message);
-          }
-          return res.status(200).json(output);
+    Traveler.findById(req.params.id)
+      .then(function(traveler) {
+        if (!traveler) {
+          return res.status(410).send('gone');
         }
-      );
-    });
+        retrieveKeyLableValue(
+          traveler,
+          ['id', 'title', 'status', 'tags', 'devices'],
+          function(err, output) {
+            if (err) {
+              return res.status(500).send(err.message);
+            }
+            return res.status(200).json(output);
+          }
+        );
+      })
+      .catch(function(travelerErr) {
+        return res.status(500).send(travelerErr.message);
+      });
   });
 
   app.get('/apis/travelers/:id/data/', function(req, res) {
@@ -823,13 +905,14 @@ module.exports = function(app) {
         referenceForm: traveler.referenceDiscrepancyForm,
       },
       'referenceForm records inputBy inputOn'
-    ).exec(function(dataErr, logs) {
-      if (dataErr) {
+    )
+      .then(function(logs) {
+        return cb(null, logs);
+      })
+      .catch(function(dataErr) {
         logger.error(dataErr);
         return cb(dataErr);
-      }
-      return cb(null, logs);
-    });
+      });
   }
 
   app.post(
@@ -839,19 +922,26 @@ module.exports = function(app) {
     function(req, res) {
       var archivedStatus = req.body.archived;
 
-      Traveler.findById(req.params.id, function(travelerErr, traveler) {
-        performMongoResponse(travelerErr, traveler, res, function() {
-          routesUtilities.traveler.changeArchivedState(
-            traveler,
-            archivedStatus
-          );
-          traveler.save(function(err) {
-            performMongoResponse(err, traveler, res, function() {
-              return res.status(200).json(traveler);
-            });
+      Traveler.findById(req.params.id)
+        .then(function(traveler) {
+          performMongoResponse(null, traveler, res, function() {
+            routesUtilities.traveler.changeArchivedState(
+              traveler,
+              archivedStatus
+            );
+            traveler
+              .save()
+              .then(function() {
+                return res.status(200).json(traveler);
+              })
+              .catch(function(err) {
+                performMongoResponse(err, null, res);
+              });
           });
+        })
+        .catch(function(travelerErr) {
+          performMongoResponse(travelerErr, null, res);
         });
-      });
     }
   );
 
@@ -876,18 +966,21 @@ module.exports = function(app) {
   app.get('/apis/data/:id/', function(req, res) {
     TravelerData.findById(req.params.id)
       .lean()
-      .exec(function(err, data) {
-        performMongoResponse(err, data, res, function() {
+      .then(function(data) {
+        performMongoResponse(null, data, res, function() {
           res.status(200).json(data);
         });
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
       });
   });
 
   app.get('/apis/data/:id/file', function(req, res) {
     TravelerData.findById(req.params.id)
       .lean()
-      .exec(function(err, data) {
-        performMongoResponse(err, data, res, function() {
+      .then(function(data) {
+        performMongoResponse(null, data, res, function() {
           if (data.inputType === 'file') {
             fs.exists(data.file.path, function(exists) {
               if (exists) {
@@ -905,6 +998,9 @@ module.exports = function(app) {
             return res.status(500).send(error_msg);
           }
         });
+      })
+      .catch(function(err) {
+        performMongoResponse(err, null, res);
       });
   });
 
@@ -950,38 +1046,45 @@ module.exports = function(app) {
         });
       }
 
-      Traveler.findById(req.params.id, function(travelerErr, traveler) {
-        performMongoResponse(travelerErr, traveler, res, function() {
-          routesUtilities.traveler.updateTravelerStatus(
-            req,
-            res,
-            traveler,
-            status,
-            false,
-            function() {
-              var deadline = req.body.deadline;
-              if (deadline === '') {
-                traveler.deadline = undefined;
-              } else {
-                traveler.deadline = deadline;
-              }
-              traveler.title = req.body.title;
-              traveler.description = req.body.description;
-              traveler.updatedBy = req.body.userName;
-              traveler.updatedOn = Date.now();
-              if (req.body.devices) {
-                traveler.devices = req.body.devices;
-              }
+      Traveler.findById(req.params.id)
+        .then(function(traveler) {
+          performMongoResponse(null, traveler, res, function() {
+            routesUtilities.traveler.updateTravelerStatus(
+              req,
+              res,
+              traveler,
+              status,
+              false,
+              function() {
+                var deadline = req.body.deadline;
+                if (deadline === '') {
+                  traveler.deadline = undefined;
+                } else {
+                  traveler.deadline = deadline;
+                }
+                traveler.title = req.body.title;
+                traveler.description = req.body.description;
+                traveler.updatedBy = req.body.userName;
+                traveler.updatedOn = Date.now();
+                if (req.body.devices) {
+                  traveler.devices = req.body.devices;
+                }
 
-              traveler.save(function(err) {
-                performMongoResponse(err, traveler, res, function() {
-                  return res.status(200).json(traveler);
-                });
-              });
-            }
-          );
+                traveler
+                  .save()
+                  .then(function() {
+                    return res.status(200).json(traveler);
+                  })
+                  .catch(function(err) {
+                    performMongoResponse(err, null, res);
+                  });
+              }
+            );
+          });
+        })
+        .catch(function(travelerErr) {
+          performMongoResponse(travelerErr, null, res);
         });
-      });
     }
   );
 
@@ -993,29 +1096,33 @@ module.exports = function(app) {
     ),
     checkSystemWritePermissions,
     function(req, res) {
-      ReleasedForm.findById(req.body.formId, function(formErr, form) {
-        performMongoResponse(formErr, form, res, function() {
-          var title = req.body.title;
-          var userName = req.body.userName;
-          var devices = req.body.devices;
-          routesUtilities.traveler.createTraveler(
-            form,
-            title,
-            userName,
-            devices,
-            function(newTravelerErr, newTraveler) {
-              performMongoResponse(
-                newTravelerErr,
-                newTraveler,
-                res,
-                function() {
-                  return res.status(201).json(newTraveler);
-                }
-              );
-            }
-          );
+      ReleasedForm.findById(req.body.formId)
+        .then(function(form) {
+          performMongoResponse(null, form, res, function() {
+            var title = req.body.title;
+            var userName = req.body.userName;
+            var devices = req.body.devices;
+            routesUtilities.traveler.createTraveler(
+              form,
+              title,
+              userName,
+              devices,
+              function(newTravelerErr, newTraveler) {
+                performMongoResponse(
+                  newTravelerErr,
+                  newTraveler,
+                  res,
+                  function() {
+                    return res.status(201).json(newTraveler);
+                  }
+                );
+              }
+            );
+          });
+        })
+        .catch(function(formErr) {
+          performMongoResponse(formErr, null, res);
         });
-      });
     }
   );
 };

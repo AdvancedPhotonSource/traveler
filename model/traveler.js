@@ -200,27 +200,27 @@ function updateBinderProgress(travelerDoc) {
         _id: travelerDoc._id,
       },
     },
-  }).exec(function(err, binders) {
-    if (err) {
-      return console.error(
+  })
+    .then(function(binders) {
+      binders.forEach(function(binder) {
+        binder.updateWorkProgress(travelerDoc);
+        binder.updateProgress();
+      });
+    })
+    .catch(function(err) {
+      console.error(
         'cannot find binders for traveler ' +
           travelerDoc._id +
           ', error: ' +
           err.message
       );
-    }
-    binders.forEach(function(binder) {
-      binder.updateWorkProgress(travelerDoc);
-      binder.updateProgress();
     });
-  });
 }
 
-traveler.pre('save', function(next) {
+traveler.pre('save', function() {
   var modifiedPaths = this.modifiedPaths();
   // keep it so that we can refer at post save
   this.wasModifiedPaths = modifiedPaths;
-  next();
 });
 
 traveler.post('save', function(obj) {
@@ -255,42 +255,34 @@ var travelerData = new Schema({
   inputOn: Date,
 });
 
-travelerData.pre('save', function validateNumber(next) {
+travelerData.pre('save', function validateNumber() {
   if (this.inputType === 'number') {
     if (typeof this.value !== this.inputType) {
-      return next(
-        new DataError('value "' + this.value + '" is not a number', 400)
-      );
+      throw new DataError('value "' + this.value + '" is not a number', 400);
     }
   } else if (this.inputType == 'checkbox') {
     if ((this.value == true || this.value == false) === false) {
-      return next(
-        new DataError('value "' + this.value + '" is not a boolean', 400)
-      );
+      throw new DataError('value "' + this.value + '" is not a boolean', 400);
     }
   } else if (this.inputType == 'datetime-local') {
     if (this.value.match(DATETIME_REG_EX) === null) {
-      return next(
-        new DataError(
-          this.value + ' does not match format yyyy-mm-ddThh:mm',
-          400
-        )
+      throw new DataError(
+        this.value + ' does not match format yyyy-mm-ddThh:mm',
+        400
       );
     }
   } else if (this.inputType == 'date') {
     if (this.value.match(DATE_REG_EX) === null) {
-      return next(
-        new DataError(this.value + ' does not match format yyyy-mm-dd', 400)
+      throw new DataError(
+        this.value + ' does not match format yyyy-mm-dd',
+        400
       );
     }
   } else if (this.inputType == 'time') {
     if (this.value.match(TIME_REG_EX) === null) {
-      return next(
-        new DataError(this.value + ' does not match format hh:mm', 400)
-      );
+      throw new DataError(this.value + ' does not match format hh:mm', 400);
     }
   } //url
-  next();
 });
 
 var travelerNote = new Schema({

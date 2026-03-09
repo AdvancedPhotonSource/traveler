@@ -1,0 +1,56 @@
+name: DB Acceptance Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: MongoDB ${{ matrix.mongodb-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        mongodb-version: [
+          "8.0",
+        ]
+
+    services:
+      mongodb:
+        image: mongo:${{ matrix.mongodb-version }}
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ping:1})' || mongo --eval 'db.runCommand({ping:1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Create config files
+        run: |
+          echo '{"server_address":"127.0.0.1","server_port":"27017","traveler_db":"traveler"}' > config/mongo.json
+          echo '{"default_form_public_access":-1,"default_traveler_public_access":0,"default_binder_public_access":0}' > config/app.json
+          echo '{"terminology":{"form":"form","traveler":"traveler","device":"device","travelBtn":"Travel"}}' > config/ui.json
+          echo '{}' > config/ad.json
+          echo '{}' > config/alias.json
+          echo '{}' > config/api.json
+          echo '{}' > config/auth.json
+          echo '{}' > config/service.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run DB acceptance tests
+        run: npm run test:db

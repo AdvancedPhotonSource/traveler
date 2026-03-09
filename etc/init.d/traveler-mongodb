@@ -62,7 +62,7 @@ stop (){
       exit 1
     fi
 
-    $MONGO_BIN_DIRECTORY/mongo \
+    $MONGO_BIN_DIRECTORY/mongosh \
     $MONGO_SERVER_ADDRESS:$MONGO_SERVER_PORT/admin \
     --username $MONGO_ADMIN_USERNAME \
     --password $adminPass \

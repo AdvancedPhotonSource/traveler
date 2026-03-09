@@ -83,7 +83,7 @@ var form = new Schema({
  * pre save middleware to add or update the mapping
  * and validate unique input name and data-userkey
  */
-form.pre('save', function(next) {
+form.pre('save', async function() {
   var doc = this;
   if (doc.isNew || doc.isModified('html')) {
     let mapping = {};
@@ -128,19 +128,15 @@ form.pre('save', function(next) {
           if (userkey === lastUserkey) {
             continue;
           } else {
-            return next(
-              new FormError(
-                'inconsistent usekey "' +
-                  userkey +
-                  '"found for the same input name',
-                400
-              )
+            throw new FormError(
+              'inconsistent usekey "' +
+                userkey +
+                '"found for the same input name',
+              400
             );
           }
         } else {
-          return next(
-            new FormError('duplicated input name "' + inputName + '"', 400)
-          );
+          throw new FormError('duplicated input name "' + inputName + '"', 400);
         }
       } else {
         labels[inputName] = label;
@@ -148,8 +144,9 @@ form.pre('save', function(next) {
         // add user key mapping if userkey is not null or empty
         if (userkey) {
           if (mapping.hasOwnProperty(userkey)) {
-            return next(
-              new FormError('duplicated input userkey "' + userkey + '"', 400)
+            throw new FormError(
+              'duplicated input userkey "' + userkey + '"',
+              400
             );
           }
           mapping[userkey] = inputName;
@@ -162,7 +159,6 @@ form.pre('save', function(next) {
     doc.labels = labels;
     doc.types = types;
   }
-  next();
 });
 
 form.plugin(addVersion, {
@@ -208,7 +204,12 @@ var createForm = function(json, newFormResultCallBack) {
   formToCreate.html = json.html || '';
   formToCreate.formType = json.formType || 'normal';
   formToCreate.sharedWith = [];
-  new Form(formToCreate).save(newFormResultCallBack);
+  new Form(formToCreate)
+    .save()
+    .then(function(newForm) {
+      newFormResultCallBack(null, newForm);
+    })
+    .catch(newFormResultCallBack);
 };
 
 module.exports = {

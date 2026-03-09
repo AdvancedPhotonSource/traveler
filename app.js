@@ -46,10 +46,8 @@ mongoAddress += ':' + (mongoConfig.server_port || '27017');
 mongoAddress += '/' + (mongoConfig.traveler_db || 'traveler');
 
 var mongoOptions = {
-  native_parser: true,
-  poolSize: 5,
+  maxPoolSize: 5,
   connectTimeoutMS: 30000,
-  keepAlive: 1,
 };
 
 // Set authentication options if specified
@@ -61,6 +59,7 @@ if (mongoConfig.auth) {
   mongoOptions.auth = config.mongo.auth;
 }
 
+mongoose.set('strictQuery', true);
 mongoose.connect(mongoAddress, mongoOptions);
 mongoose.connection.on('connected', function() {
   logger.info('Mongoose default connection opened.');
@@ -232,9 +231,9 @@ if (apiSettings.ssl_key !== undefined) {
 
 // When the node.js application is closed.
 function cleanup() {
-  server._connections = 0;
-  apiserver._connections = 0;
   mongoose.connection.close();
+  server.closeAllConnections();
+  apiserver.closeAllConnections();
 
   server.close(function() {
     apiserver.close(function() {

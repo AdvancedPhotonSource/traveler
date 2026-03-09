@@ -104,48 +104,51 @@ function addGroup(req, res) {
     });
   }
 
-  group.save(function(err, newGroup) {
-    if (err) {
+  group
+    .save()
+    .then(function(newGroup) {
+      var url =
+        (req.proxied ? authConfig.proxied_service : authConfig.service) +
+        '/groups/' +
+        newGroup._id;
+      res.set('Location', url);
+      return res
+        .status(201)
+        .send(
+          'The new group is at <a target="_blank" href="' +
+            url +
+            '">' +
+            url +
+            '</a>'
+        );
+    })
+    .catch(function(err) {
       console.error(err);
       return res.status(500).send(err.message);
-    }
-    var url =
-      (req.proxied ? authConfig.proxied_service : authConfig.service) +
-      '/groups/' +
-      newGroup._id;
-    res.set('Location', url);
-    return res
-      .status(201)
-      .send(
-        'The new group is at <a target="_blank" href="' +
-          url +
-          '">' +
-          url +
-          '</a>'
-      );
-  });
+    });
 }
 
 module.exports = function(app) {
   app.get('/groupnames/:name', auth.ensureAuthenticated, function(req, res) {
     Group.findOne({
       name: req.params.name,
-    }).exec(function(err, group) {
-      if (err) {
+    })
+      .then(function(group) {
+        if (group) {
+          return res.render(
+            'group',
+            routesUtilities.getRenderObject(req, {
+              group: group,
+              myRoles: req.session.roles,
+            })
+          );
+        }
+        return res.status(404).send(req.params.name + ' not found');
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (group) {
-        return res.render(
-          'group',
-          routesUtilities.getRenderObject(req, {
-            group: group,
-            myRoles: req.session.roles,
-          })
-        );
-      }
-      return res.status(404).send(req.params.name + ' not found');
-    });
+      });
   });
 
   app.post('/groups/', auth.ensureAuthenticated, function(req, res) {
@@ -163,27 +166,28 @@ module.exports = function(app) {
     // check if already in db
     Group.findOne({
       name: req.body.name,
-    }).exec(function(err, group) {
-      if (err) {
+    })
+      .then(function(group) {
+        if (group) {
+          var url =
+            (req.proxied ? authConfig.proxied_service : authConfig.service) +
+            '/groups/' +
+            group._id;
+          return res
+            .status(200)
+            .send(
+              'The group is at <a target="_blank" href="' +
+                url +
+                '">' +
+                url +
+                '</a>'
+            );
+        }
+        addGroup(req, res);
+      })
+      .catch(function(err) {
         return res.status(500).send(err.message);
-      }
-      if (group) {
-        var url =
-          (req.proxied ? authConfig.proxied_service : authConfig.service) +
-          '/groups/' +
-          group._id;
-        return res
-          .status(200)
-          .send(
-            'The group is at <a target="_blank" href="' +
-              url +
-              '">' +
-              url +
-              '</a>'
-          );
-      }
-      addGroup(req, res);
-    });
+      });
   });
 
   app.get('/groups/json', auth.ensureAuthenticated, function(req, res) {
@@ -206,36 +210,37 @@ module.exports = function(app) {
 
     Group.find(req.query)
       .populate('members')
-      .exec(function(err, groups) {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({
-            error: err.message,
-          });
-        }
+      .then(function(groups) {
         return res.json(groups);
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
       });
   });
 
   app.get('/groups/:id', auth.ensureAuthenticated, function(req, res) {
     Group.findOne({
       _id: req.params.id,
-    }).exec(function(err, group) {
-      if (err) {
+    })
+      .then(function(group) {
+        if (group) {
+          return res.render(
+            'group',
+            routesUtilities.getRenderObject(req, {
+              group: group,
+              myRoles: req.session.roles,
+            })
+          );
+        }
+        return res
+          .status(404)
+          .send('Group ' + req.params.id + ' does not exist');
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (group) {
-        return res.render(
-          'group',
-          routesUtilities.getRenderObject(req, {
-            group: group,
-            myRoles: req.session.roles,
-          })
-        );
-      }
-      return res.status(404).send('Group ' + req.params.id + ' does not exist');
-    });
+      });
   });
 
   app.put('/groups/:id', auth.ensureAuthenticated, function(req, res) {
@@ -257,15 +262,14 @@ module.exports = function(app) {
         _id: req.params.id,
       },
       req.body
-    ).exec(function(err) {
-      if (err) {
+    )
+      .then(function() {
+        return res.status(204).send();
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.message,
-        });
-      }
-      return res.status(204).send();
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   app.put('/groups/:id/addmember/:user', auth.ensureAuthenticated, function(
@@ -308,65 +312,53 @@ module.exports = function(app) {
       }
 
       // If user isn't already in user table, store it with no special roles.
-      User.findOne({ _id: uid }, function(err, user) {
-        if (err) {
-          return res
-            .status(500)
-            .send('Error finding user; please check configuration');
-        }
-        if (!user) {
-          user = new User({
-            _id: uid,
-            name: result[0].displayName,
-            email: result[0].mail,
-            office: result[0].physicalDeliveryOfficeName,
-            phone: result[0].telephoneNumber,
-            mobile: result[0].mobile,
-            roles: [],
-          });
-
-          user.save(function(err, newUser) {
-            if (err) {
+      User.findOne({ _id: uid })
+        .then(function(user) {
+          if (!user) {
+            user = new User({
+              _id: uid,
+              name: result[0].displayName,
+              email: result[0].mail,
+              office: result[0].physicalDeliveryOfficeName,
+              phone: result[0].telephoneNumber,
+              mobile: result[0].mobile,
+              roles: [],
+            });
+            user.save().catch(function(err) {
               console.error(err);
-              return res.status(500).send(err.message);
-            }
-          });
-        }
-      });
-
-      Group.findOne({ _id: req.params.id }, function(err, group) {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ error: err.message });
-        }
-        if (!group) {
-          return res
-            .status(404)
-            .json({ error: 'Cannot find group with id ' + req.params.id });
-        }
-        const theuid = group.members.find(function(name) {
-          return name == uid;
-        });
-        if (theuid) {
-          // silent failure when user is already in group
-          return res.status(204).send();
-        }
-        group.members.push(uid);
-        Group.findOneAndUpdate(
-          {
-            _id: req.params.id,
-          },
-          { members: group.members }
-        ).exec(function(err) {
-          if (err) {
-            console.error(err);
-            return res.status(500).json({
-              error: err.message,
             });
           }
-          return res.status(204).send();
+        })
+        .catch(function() {
+          // non-fatal — continue with group update
         });
-      });
+
+      Group.findOne({ _id: req.params.id })
+        .then(function(group) {
+          if (!group) {
+            return res
+              .status(404)
+              .json({ error: 'Cannot find group with id ' + req.params.id });
+          }
+          const theuid = group.members.find(function(name) {
+            return name == uid;
+          });
+          if (theuid) {
+            // silent failure when user is already in group
+            return res.status(204).send();
+          }
+          group.members.push(uid);
+          return Group.findOneAndUpdate(
+            { _id: req.params.id },
+            { members: group.members }
+          ).then(function() {
+            return res.status(204).send();
+          });
+        })
+        .catch(function(err) {
+          console.error(err);
+          return res.status(500).json({ error: err.message });
+        });
     });
   });
 
@@ -386,38 +378,31 @@ module.exports = function(app) {
     if (!data || data.length == 0) {
       return res.status(403).send('You must provide at least one userid');
     }
-    Group.findOne({ _id: req.params.id }, function(err, group) {
-      if (err) {
+    Group.findOne({ _id: req.params.id })
+      .then(function(group) {
+        if (!group) {
+          return res
+            .status(404)
+            .json({ error: 'Cannot find group with id ' + req.params.id });
+        }
+        const members = group.members.filter(function(name) {
+          return (
+            data.findIndex(function(member) {
+              return member._id === name;
+            }) === -1
+          );
+        });
+        return Group.findOneAndUpdate(
+          { _id: req.params.id },
+          { members: members }
+        ).then(function() {
+          return res.status(204).send();
+        });
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).json({ error: err.message });
-      }
-      if (!group) {
-        return res
-          .status(404)
-          .json({ error: 'Cannot find group with id ' + req.params.id });
-      }
-      const members = group.members.filter(function(name) {
-        return (
-          data.findIndex(function(member) {
-            return member._id === name;
-          }) === -1
-        );
       });
-      Group.findOneAndUpdate(
-        {
-          _id: req.params.id,
-        },
-        { members: members }
-      ).exec(function(err) {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({
-            error: err.message,
-          });
-        }
-        return res.status(204).send();
-      });
-    });
   });
 
   app.delete('/groups/:id', auth.ensureAuthenticated, function(req, res) {
@@ -434,35 +419,28 @@ module.exports = function(app) {
         error: 'json request expected.',
       });
     }
-    Group.findOneAndUpdate(
-      {
-        _id: req.params.id,
-      },
-      { deleted: true }
-    ).exec(function(err) {
-      if (err) {
+    Group.findOneAndUpdate({ _id: req.params.id }, { deleted: true })
+      .then(function() {
+        return res.status(204).send();
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.message,
-        });
-      }
-      return res.status(204).send();
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   // get from the db not ad
   app.get('/groups/:id/json', auth.ensureAuthenticated, function(req, res) {
     Group.findOne({
       _id: req.params.id,
-    }).exec(function(err, group) {
-      if (err) {
+    })
+      .then(function(group) {
+        return res.json(group);
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.message,
-        });
-      }
-      return res.json(group);
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   app.get('/groups/:id/members/json', auth.ensureAuthenticated, function(
@@ -473,17 +451,15 @@ module.exports = function(app) {
       _id: req.params.id,
     })
       .populate('members')
-      .exec(function(err, group) {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({
-            error: err.message,
-          });
-        }
+      .then(function(group) {
         if (group === null) {
-          return res.status(404);
+          return res.status(404).send();
         }
         return res.json(group.members);
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
       });
   });
 
@@ -498,19 +474,20 @@ module.exports = function(app) {
     }
     Group.findOne({
       _id: req.params.id,
-    }).exec(function(err, group) {
-      if (err) {
+    })
+      .then(function(group) {
+        if (group) {
+          updateGroupProfile(group, res);
+        } else {
+          return res
+            .status(404)
+            .send(req.params.id + ' is not in the application.');
+        }
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (group) {
-        updateGroupProfile(group, res);
-      } else {
-        return res
-          .status(404)
-          .send(req.params.id + ' is not in the application.');
-      }
-    });
+      });
   });
 
   // resource /adgroups
@@ -561,15 +538,14 @@ module.exports = function(app) {
       return listADGroups(req, res);
     }
 
-    Group.find().exec(function(err, groups) {
-      if (err) {
+    Group.find()
+      .then(function(groups) {
+        return res.json(groups);
+      })
+      .catch(function(err) {
         console.error(err);
-        return res.status(500).json({
-          error: err.message,
-        });
-      }
-      return res.json(groups);
-    });
+        return res.status(500).json({ error: err.message });
+      });
   });
 
   app.get('/adgroups', auth.ensureAuthenticated, function(req, res) {

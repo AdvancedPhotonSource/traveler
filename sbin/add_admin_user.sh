@@ -11,7 +11,7 @@ source $MY_DIR/configure_paths.sh
 
 source $TRAVELER_INSTALL_ETC_DIR/mongo-configuration.sh
 # Check to see that mongo is installed
-if [ ! -f $MONGO_BIN_DIRECTORY/mongo ]; then
+if [ ! -f $MONGO_BIN_DIRECTORY/mongosh ]; then
     echo "MongoDB was not found in the local directory: $MONGO_BIN_DIRECTORY"
     echo "please run 'make support' from $TRAVELER_ROOT_DIR directory"
     exit 1
@@ -29,4 +29,4 @@ fi
 
 mongoCommands="db.users.update({'_id':'$adminUsername'}, { \$push:{ 'roles':'admin'}})"
 mongoCommands="$mongoCommands\ndb.users.findOne({'_id':'$adminUsername'});"
-echo -e $mongoCommands | $MONGO_BIN_DIRECTORY/mongo $MONGO_SERVER_ADDRESS:$MONGO_SERVER_PORT/$MONGO_TRAVELER_DB --username $MONGO_TRAVELER_USERNAME --password $travelerPassword
+echo -e $mongoCommands | $MONGO_BIN_DIRECTORY/mongosh $MONGO_SERVER_ADDRESS:$MONGO_SERVER_PORT/$MONGO_TRAVELER_DB --username $MONGO_TRAVELER_USERNAME --password $travelerPassword

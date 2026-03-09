@@ -29,13 +29,14 @@ module.exports = function(app) {
           status: 0.5,
         },
         'title formType status tags mapping _v updatedOn updatedBy'
-      ).exec(function(err, forms) {
-        if (err) {
+      )
+        .then(function(forms) {
+          res.status(200).json(forms);
+        })
+        .catch(function(err) {
           console.error(err);
           return res.status(500).send(err.message);
-        }
-        res.status(200).json(forms);
-      });
+        });
     }
   );
 
@@ -45,13 +46,14 @@ module.exports = function(app) {
         status: 1,
       },
       'title formType status tags ver releasedOn releasedBy'
-    ).exec(function(err, forms) {
-      if (err) {
+    )
+      .then(function(forms) {
+        res.status(200).json(forms);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(forms);
-    });
+      });
   });
 
   app.get('/archived-released-forms/json', auth.ensureAuthenticated, function(
@@ -63,13 +65,14 @@ module.exports = function(app) {
         status: 2,
       },
       'title formType status tags ver archivedOn archivedBy'
-    ).exec(function(err, forms) {
-      if (err) {
+    )
+      .then(function(forms) {
+        res.status(200).json(forms);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(forms);
-    });
+      });
   });
 
   app.get(
@@ -94,42 +97,45 @@ module.exports = function(app) {
     }
   );
 
-    /**
-     * Batch archiving of multiple released forms
-     */
+  /**
+   * Batch archiving of multiple released forms
+   */
   app.put(
-      '/released-forms/archive',
-      auth.ensureAuthenticated,
-      auth.verifyRole('admin', 'manager'),
-      function updateStatus(req, res) {
-          let ids = req.body;
-          if (!ids || ids.length < 1) {
-              return res.status(400).send('no id(s) provided');
-          }
-
-          let stateTransition = require('../model/released-form').stateTransition;
-
-          ids.forEach(function(id) {
-              ReleasedForm.findById({_id: id}, function (err, f) {
-                  if (err) {
-                      return res.status(400).send('Invalid id: ' + id);
-                  }
-                  f.status = 2;
-                  f.archivedBy = req.session.userid;
-                  f.archivedOn = Date.now();
-                  // check if we need to increment the version
-                  // in this case, no
-                  f.incrementVersion();
-                  f.saveWithHistory(req.session.userid)
-                      .then(function () {
-                      })
-                      .catch(function (err) {
-                          return res.status(500).send('Failed to archive form: ' + id);
-                      });
-              });
-          });
-          return res.status(200).send('Archived form(s): ' + ids.join(', '));
+    '/released-forms/archive',
+    auth.ensureAuthenticated,
+    auth.verifyRole('admin', 'manager'),
+    function updateStatus(req, res) {
+      let ids = req.body;
+      if (!ids || ids.length < 1) {
+        return res.status(400).send('no id(s) provided');
       }
+
+      let stateTransition = require('../model/released-form').stateTransition;
+
+      ids.forEach(function(id) {
+        ReleasedForm.findById(id)
+          .then(function(f) {
+            if (!f) {
+              return res.status(400).send('Invalid id: ' + id);
+            }
+            f.status = 2;
+            f.archivedBy = req.session.userid;
+            f.archivedOn = Date.now();
+            // check if we need to increment the version
+            // in this case, no
+            f.incrementVersion();
+            f.saveWithHistory(req.session.userid)
+              .then(function() {})
+              .catch(function(err) {
+                return res.status(500).send('Failed to archive form: ' + id);
+              });
+          })
+          .catch(function(err) {
+            return res.status(400).send('Invalid id: ' + id);
+          });
+      });
+      return res.status(200).send('Archived form(s): ' + ids.join(', '));
+    }
   );
 
   app.put(
@@ -204,23 +210,29 @@ module.exports = function(app) {
       clonedForm.formType = base.formType;
       clonedForm.sharedWith = [];
       clonedForm.tags = releasedForm.tags;
-      new Form(clonedForm).save(function(saveErr, newform) {
-        if (saveErr) {
+      new Form(clonedForm)
+        .save()
+        .then(function(newform) {
+          var url =
+            (req.proxied ? authConfig.proxied_service : authConfig.service) +
+            '/forms/' +
+            newform.id +
+            '/';
+          res.set('Location', url);
+          return res
+            .status(201)
+            .send(
+              'You can see the new form at <a href="' +
+                url +
+                '">' +
+                url +
+                '</a>'
+            );
+        })
+        .catch(function(saveErr) {
           logger.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        var url =
-          (req.proxied ? authConfig.proxied_service : authConfig.service) +
-          '/forms/' +
-          newform.id +
-          '/';
-        res.set('Location', url);
-        return res
-          .status(201)
-          .send(
-            'You can see the new form at <a href="' + url + '">' + url + '</a>'
-          );
-      });
+        });
     }
   );
 
@@ -234,13 +246,14 @@ module.exports = function(app) {
         formType: 'normal',
       },
       'title formType status tags _v releasedOn releasedBy'
-    ).exec(function(err, forms) {
-      if (err) {
+    )
+      .then(function(forms) {
+        res.status(200).json(forms);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(forms);
-    });
+      });
   });
 
   app.get(
@@ -253,13 +266,14 @@ module.exports = function(app) {
           formType: 'discrepancy',
         },
         'title formType status tags _v releasedOn releasedBy'
-      ).exec(function(err, forms) {
-        if (err) {
+      )
+        .then(function(forms) {
+          res.status(200).json(forms);
+        })
+        .catch(function(err) {
           console.error(err);
           return res.status(500).send(err.message);
-        }
-        res.status(200).json(forms);
-      });
+        });
     }
   );
 };

@@ -15,18 +15,19 @@ module.exports = function(app) {
     // render the profile page
     User.findOne({
       _id: req.session.userid,
-    }).exec(function(err, user) {
-      if (err) {
+    })
+      .then(function(user) {
+        return res.render(
+          'profile',
+          routesUtilities.getRenderObject(req, {
+            user: user,
+          })
+        );
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send('something is wrong with the DB.');
-      }
-      return res.render(
-        'profile',
-        routesUtilities.getRenderObject(req, {
-          user: user,
-        })
-      );
-    });
+      });
   });
 
   // user update her/his profile. This is a little different from the admin update the user's roles.
@@ -43,15 +44,16 @@ module.exports = function(app) {
       {
         subscribe: req.body.subscribe,
       }
-    ).exec(function(err, user) {
-      if (err) {
+    )
+      .then(function() {
+        return res.status(204).send();
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).json({
           error: err.message,
         });
-      }
-      return res.status(204).send();
-    });
+      });
   });
 
   app.put('/profile/apikey', auth.ensureAuthenticated, function(req, res) {
@@ -80,14 +82,15 @@ module.exports = function(app) {
         apiKey: generatedApiKey,
         apiKeyExpiration: expiration,
       }
-    ).exec(function(err, user) {
-      if (err) {
+    )
+      .then(function() {
+        return res.status(204).send();
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).json({
           error: err.message,
         });
-      }
-      return res.status(204).send();
-    });
+      });
   }
 };

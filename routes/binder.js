@@ -37,13 +37,14 @@ module.exports = function(app) {
       owner: {
         $exists: false,
       },
-    }).exec(function(err, docs) {
-      if (err) {
+    })
+      .then(function(docs) {
+        return res.status(200).json(docs);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      return res.status(200).json(docs);
-    });
+      });
   });
 
   app.get(
@@ -73,13 +74,15 @@ module.exports = function(app) {
       doc.updatedBy = req.session.userid;
       doc.updatedOn = Date.now();
       doc.tags.addToSet(req.body.newtag);
-      doc.save(function(saveErr) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function() {
+          return res.status(204).send();
+        })
+        .catch(function(saveErr) {
           console.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(204).send();
-      });
+        });
     }
   );
 
@@ -93,13 +96,15 @@ module.exports = function(app) {
       doc.updatedBy = req.session.userid;
       doc.updatedOn = Date.now();
       doc.tags.pull(req.params.tag);
-      doc.save(function(saveErr) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function() {
+          return res.status(204).send();
+        })
+        .catch(function(saveErr) {
           console.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(204).send();
-      });
+        });
     }
   );
 
@@ -121,13 +126,15 @@ module.exports = function(app) {
       }
       doc.updatedBy = req.session.userid;
       doc.updatedOn = Date.now();
-      doc.save(function(saveErr) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function() {
+          return res.status(204).send();
+        })
+        .catch(function(saveErr) {
           console.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res.status(204).send();
-      });
+        });
     }
   );
 
@@ -167,15 +174,17 @@ module.exports = function(app) {
         return res.status(204).send();
       }
       binder.publicAccess = access;
-      binder.save(function(saveErr) {
-        if (saveErr) {
+      binder
+        .save()
+        .then(function() {
+          return res
+            .status(200)
+            .send('public access is set to ' + req.body.access);
+        })
+        .catch(function(saveErr) {
           console.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res
-          .status(200)
-          .send('public access is set to ' + req.body.access);
-      });
+        });
     }
   );
 
@@ -267,39 +276,36 @@ module.exports = function(app) {
       } else {
         share.access = 0;
       }
-      binder.save(function(saveErr) {
-        if (saveErr) {
+      binder
+        .save()
+        .then(function() {
+          // check consistency of user's traveler list
+          var Target;
+          if (req.params.list === 'users') {
+            Target = User;
+          }
+          if (req.params.list === 'groups') {
+            Target = Group;
+          }
+          Target.findByIdAndUpdate(req.params.shareid, {
+            $addToSet: { binders: binder._id },
+          })
+            .then(function(target) {
+              if (!target) {
+                console.error(
+                  'The user/group ' + req.params.userid + ' is not in the db'
+                );
+              }
+            })
+            .catch(function(updateErr) {
+              console.error(updateErr);
+            });
+          return res.status(200).json(share);
+        })
+        .catch(function(saveErr) {
           console.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        // check consistency of user's traveler list
-        var Target;
-        if (req.params.list === 'users') {
-          Target = User;
-        }
-        if (req.params.list === 'groups') {
-          Target = Group;
-        }
-        Target.findByIdAndUpdate(
-          req.params.shareid,
-          {
-            $addToSet: {
-              binders: binder._id,
-            },
-          },
-          function(updateErr, target) {
-            if (updateErr) {
-              console.error(updateErr);
-            }
-            if (!target) {
-              console.error(
-                'The user/group ' + req.params.userid + ' is not in the db'
-              );
-            }
-          }
-        );
-        return res.status(200).json(share);
-      });
+        });
     }
   );
 
@@ -338,28 +344,30 @@ module.exports = function(app) {
       }
       binder.createdBy = req.session.userid;
       binder.createdOn = Date.now();
-      new Binder(binder).save(function(err, newPackage) {
-        if (err) {
+      new Binder(binder)
+        .save()
+        .then(function(newPackage) {
+          var url =
+            (req.proxied ? authConfig.proxied_service : authConfig.service) +
+            '/binders/' +
+            newPackage.id +
+            '/';
+
+          res.set('Location', url);
+          return res
+            .status(201)
+            .send(
+              'You can access the new binder at <a href="' +
+                url +
+                '">' +
+                url +
+                '</a>'
+            );
+        })
+        .catch(function(err) {
           console.error(err);
           return res.status(500).send(err.message);
-        }
-        var url =
-          (req.proxied ? authConfig.proxied_service : authConfig.service) +
-          '/binders/' +
-          newPackage.id +
-          '/';
-
-        res.set('Location', url);
-        return res
-          .status(201)
-          .send(
-            'You can access the new binder at <a href="' +
-              url +
-              '">' +
-              url +
-              '</a>'
-          );
-      });
+        });
     }
   );
 
@@ -369,16 +377,15 @@ module.exports = function(app) {
   ) {
     Binder.find({
       owner: req.session.userid,
-      archived: {
-        $ne: true,
-      },
-    }).exec(function(err, binders) {
-      if (err) {
+      archived: { $ne: true },
+    })
+      .then(function(binders) {
+        res.status(200).json(binders);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(binders);
-    });
+      });
   });
 
   app.get('/ownedbinders/json', auth.ensureAuthenticated, function(req, res) {
@@ -401,85 +408,59 @@ module.exports = function(app) {
 
     Binder.find(search)
       .lean()
-      .exec(function(err, binders) {
-        if (err) {
-          console.error(err);
-          return res.status(500).send(err.message);
-        }
+      .then(function(binders) {
         return res.status(200).json(binders);
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.status(500).send(err.message);
       });
   });
 
   app.get('/sharedbinders/json', auth.ensureAuthenticated, function(req, res) {
-    User.findOne(
-      {
-        _id: req.session.userid,
-      },
-      'binders'
-    ).exec(function(err, me) {
-      if (err) {
+    User.findOne({ _id: req.session.userid }, 'binders')
+      .then(function(me) {
+        if (!me) {
+          return res.status(400).send('cannot identify the current user');
+        }
+        return Binder.find({
+          _id: { $in: me.binders },
+          archived: { $ne: true },
+        }).then(function(binders) {
+          return res.status(200).json(binders);
+        });
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      if (!me) {
-        return res.status(400).send('cannot identify the current user');
-      }
-      Binder.find({
-        _id: {
-          $in: me.binders,
-        },
-        archived: {
-          $ne: true,
-        },
-      }).exec(function(pErr, binders) {
-        if (pErr) {
-          console.error(pErr);
-          return res.status(500).send(pErr.message);
-        }
-        return res.status(200).json(binders);
       });
-    });
   });
 
   app.get('/groupsharedbinders/json', auth.ensureAuthenticated, function(
     req,
     res
   ) {
-    Group.find(
-      {
-        _id: {
-          $in: req.session.memberOf,
-        },
-      },
-      'binders'
-    ).exec(function(err, groups) {
-      if (err) {
-        console.error(err);
-        return res.status(500).send(err.message);
-      }
-      var binderIds = [];
-      var i;
-      var j;
-      // merge the binders arrays
-      for (i = 0; i < groups.length; i += 1) {
-        for (j = 0; j < groups[i].binders.length; j += 1) {
-          if (binderIds.indexOf(groups[i].binders[j]) === -1) {
-            binderIds.push(groups[i].binders[j]);
+    Group.find({ _id: { $in: req.session.memberOf } }, 'binders')
+      .then(function(groups) {
+        var binderIds = [];
+        var i;
+        var j;
+        // merge the binders arrays
+        for (i = 0; i < groups.length; i += 1) {
+          for (j = 0; j < groups[i].binders.length; j += 1) {
+            if (binderIds.indexOf(groups[i].binders[j]) === -1) {
+              binderIds.push(groups[i].binders[j]);
+            }
           }
         }
-      }
-      Binder.find({
-        _id: {
-          $in: binderIds,
-        },
-      }).exec(function(pErr, binders) {
-        if (pErr) {
-          console.error(pErr);
-          return res.status(500).send(pErr.message);
-        }
-        res.status(200).json(binders);
+        return Binder.find({ _id: { $in: binderIds } }).then(function(binders) {
+          res.status(200).json(binders);
+        });
+      })
+      .catch(function(err) {
+        console.error(err);
+        return res.status(500).send(err.message);
       });
-    });
   });
 
   app.get('/archivedbinders/json', auth.ensureAuthenticated, function(
@@ -489,13 +470,14 @@ module.exports = function(app) {
     Binder.find({
       createdBy: req.session.userid,
       archived: true,
-    }).exec(function(err, binders) {
-      if (err) {
+    })
+      .then(function(binders) {
+        return res.status(200).json(binders);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      return res.status(200).json(binders);
-    });
+      });
   });
 
   app.put(
@@ -516,20 +498,22 @@ module.exports = function(app) {
         doc.archivedOn = Date.now();
       }
 
-      doc.save(function(saveErr, newDoc) {
-        if (saveErr) {
+      doc
+        .save()
+        .then(function(newDoc) {
+          return res
+            .status(200)
+            .send(
+              'Binder ' +
+                req.params.id +
+                ' archived state set to ' +
+                newDoc.archived
+            );
+        })
+        .catch(function(saveErr) {
           console.error(saveErr);
           return res.status(500).send(saveErr.message);
-        }
-        return res
-          .status(200)
-          .send(
-            'Binder ' +
-              req.params.id +
-              ' archived state set to ' +
-              newDoc.archived
-          );
-      });
+        });
     }
   );
 
@@ -607,13 +591,14 @@ module.exports = function(app) {
         }
       }
 
-      p.save(function(err) {
-        if (err) {
+      p.save()
+        .then(function() {
+          return res.status(200).send('status updated to ' + s);
+        })
+        .catch(function(err) {
           console.error(err);
           return res.status(500).send(err.message);
-        }
-        return res.status(200).send('status updated to ' + s);
-      });
+        });
     }
   );
 
@@ -678,11 +663,7 @@ module.exports = function(app) {
           'mapping devices tags locations manPower status createdBy owner sharedWith finishedInput totalInput'
         )
           .lean()
-          .exec(function(err, travelers) {
-            if (err) {
-              console.error(err);
-              return res.status(500).send(err.message);
-            }
+          .then(function(travelers) {
             travelers.forEach(function(t) {
               binder.updateWorkProgress(t);
 
@@ -707,7 +688,7 @@ module.exports = function(app) {
           'tags status createdBy owner finishedValue inProgressValue totalValue finishedInput totalInput'
         )
           .lean()
-          .exec(function(err, binders) {
+          .then(function(binders) {
             binders.forEach(function(p) {
               binder.updateWorkProgress(p);
               _.extend(p, works.id(p._id).toJSON());
@@ -715,6 +696,10 @@ module.exports = function(app) {
             });
             pFinished = true;
             sendMerged(tFinished, pFinished, res, merged, binder);
+          })
+          .catch(function(err) {
+            console.error(err);
+            return res.status(500).send(err.message);
           });
       }
     }
@@ -753,7 +738,7 @@ module.exports = function(app) {
           .send('Work ' + req.params.wid + ' not found in the binder.');
       }
 
-      work.remove();
+      work.deleteOne();
       p.updatedBy = req.session.userid;
       p.updatedOn = Date.now();
 
@@ -809,20 +794,28 @@ module.exports = function(app) {
         return res.status(204).send();
       }
 
-      var cb = function(err, newWP) {
-        if (err) {
-          console.error(err);
-          return res
-            .status(500)
-            .send('cannot save the updates to binder ' + binder._id);
-        }
-        res.status(200).json(newWP.works);
-      };
-
       if (valueChanged) {
-        binder.updateProgress(cb);
+        binder.updateProgress(function(err, newWP) {
+          if (err) {
+            console.error(err);
+            return res
+              .status(500)
+              .send('cannot save the updates to binder ' + binder._id);
+          }
+          res.status(200).json(newWP.works);
+        });
       } else {
-        binder.save(cb);
+        binder
+          .save()
+          .then(function(newWP) {
+            res.status(200).json(newWP.works);
+          })
+          .catch(function(err) {
+            console.error(err);
+            return res
+              .status(500)
+              .send('cannot save the updates to binder ' + binder._id);
+          });
       }
     }
   );
@@ -839,12 +832,13 @@ module.exports = function(app) {
       archived: {
         $ne: true,
       },
-    }).exec(function(err, binders) {
-      if (err) {
+    })
+      .then(function(binders) {
+        res.status(200).json(binders);
+      })
+      .catch(function(err) {
         console.error(err);
         return res.status(500).send(err.message);
-      }
-      res.status(200).json(binders);
-    });
+      });
   });
 };
