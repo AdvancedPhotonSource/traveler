@@ -1,4 +1,4 @@
-APS 1.7.1
+APS 1.8.0
 # Infrastructure Upgrades
 - Upgrade Node.js runtime to version 20.
 - Upgrade Mongoose from version 5 to version 9.
