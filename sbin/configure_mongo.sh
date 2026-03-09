@@ -15,6 +15,9 @@ if [ ! -f $MONGO_BIN_DIRECTORY/mongosh ]; then
   exit 1
 fi
 
+# Create mongo data directory if it does not exist
+mkdir -p $MONGO_DATA_DIRECTORY
+
 if [[ -f $MONGO_ADMIN_PASSWD_FILE && -f $MONGO_TRAVELER_PASSWD_FILE ]]; then
   # --- Reconfigure mode: existing credentials found, prepare a clean database ---
   echo "Existing configuration found. Preparing a clean database..."
