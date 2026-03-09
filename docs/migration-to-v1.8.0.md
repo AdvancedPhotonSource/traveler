@@ -12,6 +12,7 @@ source setup.sh
 
 ./etc/init.d/traveler-webapp stop
 make db-backup
+./etc/init.d/traveler-mongodb stop
 ```
 
 ### Upgrade
